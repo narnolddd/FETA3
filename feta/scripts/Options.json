@@ -1,0 +1,45 @@
+{
+  "type": "object",
+  "properties": {
+    "Datafile": { "type": "object",
+    "properties": {
+      "FileInput": {
+        "type": "string"
+      },
+      "FileOutput": {
+        "type": "string"
+      },
+      "InputGraphFormat": {
+        "type": "string"
+      },
+      "OutputGraphFormat": {
+        "type": "string"
+      },
+      "DirectedInput": {
+        "type": "boolean"
+      },
+      "DirectedOutput": {
+        "type": "boolean"
+      },
+      "AllowMultipleLinks": {
+        "type": "boolean"
+      }
+    }},
+    "Action": {"type": "object",
+    "properties": {
+      "Type": {
+        "type": "string"
+      },
+      "ActionStartTime": {
+        "type": "integer"
+      },
+      "ActionEndTime": {
+        "type": "integer"
+      },
+      "ActionInterval": {
+        "type": "integer"
+      }
+    }}
+
+  }
+}
