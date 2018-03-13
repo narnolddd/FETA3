@@ -1,6 +1,6 @@
 package feta;
 
-import java.io*;
+import java.io.*;
 
 public class FetaCLI {
 
@@ -8,14 +8,13 @@ public class FetaCLI {
 
     public FetaCLI() {
 
-        public static void main( String[] args) {
+    }
 
-            if(args.length != 1){
-                System.err.println("Command line must specify JSON file to read and nothing else");
-                System.exit(-1);
-            }
-
-
+    public static void main( String[] args) {
+        if (args.length != 1) {
+            System.err.println("Exactly one argument expected as JSON file");
+            System.exit(-1);
         }
     }
+
 }

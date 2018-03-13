@@ -11,8 +11,6 @@ public class Network {
     public int[] outDegreeDistrib_;
     // Size of degree distribution array
     public int degArraySize_ = 1000;
-    public ArrayList<Integer> outLinks_ = null;
-    public ArrayList<Integer> inLinks_ = null;
 
     /** Network statistics */
     private int[] triCount_;
@@ -23,7 +21,8 @@ public class Network {
     private int maxInDegree_;
     private int maxOutDegree;
     private double clusterCoeff_;
-
+    private boolean measureDegDist_;
+    private boolean trackDegreeDistrib_;
 
     /** Network options */
     // Multiple links a->b allowed
@@ -42,7 +41,13 @@ public class Network {
         directedNetwork_= opt.directedNetwork_;
         ignoreDuplicates_= opt.ignoreDuplicates_;
         ignoreSelfLinks_= opt.ignoreSelfLinks_;
+        measureDegDist_= opt.measureDegDist_;
+    }
 
+    private void init() {
+        noNodes_= 0;
+        noLinks_= 0;
+        trackDegreeDistrib_= false;
     }
 
 }

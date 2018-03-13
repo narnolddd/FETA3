@@ -1,6 +1,7 @@
 package feta;
 
-import java.io*;
+import java.io.*;
+import java.util.*;
 
 /** Options for FETA use */
 public class FetaOptions {
@@ -35,7 +36,7 @@ public class FetaOptions {
     public String fetaFileInput_ = null;
     public String fetaFileOutput_ = null;
     public int fileFormatRead_ = NODE_NODE_TIME;
-    public int fileFormatRead_ = NODE_NODE_TIME;
+    public int fileFormatWrite_ = NODE_NODE_TIME;
     public boolean directedNetwork_ = false;
     public boolean complexNetwork_ = false;
     public boolean ignoreDuplicates_ = false;
@@ -45,7 +46,7 @@ public class FetaOptions {
     public int fetaAction_ = ACTION_MEASURE;
     public int actionInterval_ = 1;
     public int actionStartTime_ = 0;
-    public int actionStopTime_ = Long.MAX_VALUE;
+    public long actionStopTime_ = Long.MAX_VALUE;
     public boolean measureDegDist_ = false;
     public String degDistFile_ = null;
     public int maxLinks_ = Integer.MAX_VALUE;
@@ -53,7 +54,7 @@ public class FetaOptions {
 
     // Operation Model options
 
-    // 
+    //
 
 
 }
