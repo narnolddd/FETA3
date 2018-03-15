@@ -5,7 +5,7 @@ import java.util.*;
 /** Class representing a node with various properties. */
 public class Node {
     public String name_;
-    public int birthTime_;
+    public int birthTime_ = -1;
     final static String growName_="Grown-Node-";
     public int order_;
     public int inDegree_;
@@ -19,7 +19,7 @@ public class Node {
         if (nodename != null) {
             name_ = nodename;
         } else {
-            name_ = growName_ + Integer.toString(order_);
+            name_ = growName_+Integer.toString(order_);
         }
         inLinks_ = new ArrayList<Node>();
         outLinks_ = new ArrayList<Node>();
@@ -31,7 +31,7 @@ public class Node {
 
     public void birth(int time)
     {
-
+        birthTime_= time;
     }
     // Add link to various structures
     public void addOutLink(Node node2, int time) {

@@ -155,6 +155,7 @@ public class Network {
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String Line;
+            int order = 1;
             while ((Line = br.readLine()) != null) {
                 Line = Line.trim();
                 if (Line.length() == 0)
@@ -164,10 +165,18 @@ public class Network {
                     continue;
                 }
                 if (parts.length != 2) {
-                    throw new IOException("Expected two entries per line but read: " + Line);
+                    throw new IOException("Expected two entries per line but read: "+Line);
                 }
                 Node node1 = findNode(parts[0]);
+                if (node1.birthTime_< 0) {
+                    node1.birth(time);
+                    node1.order_= order;
+                }
                 Node node2 = findNode(parts[1]);
+                if (node2.birthTime_< 0) {
+                    node2.birth(time);
+                    node2.order_ = order;
+                }
                 linkz.add(new Link(node1, node2, time));
                 time++;
             }
@@ -179,9 +188,77 @@ public class Network {
         return linkz;
     }
 
-    //public ArrayList<Link> buildNetwork(ArrayList<Link> linkList, int stopTime)
-    {
+    // Makes bare edgelist from file in node-node-time format
+    public ArrayList<Link> readNNT(String file) throws IOException {
+        ArrayList<Link> linkz = new ArrayList<Link>();
+        try {
+            FileInputStream fstream = new FileInputStream(file);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String Line;
+            int order = 1;
+            while ((Line = br.readLine()) != null) {
+                Line = Line.trim();
+                if (Line.length() == 0)
+                    continue;
+                String[] parts = Line.split("\\s+");
+                if (parts.length == 0) {
+                    continue;
+                }
+                if (parts.length != 3) {
+                    throw new IOException("Expected three entries per line but read: "+Line+"\n");
+                }
+                int time;
+                try {
+                    time = Integer.parseInt(parts[2]);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    throw new IOException("Could not interpret "+parts[2]+" as an integer time \n");
+                }
+                Node node1 = findNode(parts[0]);
+                if (node1.birthTime_< 0) {
+                    node1.birth(time);
+                    node1.order_= order;
+                    order++;
+                }
+                Node node2 = findNode(parts[1]);
+                if (node2.birthTime_< 0) {
+                    node2.birth(time);
+                    node2.order_= order;
+                    order++;
+                }
+                linkz.add(new Link(node1, node2, time));
+                time++;
+            }
+            in.close();
+        }
+        catch (Exception e){
+            System.err.println(e);
+        }
+        return linkz;
+    }
 
+    // Builds the actual network
+    public ArrayList<Link> buildNetwork(ArrayList<Link> linkList, int stopTime)
+    {
+        for(int i = 0; i < linkList.size(); i++) {
+            Link link = linkList.get(i);
+            if( link.time >= stopTime) {
+                ArrayList <Link> remaining = new ArrayList<Link>();
+                for(int j = i; j < linkList.size(); j++) {
+                    remaining.add(linkList.get(j));
+                }
+                return remaining;
+            }
+            Node n1 = link.node1;
+            Node n2 = link.node2;
+            if (n1.IsOutLink(n2) && !complexNetwork_) {
+                System.err.println("Link exists twice in non-complex network");
+                System.exit(-1);
+            }
+            n1.addOutLink(n2, link.time);
+        }
+        return new ArrayList<Link>();
     }
 
     public Node findNode(String nName) {
