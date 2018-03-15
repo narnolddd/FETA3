@@ -51,6 +51,7 @@ public class FetaOptions {
     public String degDistFile_ = null;
     public int maxLinks_ = Integer.MAX_VALUE;
     public int maxNodes_ = Integer.MAX_VALUE;
+    public int epochSize_ = 20;
 
     // Operation Model options
 
