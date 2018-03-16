@@ -29,6 +29,8 @@ public class Node {
         outDegree_ = 0;
     }
 
+
+
     public void birth(int time)
     {
         birthTime_= time;

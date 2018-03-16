@@ -171,11 +171,13 @@ public class Network {
                 if (node1.birthTime_< 0) {
                     node1.birth(time);
                     node1.order_= order;
+                    order++;
                 }
                 Node node2 = findNode(parts[1]);
                 if (node2.birthTime_< 0) {
                     node2.birth(time);
                     node2.order_ = order;
+                    order++;
                 }
                 linkz.add(new Link(node1, node2, time));
                 time++;
@@ -238,7 +240,7 @@ public class Network {
         return linkz;
     }
 
-    // Builds the actual network
+    // Builds the actual network up to stop time and spits out remaining (unbuilt) links
     public ArrayList<Link> buildNetwork(ArrayList<Link> linkList, int stopTime)
     {
         for(int i = 0; i < linkList.size(); i++) {
