@@ -10,6 +10,7 @@ public class Node {
     public int order_;
     public int inDegree_;
     public int outDegree_;
+    public int totDegree;
     public ArrayList<Node> inLinks_;
     public ArrayList<Integer> inLinksTimes_;
     public ArrayList<Node> outLinks_;
@@ -64,6 +65,10 @@ public class Node {
                 return true;
         }
         return false;
+    }
+
+    public void setDegree() {
+        totDegree = inDegree_+outDegree_;
     }
 
 }

@@ -1,0 +1,12 @@
+{
+  "dataoptions": {
+  "graphinput": "feta/data/evilgraph.dat",
+  "fileformatread": "NNT",
+  "fileformatwrite": "NNT"
+  },
+  "action": {
+    "type": "measure",
+    "stop": 10000,
+    "interval": 10
+  }
+}

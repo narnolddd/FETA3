@@ -1,11 +1,11 @@
 package feta;
 
 public class Link {
-    public Node node1;
-    public Node node2;
+    public String node1;
+    public String node2;
     public int time;
 
-    public Link(Node n1, Node n2, int t)
+    public Link(String n1, String n2, int t)
     {
         node1 = n1;
         node2 = n2;

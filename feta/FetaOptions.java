@@ -69,6 +69,8 @@ public class FetaOptions {
 
             // Read the subtags by turn
 
+            // System.out.println("retrieving options");
+
             JSONObject dataOpt = (JSONObject) jsonObject.get("dataoptions");
 
             JSONObject action = (JSONObject) jsonObject.get("action");
@@ -97,7 +99,9 @@ public class FetaOptions {
     public void parseDataOptions(JSONObject obj) {
         try {
             graphFileInput_ = (String) obj.get("graphinput");
+            //System.out.println(graphFileInput_);
             graphFileOutput_ = (String) obj.get("graphoutput");
+            System.out.println(graphFileOutput_);
             String inFormat = (String) obj.get("fileformatread");
             fileFormatRead_ = getGraphFormat(inFormat);
             String outFormat = (String) obj.get("fileformatwrite");
@@ -131,8 +135,10 @@ public class FetaOptions {
             System.exit(-1);
         }
         actionType_ = getActionType(type);
-        actionStartTime_ = (Integer) obj.get("start");
-        actionInterval_ = (Integer) obj.get("interval");
+        Long actstart = (Long) obj.get("start");
+        actionStartTime_ = Integer.valueOf(actstart.intValue());
+        Long actionInterval = (Long) obj.get("interval");
+        actionInterval_ = Integer.valueOf(actionInterval.intValue());
         actionStopTime_ = (Long) obj.get("stop");
 
         if (actionType_ == ACTION_MEASURE) {
