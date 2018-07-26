@@ -35,4 +35,11 @@ public class UndirectedLink implements Link {
         return null;
     }
 
+    public boolean equals(UndirectedLink link) {
+        if (link.getSourceNode() == sourceNode_ & link.getDestNode() == destNode_) {
+            return true;
+        }
+        return false;
+    }
+
 }
