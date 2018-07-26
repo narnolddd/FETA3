@@ -10,17 +10,14 @@ public class FetaCLI {
 
     }
 
-    public static void main( String[] args) throws IOException {
+    public static void main( String[] args) {
+
         if (args.length != 1) {
-            System.err.println("Exactly one argument expected as JSON file");
+            System.err.println("Command line must specify a JSON file to read and nothing else");
             System.exit(-1);
         }
 
-        System.out.println("Doing the thing");
-
         FetaModel fm = new FetaModel();
-        fm.readConfig(args[0]);
-        fm.executeAction();
 
     }
 

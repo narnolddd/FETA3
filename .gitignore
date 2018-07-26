@@ -1,6 +1,8 @@
-#intellij files
+# intellij files
 *.iml
 .idea
+src
+out
 
-#compiled class files
+# compiled class files
 *.class

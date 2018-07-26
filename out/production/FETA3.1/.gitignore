@@ -1,6 +1,0 @@
-#intellij files
-*.iml
-.idea
-
-#compiled class files
-*.class

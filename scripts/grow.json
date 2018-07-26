@@ -3,7 +3,7 @@
     "graphinput": "feta/data/BAgrown.dat",
     "graphoutput": "feta/data/growtest.dat",
     "fileformatread": "NNT",
-    "fileformatwrite": "NNT"
+    "fileformatwrite": "IIT"
   },
   "action": {
     "type": "grow",
