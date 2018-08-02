@@ -1,4 +1,4 @@
-package feta;
+package feta.network;
 
 import com.sun.jdi.event.ExceptionEvent;
 
@@ -12,36 +12,43 @@ public abstract class Network {
 
     /** Properties and methods performed by all networks */
 
-    private int noNodes_;
-    private int noLinks_;
+    public int noNodes_;
+    public int noLinks_;
     private int latestNodeNo_=0;
 
     private HashMap <String, Integer> nodeNumbers_ = null;
     private HashMap <Integer, String> nodeNames_ = null;
-    private HashMap <Integer, ArrayList <Integer>> outLinks_= null;
-    private HashMap <Integer, ArrayList <Integer>> inLinks_= null;
     private ArrayList <Integer> nodes_= null;
+
+    /** Initialise an empty network */
+    public Network() {
+        noNodes_= 0;
+        noLinks_= 0;
+        nodeNumbers_= new HashMap <String, Integer> ();
+        nodeNames_= new HashMap <Integer, String>();
+    }
 
 
     /** Add a new node to all data structures */
 
-    public void addNode(String nodeName) {
+    public void addNodeToList(String nodeName) {
         nodes_.add(latestNodeNo_);
         int nodeNo= latestNodeNo_;
         latestNodeNo_++;
-        outLinks_.put(nodeNo,new ArrayList<Integer>());
-        inLinks_.put(nodeNo,new ArrayList<Integer>());
         nodeNumbers_.put(nodeName,nodeNo);
         nodeNames_.put(nodeNo,nodeName);
+        addNode(nodeNo);
     }
+
+    /** Add node (implemented by relevant network class */
+    public abstract void addNode(int nodeno);
+
+    /** Abstract method for adding link between two nodes */
+    public abstract void addLink(int src, int dst);
 
     /** Remove hanging edges for safe deletion of a node from data structures. IMPLEMENT AT YOUR PERIL */
 
-    public void removeOutLinks(String nodeName) {
-        // Work in progress
-        int nodeNo_= nodeNameToNo(nodeName);
-
-    }
+    public abstract void removeLinks(String nodeName);
 
     /** For quick switching between node names and numbers */
 
@@ -55,7 +62,15 @@ public abstract class Network {
         return nodeNames_.get(node);
     }
 
-    /** Abstract method for adding link between two nodes */
-    public void addLink() {}
+    /** Get number of links */
+    public int getNoLinks() {
+        return noLinks_;
+    }
+
+    /** Get number of nodes */
+    public int getNoNodes() {
+        return noNodes_;
+    }
+
 
 }
