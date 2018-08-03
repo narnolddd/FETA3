@@ -1,17 +1,14 @@
 package feta.network;
 
-public interface Link {
+public abstract class Link {
 
     /** Get source node of link */
-    public int getSourceNode();
+    public abstract String getSourceNode();
 
     /** Get destination node of link */
-    public int getDestNode();
+    public abstract String getDestNode();
 
-    /** Get source node name */
-    public String getSourceName();
-
-    /** Get destination node name */
-    public String getDestName();
+    /** Get time added -- long since could be UNIX timestamp*/
+    public abstract long getTime();
 
 }
