@@ -9,7 +9,13 @@ public abstract class ReadNet {
 
     ArrayList<Link> links_;
     LinkBuilder lb_;
-    public String sep_;
+    public String sep_ = "\\s+";
+    String networkInput_;
+    boolean removeDuplicates_;
+
+    public ReadNet(){
+        links_= new ArrayList<Link>();
+    }
 
     public void setLinkBuilder(LinkBuilder lb) {
         lb_=lb;
@@ -19,11 +25,14 @@ public abstract class ReadNet {
         sep_ = sep;
     }
 
-    public final void readNetwork(String fname){
-        ArrayList<Link> links = new ArrayList<Link>();
+    public void setFileInput(String fname) {
+        networkInput_= fname;
+    }
+
+    public final void readNetwork(){
         int linkno = 1;
         try {
-            FileInputStream fstream = new FileInputStream(fname);
+            FileInputStream fstream = new FileInputStream(networkInput_);
             DataInputStream dstream = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(dstream));
             String line;
@@ -32,10 +41,12 @@ public abstract class ReadNet {
                 if (line.length() == 0)
                     continue;
                 Link link = parseLine(line, linkno);
-                links.add(link);
+                if (removeDuplicates_ && links_.contains(link))
+                    continue;
+                links_.add(link);
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Cannot read network. File "+fname+" not found.");
+            System.err.println("Cannot read network. File "+networkInput_+" not found.");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

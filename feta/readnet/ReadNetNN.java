@@ -1,10 +1,6 @@
 package feta.readnet;
 
 import feta.network.Link;
-import feta.readnet.ReadNet;
-
-import java.io.*;
-import java.util.ArrayList;
 
 /** Class for reading network files in the NODE-NODE form */
 

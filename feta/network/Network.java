@@ -15,10 +15,12 @@ public abstract class Network {
     public int noNodes_;
     public int noLinks_;
     private int latestNodeNo_=0;
+    public boolean duplicatesPresent_;
 
     private HashMap <String, Integer> nodeNumbers_ = null;
     private HashMap <Integer, String> nodeNames_ = null;
     private ArrayList <Integer> nodes_= null;
+    public ArrayList <Link> linksToBuild_;
 
     /** Initialise an empty network */
     public Network() {
@@ -26,6 +28,32 @@ public abstract class Network {
         noLinks_= 0;
         nodeNumbers_= new HashMap <String, Integer> ();
         nodeNames_= new HashMap <Integer, String>();
+    }
+
+    /** Build network from list of links */
+
+    public void buildUpTo(long time) {
+        for (Link link: linksToBuild_) {
+            if (link.getTime() > time)
+                break;
+            String src = link.getSourceNode();
+            String dst = link.getDestNode();
+            if (newNode(src)) {
+                addNodeToList(src);
+            }
+            if (newNode(dst)) {
+                addNodeToList(dst);
+            }
+            addLink(src,dst);
+        }
+    }
+
+    /** Is a given node new? */
+    public boolean newNode(String node) {
+        if (nodeNames_.containsValue(node)) {
+            return false;
+        }
+        return true;
     }
 
 
@@ -45,6 +73,12 @@ public abstract class Network {
 
     /** Abstract method for adding link between two nodes */
     public abstract void addLink(int src, int dst);
+
+    /** Abstract method for adding link between two nodes */
+    public abstract void addLink(String src, String dst);
+
+    /** Is there a link between node a and node b? */
+    public abstract boolean isLink(int a, int b);
 
     /** Remove hanging edges for safe deletion of a node from data structures. IMPLEMENT AT YOUR PERIL */
 
@@ -71,6 +105,5 @@ public abstract class Network {
     public int getNoNodes() {
         return noNodes_;
     }
-
 
 }
