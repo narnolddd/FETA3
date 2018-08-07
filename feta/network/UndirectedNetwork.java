@@ -12,6 +12,13 @@ public class UndirectedNetwork extends Network {
     private int[] degreeDist_;
     private int degArraySize_ = 1000;
 
+    /** Variables related to measurements */
+    private double avgDeg_;
+    private double averageCluster_;
+    private double meanDegSq_;
+    private int maxDeg_;
+    private double assort_;
+
     public UndirectedNetwork() {
         neighbours_= new TreeMap<Integer, ArrayList<Integer>>();
 
@@ -19,6 +26,12 @@ public class UndirectedNetwork extends Network {
         for (int i = 0; i < degArraySize_; i++) {
             degreeDist_[i] = 0;
         }
+
+        avgDeg_=0.0;
+        averageCluster_=0.0;
+        meanDegSq_=0.0;
+        maxDeg_=0;
+        assort_=0;
     }
 
     /** Adds undirected link to data structures */
@@ -46,6 +59,8 @@ public class UndirectedNetwork extends Network {
     /** Increments the degree distribution array in the correct place */
     public void incrementDegDist(int degree) {
         // May need to increase degree distribution array size.
+        if (degree > maxDeg_)
+            maxDeg_= degree;
         if (degree < degArraySize_) {
             degreeDist_[degree]++;
         } else {
@@ -127,6 +142,38 @@ public class UndirectedNetwork extends Network {
         return sum/noNodes_;
     }
 
+    public void calcMeasurements() {
+        avgDeg_= getAverageDegree();
+        meanDegSq_= getSecondMoment();
+        averageCluster_ = getAverageCluster();
+        assort_=getAssortativity();
+    }
 
+    /** Degree-degree assortativity */
+    private double getAssortativity() {
+        double assSum = 0.0;
+        double assProd = 0.0;
+        double assSq = 0.0;
 
+        for (int i = 0; i < noNodes_; i++) {
+            ArrayList<Integer> links = neighbours_.get(i);
+            for (int j = 0; j < links.size(); j++) {
+                int l = links.get(j);
+                if (l < i)
+                    continue;
+                int srcDeg = getDegree(i);
+                int dstDeg = getDegree(l);
+                assSum += 0.5 * (1.0/noLinks_) * (srcDeg + dstDeg);
+                assProd += srcDeg * dstDeg;
+                assSq += 0.5 * (1.0/noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
+            }
+        }
+        double assNum = (1.0/noLinks_) * assProd - assSum * assSum;
+        double assDom = assSq - assSum * assSum;
+        return assNum/assDom;
+    }
+
+    public String measureToString() {
+        return noNodes_+" "+noLinks_+" "+avgDeg_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_;
+    }
 }

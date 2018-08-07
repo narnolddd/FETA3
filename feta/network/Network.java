@@ -14,7 +14,7 @@ public abstract class Network {
 
     public int noNodes_;
     public int noLinks_;
-    private int latestNodeNo_=0;
+    private int latestNodeNo_;
     public boolean duplicatesPresent_;
 
     private HashMap <String, Integer> nodeNumbers_ = null;
@@ -28,6 +28,7 @@ public abstract class Network {
         noLinks_= 0;
         nodeNumbers_= new HashMap <String, Integer> ();
         nodeNames_= new HashMap <Integer, String>();
+        latestNodeNo_=0;
     }
 
     /** Build network from list of links */
@@ -45,6 +46,7 @@ public abstract class Network {
                 addNodeToList(dst);
             }
             addLink(src,dst);
+            noLinks_++;
         }
     }
 
@@ -63,6 +65,7 @@ public abstract class Network {
         nodes_.add(latestNodeNo_);
         int nodeNo= latestNodeNo_;
         latestNodeNo_++;
+        noNodes_++;
         nodeNumbers_.put(nodeName,nodeNo);
         nodeNames_.put(nodeNo,nodeName);
         addNode(nodeNo);
@@ -105,5 +108,11 @@ public abstract class Network {
     public int getNoNodes() {
         return noNodes_;
     }
+
+    /** Get measurements */
+    public abstract void calcMeasurements();
+
+    /** Prints measurements to line */
+    public abstract String measureToString();
 
 }

@@ -15,12 +15,29 @@ public class DirectedNetwork extends Network {
     private int inDegArraySize_ = 1000;
     private int outDegArraySize_ = 1000;
 
+    /** Doubles relating to measurements */
+    private double avgInDeg_;
+    private double avgOutDeg_;
+    private double meanInDegSq_;
+    private double meanOutDegSq_;
+    private double inAssort_;
+    private double outAssort_;
+    private int maxInDeg_;
+    private int maxOutDeg_;
+
     public DirectedNetwork() {
         inLinks_ = new TreeMap<Integer, ArrayList<Integer>>();
         outLinks_ = new TreeMap<Integer, ArrayList<Integer>>();
 
         inDegreeDist_= new int[inDegArraySize_];
         outDegreeDist_= new int[outDegArraySize_];
+
+        avgInDeg_= 0.0;
+        avgOutDeg_= 0.0;
+        meanInDegSq_= 0.0;
+        meanOutDegSq_= 0.0;
+        inAssort_= 0.0;
+        outAssort_= 0.0;
     }
 
     public void addNode(int nodeno) {
@@ -61,6 +78,8 @@ public class DirectedNetwork extends Network {
     }
 
     public void incrementInDegDist(int degree) {
+        if (degree > maxInDeg_)
+            maxInDeg_=degree;
         if (degree < inDegArraySize_) {
             inDegreeDist_[degree]++;
         } else {
@@ -73,6 +92,8 @@ public class DirectedNetwork extends Network {
     }
 
     public void incrementOutDegDist(int degree) {
+        if (degree > maxOutDeg_)
+            maxOutDeg_=degree;
         if (degree < outDegArraySize_) {
             outDegreeDist_[degree]++;
         } else {
@@ -99,5 +120,88 @@ public class DirectedNetwork extends Network {
         return getAverageInDegree();
     }
 
+    public double getMeanInDegSq() {
+        double sum = 0.0;
+        for (int i = 0; i < noNodes_; i++) {
+            double inDeg = getInDegree(i);
+            sum += inDeg*inDeg;
+        }
+        if (noNodes_> 0) {
+            return sum/noNodes_;
+        }
+        return 0.0;
+    }
+
+    public double getMeanOutDegSq() {
+        double sum = 0.0;
+        for (int i = 0; i < noNodes_; i++) {
+            double outDeg = getOutDegree(i);
+            sum += outDeg*outDeg;
+        }
+        if (noNodes_> 0) {
+            return sum/noNodes_;
+        }
+        return 0.0;
+    }
+
+    public double getInAssort() {
+        double assSum = 0.0;
+        double assProd = 0.0;
+        double assSq = 0.0;
+
+        for (int i = 0; i < noNodes_; i++) {
+            ArrayList<Integer> links = inLinks_.get(i);
+            for (int j = 0; j < links.size(); j++) {
+                int l = links.get(j);
+                if (l < i)
+                    continue;
+                int srcDeg = getInDegree(i);
+                int dstDeg = getInDegree(l);
+                assSum += 0.5 * (1.0/noLinks_) * (srcDeg + dstDeg);
+                assProd += srcDeg * dstDeg;
+                assSq += 0.5 * (1.0/noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
+            }
+        }
+        double assNum = (1.0/noLinks_) * assProd - assSum * assSum;
+        double assDom = assSq - assSum * assSum;
+        return assNum/assDom;
+    }
+
+    public double getOutAssort_() {
+        double assSum = 0.0;
+        double assProd = 0.0;
+        double assSq = 0.0;
+
+        for (int i = 0; i < noNodes_; i++) {
+            ArrayList<Integer> links = outLinks_.get(i);
+            for (int j = 0; j < links.size(); j++) {
+                int l = links.get(j);
+                if (l < i)
+                    continue;
+                int srcDeg = getOutDegree(i);
+                int dstDeg = getOutDegree(l);
+                assSum += 0.5 * (1.0/noLinks_) * (srcDeg + dstDeg);
+                assProd += srcDeg * dstDeg;
+                assSq += 0.5 * (1.0/noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
+            }
+        }
+        double assNum = (1.0/noLinks_) * assProd - assSum * assSum;
+        double assDom = assSq - assSum * assSum;
+        return assNum/assDom;
+    }
+
+    public void calcMeasurements() {
+        avgInDeg_= getAverageInDegree();
+        avgOutDeg_= getAverageOutDegree();
+        meanInDegSq_= getMeanInDegSq();
+        meanOutDegSq_= getMeanOutDegSq();
+        inAssort_= getInAssort();
+        outAssort_= getOutAssort_();
+    }
+
+    public String measureToString() {
+        return noNodes_+" "+noLinks_+" "+avgInDeg_+" "+avgOutDeg_+" "+maxInDeg_+" "+maxOutDeg_+" "+meanInDegSq_+" "+
+                meanOutDegSq_+" "+inAssort_+" "+outAssort_;
+    }
 
 }
