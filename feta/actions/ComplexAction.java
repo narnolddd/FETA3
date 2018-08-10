@@ -6,6 +6,10 @@ public abstract class ComplexAction extends SimpleAction {
 
     ArrayList<SimpleAction> actions_;
 
-    public void execute(){};
+    public void execute(){
+        for (SimpleAction a:actions_) {
+            a.execute();
+        }
+    };
 
 }
