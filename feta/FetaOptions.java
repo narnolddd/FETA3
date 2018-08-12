@@ -13,8 +13,9 @@ public class FetaOptions {
     /** Options related to the data input and output files */
     String netInputFile_;
     String netOutputFile_;
-    String inputType_;
+    String inputType_ = "NNT";
     String outputType_;
+    String sep_ = "\\s+";
 
 
 
@@ -29,6 +30,12 @@ public class FetaOptions {
             // Get datafile
             JSONObject dataFileOps = (JSONObject) jsonObject.get("Data");
 
+            parseDataTag(dataFileOps);
+
+            JSONObject actionOps = (JSONObject) jsonObject.get("Action");
+
+
+
         } catch (FileNotFoundException e) {
             System.err.println("JSON Options file "+file+" not found.");
         } catch (ParseException e) {
@@ -40,9 +47,17 @@ public class FetaOptions {
     }
 
     public void parseDataTag(JSONObject df) {
-        netInputFile_ = (String) df.get("InputFile");
-        netOutputFile_= (String) df.get("OutputFile");
-        inputType_= (String) df.get("")
+        netInputFile_ = (String) df.get("GraphInputFile");
+
+        String in = (String) df.get("GraphInputType");
+        if (in != null) {
+            inputType_ = in;
+        }
+
+        String sep = (String) df.get("LineSeparator");
+        if (sep != null) {
+            sep_= sep;
+        }
     }
 
 }
