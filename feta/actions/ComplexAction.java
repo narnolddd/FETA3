@@ -10,6 +10,10 @@ public abstract class ComplexAction extends SimpleAction {
         for (SimpleAction a:actions_) {
             a.execute();
         }
-    };
+    }
+
+    public void addAction(SimpleAction action) {
+        actions_.add(action);
+    }
 
 }

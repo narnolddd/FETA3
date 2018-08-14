@@ -17,6 +17,9 @@ public class FetaOptions {
     String outputType_;
     String sep_ = "\\s+";
 
+    /** Type of action. Everything else related to the action will be parsed in the relevant action class */
+    JSONObject actionOps_;
+
 
 
     public void readConfig(String file) {
@@ -32,7 +35,7 @@ public class FetaOptions {
 
             parseDataTag(dataFileOps);
 
-            JSONObject actionOps = (JSONObject) jsonObject.get("Action");
+            actionOps_ = (JSONObject) jsonObject.get("Action");
 
 
 
@@ -59,5 +62,6 @@ public class FetaOptions {
             sep_= sep;
         }
     }
+
 
 }

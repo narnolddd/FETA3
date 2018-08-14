@@ -1,15 +1,15 @@
 package feta.actions;
 
+import feta.network.Network;
 import org.json.simple.JSONObject;
 
 public class Measure extends SimpleAction {
 
-    private long startTime_;
-    private long interval_;
-    private boolean measureDegDist_;
+    private long startTime_=10;
+    private long interval_=10;
+    private boolean measureDegDist_=false;
 
     public Measure() {
-
     }
 
     public void execute(){}
@@ -30,5 +30,7 @@ public class Measure extends SimpleAction {
         }
 
     }
+
+
 
 }
