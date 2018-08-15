@@ -1,6 +1,7 @@
 package feta.network;
 
 import com.sun.jdi.event.ExceptionEvent;
+import feta.readnet.ReadNet;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public abstract class Network {
     public int noLinks_;
     private int latestNodeNo_;
     public boolean duplicatesPresent_;
+    public ReadNet networkReader_;
 
     private HashMap <String, Integer> nodeNumbers_ = null;
     private HashMap <Integer, String> nodeNames_ = null;
@@ -69,6 +71,11 @@ public abstract class Network {
         nodeNumbers_.put(nodeName,nodeNo);
         nodeNames_.put(nodeNo,nodeName);
         addNode(nodeNo);
+    }
+
+    /** Read links from network file */
+    public void getLinksFromFile() {
+        networkReader_.readNetwork();
     }
 
     /** Add node (implemented by relevant network class */

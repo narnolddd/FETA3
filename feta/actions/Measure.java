@@ -12,7 +12,12 @@ public class Measure extends SimpleAction {
     public Measure() {
     }
 
-    public void execute(){}
+    public void execute(){
+        long time = startTime_;
+        while (!stoppingConditionsExceeded_(network_)) {
+            network_.buildUpTo(time);
+        }
+    }
 
     public void parseJSON(JSONObject obj) {
 

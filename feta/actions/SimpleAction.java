@@ -11,6 +11,13 @@ public abstract class SimpleAction {
 
     public ArrayList<StoppingCondition> stoppingConditions_;
 
+    public boolean stoppingConditionsExceeded_(Network net) {
+        for (StoppingCondition sc: stoppingConditions_) {
+            if (sc.hasBeenReached(net)) {return true;}
+        }
+        return false;
+    }
+
     public abstract void execute();
 
 }

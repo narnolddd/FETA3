@@ -18,7 +18,7 @@ public class FetaOptions {
     String sep_ = "\\s+";
 
     /** Type of action. Everything else related to the action will be parsed in the relevant action class */
-    JSONObject actionOps_;
+    JSONArray actionOps_;
 
 
 
@@ -35,7 +35,7 @@ public class FetaOptions {
 
             parseDataTag(dataFileOps);
 
-            actionOps_ = (JSONObject) jsonObject.get("Action");
+            actionOps_ = (JSONArray) jsonObject.get("Action");
 
 
 
