@@ -2,6 +2,7 @@ package feta.actions;
 
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.Network;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,8 @@ public abstract class SimpleAction {
         }
         return false;
     }
+
+    public abstract void parseActionOptions(JSONObject obj);
 
     public abstract void execute();
 

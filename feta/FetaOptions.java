@@ -14,11 +14,12 @@ public class FetaOptions {
     String netInputFile_;
     String netOutputFile_;
     String inputType_ = "NNT";
+    boolean directedInput_=false;
     String outputType_;
     String sep_ = "\\s+";
 
     /** Type of action. Everything else related to the action will be parsed in the relevant action class */
-    JSONArray actionOps_;
+    JSONObject actionOps_;
 
 
 
@@ -35,7 +36,7 @@ public class FetaOptions {
 
             parseDataTag(dataFileOps);
 
-            actionOps_ = (JSONArray) jsonObject.get("Action");
+            actionOps_ = (JSONObject) jsonObject.get("Action");
 
 
 
@@ -60,6 +61,11 @@ public class FetaOptions {
         String sep = (String) df.get("LineSeparator");
         if (sep != null) {
             sep_= sep;
+        }
+
+        Boolean dir = (Boolean) df.get("Directed");
+        if (dir != null) {
+            directedInput_=dir;
         }
     }
 

@@ -18,6 +18,7 @@ public class UndirectedNetwork extends Network {
     private double meanDegSq_;
     private int maxDeg_;
     private double assort_;
+    private double density_;
 
     public UndirectedNetwork() {
         neighbours_= new TreeMap<Integer, ArrayList<Integer>>();
@@ -122,6 +123,12 @@ public class UndirectedNetwork extends Network {
         return count;
     }
 
+    public double getDensity() {
+        double possibleLinks = 0.5 * noNodes_ * (noNodes_ - 1);
+        double density = noLinks_/possibleLinks;
+        return density;
+    }
+
     /** Calculates local clustering of node */
     public double localCluster(int node) {
         if (getDegree(node) == 0 || getDegree(node) == 1) {
@@ -147,6 +154,7 @@ public class UndirectedNetwork extends Network {
         meanDegSq_= getSecondMoment();
         averageCluster_ = getAverageCluster();
         assort_=getAssortativity();
+        density_=getDensity();
     }
 
     /** Degree-degree assortativity */
@@ -174,6 +182,6 @@ public class UndirectedNetwork extends Network {
     }
 
     public String measureToString() {
-        return noNodes_+" "+noLinks_+" "+avgDeg_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_;
+        return noNodes_+" "+noLinks_+" "+avgDeg_+" "+density_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_+" "+assort_;
     }
 }

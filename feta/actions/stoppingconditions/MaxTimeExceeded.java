@@ -4,10 +4,17 @@ import feta.network.Network;
 
 public class MaxTimeExceeded implements StoppingCondition {
 
-    public MaxTimeExceeded(){}
+    private long maxTime_;
 
-    // uhh... I haven't thought this one through have I
+    public MaxTimeExceeded(long maxTime){
+        maxTime_=maxTime;
+    }
+
+    // Hmm this should work.
     public boolean hasBeenReached(Network net) {
+        if (net.latestTime_ >= maxTime_)
+            return true;
         return false;
     }
+
 }

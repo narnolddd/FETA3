@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public abstract class ReadNet {
 
-    ArrayList<Link> links_;
+    public ArrayList<Link> links_;
     LinkBuilder lb_;
     public String sep_ = "\\s+";
     String networkInput_;

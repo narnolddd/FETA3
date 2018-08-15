@@ -5,9 +5,9 @@
   },
   "Action": {
     "Measure": {
-      "Start": "10",
-      "Interval": "10",
-      "MaxTime": "10000"
+      "Start": 10,
+      "Interval": 10,
+      "MaxTime": 10000
     }
   }
 }

@@ -15,8 +15,13 @@ public abstract class Network {
 
     public int noNodes_;
     public int noLinks_;
-    private int latestNodeNo_;
-    public boolean duplicatesPresent_;
+
+    /** For tracking time in network building */
+    private int latestNodeNo_; // Number of nodes built
+    public long latestTime_; // Time at which the most recent link was added
+
+    /** Options for reading network */
+    public boolean duplicatesPresent_=false;
     public ReadNet networkReader_;
 
     private HashMap <String, Integer> nodeNumbers_ = null;
@@ -31,6 +36,7 @@ public abstract class Network {
         nodeNumbers_= new HashMap <String, Integer> ();
         nodeNames_= new HashMap <Integer, String>();
         latestNodeNo_=0;
+        latestTime_=0;
     }
 
     /** Build network from list of links */
@@ -48,6 +54,7 @@ public abstract class Network {
                 addNodeToList(dst);
             }
             addLink(src,dst);
+            latestTime_= link.getTime();
             noLinks_++;
         }
     }
@@ -76,6 +83,12 @@ public abstract class Network {
     /** Read links from network file */
     public void getLinksFromFile() {
         networkReader_.readNetwork();
+        linksToBuild_=networkReader_.links_;
+    }
+
+    /** Set which reader to use */
+    public void setNetworkReader(ReadNet rn) {
+        networkReader_=rn;
     }
 
     /** Add node (implemented by relevant network class */

@@ -1,12 +1,15 @@
 package feta.actions;
 
-import feta.network.Network;
+import feta.actions.stoppingconditions.MaxTimeExceeded;
+import feta.actions.stoppingconditions.StoppingCondition;
 import org.json.simple.JSONObject;
 
 public class Measure extends SimpleAction {
 
     private long startTime_=10;
     private long interval_=10;
+    private StoppingCondition stop_;
+
     private boolean measureDegDist_=false;
 
     public Measure() {
@@ -16,10 +19,13 @@ public class Measure extends SimpleAction {
         long time = startTime_;
         while (!stoppingConditionsExceeded_(network_)) {
             network_.buildUpTo(time);
+            network_.calcMeasurements();
+            System.out.println(network_.measureToString());
+            time += interval_;
         }
     }
 
-    public void parseJSON(JSONObject obj) {
+    public void parseActionOptions(JSONObject obj) {
 
         Long start = (Long) obj.get("Start");
         if (start != null)
@@ -34,8 +40,11 @@ public class Measure extends SimpleAction {
             }
         }
 
+        Long stopTime = (Long) obj.get("StoppingTime");
+        if (stopTime != null) {
+            StoppingCondition sc = new MaxTimeExceeded(stopTime);
+            stoppingConditions_.add(sc);
+        }
     }
-
-
 
 }
