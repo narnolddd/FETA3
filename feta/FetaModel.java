@@ -42,6 +42,7 @@ public class FetaModel {
         network_.setNetworkReader(newReader());
         network_.getLinksFromFile();
         for (SimpleAction act: actionsToDo_) {
+            act.setNetwork(network_);
             act.execute();
         }
     }

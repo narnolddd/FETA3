@@ -24,15 +24,17 @@ public abstract class Network {
     public boolean duplicatesPresent_=false;
     public ReadNet networkReader_;
 
-    private HashMap <String, Integer> nodeNumbers_ = null;
-    private HashMap <Integer, String> nodeNames_ = null;
-    private ArrayList <Integer> nodes_= null;
+    private HashMap <String, Integer> nodeNumbers_;
+    private HashMap <Integer, String> nodeNames_;
+    private ArrayList <Integer> nodes_;
     public ArrayList <Link> linksToBuild_;
 
     /** Initialise an empty network */
     public Network() {
         noNodes_= 0;
         noLinks_= 0;
+        nodes_= new ArrayList<Integer>();
+        linksToBuild_= new ArrayList<Link>();
         nodeNumbers_= new HashMap <String, Integer> ();
         nodeNames_= new HashMap <Integer, String>();
         latestNodeNo_=0;
@@ -42,7 +44,10 @@ public abstract class Network {
     /** Build network from list of links */
 
     public void buildUpTo(long time) {
-        for (Link link: linksToBuild_) {
+        ArrayList<Link> remaining_ = linksToBuild_;
+        int i = 0;
+        while (true) {
+            Link link = linksToBuild_.get(i);
             if (link.getTime() > time)
                 break;
             String src = link.getSourceNode();
@@ -54,9 +59,11 @@ public abstract class Network {
                 addNodeToList(dst);
             }
             addLink(src,dst);
+            remaining_.remove(link);
             latestTime_= link.getTime();
-            noLinks_++;
+            noLinks_++; i++;
         }
+        linksToBuild_=remaining_;
     }
 
     /** Is a given node new? */

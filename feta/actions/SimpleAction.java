@@ -23,4 +23,8 @@ public abstract class SimpleAction {
 
     public abstract void execute();
 
+    public void setNetwork(Network net) {
+        network_=net;
+    }
+
 }
