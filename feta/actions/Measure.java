@@ -1,5 +1,7 @@
 package feta.actions;
 
+import feta.actions.stoppingconditions.MaxLinksExceeded;
+import feta.actions.stoppingconditions.MaxNodeExceeded;
 import feta.actions.stoppingconditions.MaxTimeExceeded;
 import feta.actions.stoppingconditions.StoppingCondition;
 import org.json.simple.JSONObject;
@@ -12,6 +14,7 @@ public class Measure extends SimpleAction {
     private long interval_=10;
     private StoppingCondition stop_;
 
+    // Need to think how this will work alternating between directed and undirected networks.
     private boolean measureDegDist_=false;
 
     public Measure() {
@@ -29,12 +32,12 @@ public class Measure extends SimpleAction {
         }
     }
 
+    /** Parses the json for any stopping conditions */
     public void parseActionOptions(JSONObject obj) {
 
         Long start = (Long) obj.get("Start");
         if (start != null)
             startTime_=start;
-        System.out.println(start);
 
         Long interval = (Long) obj.get("Interval");
         if (interval != null) {
@@ -48,6 +51,20 @@ public class Measure extends SimpleAction {
         Long stopTime = (Long) obj.get("StoppingTime");
         if (stopTime != null) {
             StoppingCondition sc = new MaxTimeExceeded(stopTime);
+            stoppingConditions_.add(sc);
+        }
+
+        // These don't work at the moment bc of java type issues
+
+        Integer maxNodes = (Integer) obj.get("MaxNodes");
+        if (maxNodes != null) {
+            StoppingCondition sc = new MaxNodeExceeded(maxNodes);
+            stoppingConditions_.add(sc);
+        }
+
+        Integer maxLinks = (Integer) obj.get("MaxLinks");
+        if (maxLinks != null) {
+            StoppingCondition sc = new MaxLinksExceeded(maxLinks);
             stoppingConditions_.add(sc);
         }
     }

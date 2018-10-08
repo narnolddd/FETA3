@@ -8,7 +8,7 @@
     "Measure": {
       "Start": 10,
       "Interval": 10,
-      "StoppingTime": 10000
+      "MaxLinks": 100
     }
   }
 }

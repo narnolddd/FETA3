@@ -52,6 +52,7 @@ public class DirectedNetwork extends Network {
         incrementOutDegDist(getOutDegree(src));
     }
 
+    /** Calls the addLink() method for ints to allow for string nodenames */
     public void addLink(String src, String dst) {
         int n1 = nodeNameToNo(src);
         int n2 = nodeNameToNo(dst);
@@ -77,6 +78,7 @@ public class DirectedNetwork extends Network {
         return getInDegree(node) + getOutDegree(node);
     }
 
+    /** Increments degree distribution at appropriate index corresponding to new link */
     public void incrementInDegDist(int degree) {
         if (degree > maxInDeg_)
             maxInDeg_=degree;
@@ -91,6 +93,7 @@ public class DirectedNetwork extends Network {
         }
     }
 
+    /** Increments degree distribution at appropriate index corresponding to new link */
     public void incrementOutDegDist(int degree) {
         if (degree > maxOutDeg_)
             maxOutDeg_=degree;

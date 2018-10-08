@@ -37,6 +37,7 @@ public class FetaModel {
     }
 
     public void goForIt() {
+        System.out.println("Doing the thing");
         parseActionList(options_.actionOps_);
         initialiseNetwork();
         network_.setNetworkReader(newReader());
@@ -56,11 +57,12 @@ public class FetaModel {
         }
     }
 
+    /** Reads from a string the relevant action type */
     private SimpleAction newAction(String name) {
         if (name.equals("Measure")) {
             System.out.println("Measuring");
             return new Measure();
-        } else if (name == "Grow") {
+        } else if (name.equals("Grow")) {
             return new Grow();
         } else {
             System.err.println("Invalid action type: "+name);
@@ -68,6 +70,7 @@ public class FetaModel {
         }
     }
 
+    /** Sets which network file reader to do the job */
     private ReadNet newReader() {
         ReadNet reader;
         if (options_.inputType_ == "NNT") {

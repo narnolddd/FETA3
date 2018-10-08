@@ -52,6 +52,7 @@ public class FetaOptions {
 
     public void parseDataTag(JSONObject df) {
         netInputFile_ = (String) df.get("GraphInputFile");
+        netOutputFile_= (String) df.get("GraphOutputFile");
 
         String in = (String) df.get("GraphInputType");
         if (in != null) {
