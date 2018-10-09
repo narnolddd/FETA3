@@ -3,6 +3,7 @@
 .idea
 src
 out
+META-INF
 
 # compiled class files
 *.class

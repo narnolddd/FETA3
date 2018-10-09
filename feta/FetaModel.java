@@ -26,16 +26,6 @@ public class FetaModel {
         actionsToDo_= new ArrayList<SimpleAction>();
     }
 
-    public void initialiseNetwork() {
-        if (options_.directedInput_) {
-            network_= new DirectedNetwork();
-        } else network_= new UndirectedNetwork();
-    }
-
-    public void readConfigs(String configFile) {
-        options_.readConfig(configFile);
-    }
-
     public void goForIt() {
         System.out.println("Doing the thing");
         parseActionList(options_.actionOps_);
@@ -47,7 +37,6 @@ public class FetaModel {
             act.execute();
         }
     }
-
     public void parseActionList(JSONObject actionList) {
         Set<String> actionNames_ = actionList.keySet();
         for (String singleAction: actionNames_) {
@@ -55,6 +44,16 @@ public class FetaModel {
             action.parseActionOptions((JSONObject) actionList.get(singleAction));
             actionsToDo_.add(action);
         }
+    }
+
+    public void initialiseNetwork() {
+        if (options_.directedInput_) {
+            network_= new DirectedNetwork();
+        } else network_= new UndirectedNetwork();
+    }
+
+    public void readConfigs(String configFile) {
+        options_.readConfig(configFile);
     }
 
     /** Reads from a string the relevant action type */

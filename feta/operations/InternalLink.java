@@ -9,4 +9,6 @@ public class InternalLink extends Operation {
 
     }
 
+    public String toString() { return "NEW LINK OLD NODES";}
+
 }
