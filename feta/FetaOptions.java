@@ -25,7 +25,7 @@ public class FetaOptions {
 
     public FetaOptions(){
 
-        String dateTime = new SimpleDateFormat("yyyyMMddHHmmss'.txt'").format(new Date());
+        String dateTime = new SimpleDateFormat("yyyyMMddHHmmss'.dat'").format(new Date());
         netOutputFile_="output/"+dateTime;
 
     }
