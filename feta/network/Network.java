@@ -48,10 +48,10 @@ public abstract class Network {
         int i = 0;
         while (true) {
             Link link = linksToBuild_.get(i);
-            if (link.getTime() > time)
+            if (link.time_ > time)
                 break;
-            String src = link.getSourceNode();
-            String dst = link.getDestNode();
+            String src = link.sourceNode_;
+            String dst = link.destNode_;
             if (newNode(src)) {
                 addNodeToList(src);
             }
@@ -60,7 +60,7 @@ public abstract class Network {
             }
             addLink(src,dst);
             remaining_.remove(link);
-            latestTime_= link.getTime();
+            latestTime_= link.time_;
             noLinks_++; i++;
         }
         linksToBuild_=remaining_;
@@ -87,6 +87,13 @@ public abstract class Network {
         addNode(nodeNo);
     }
 
+    /** Calls the addLink method on the integers corresponding to the string nodenames */
+    public void addLink(String src, String dst) {
+        int n1 = nodeNameToNo(src);
+        int n2 = nodeNameToNo(dst);
+        addLink(n1, n2);
+    }
+
     /** Read links from network file */
     public void getLinksFromFile() {
         networkReader_.readNetwork();
@@ -103,9 +110,6 @@ public abstract class Network {
 
     /** Abstract method for adding link between two nodes */
     public abstract void addLink(int src, int dst);
-
-    /** Abstract method for adding link between two nodes */
-    public abstract void addLink(String src, String dst);
 
     /** Is there a link between node a and node b? */
     public abstract boolean isLink(int a, int b);

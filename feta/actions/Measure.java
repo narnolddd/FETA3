@@ -7,6 +7,7 @@ import feta.actions.stoppingconditions.StoppingCondition;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
+import static java.lang.Math.toIntExact;
 
 public class Measure extends SimpleAction {
 
@@ -56,14 +57,16 @@ public class Measure extends SimpleAction {
 
         // These don't work at the moment bc of java type issues
 
-        Integer maxNodes = (Integer) obj.get("MaxNodes");
-        if (maxNodes != null) {
+        Long mn = (Long) obj.get("MaxNodes");
+        if (mn != null) {
+            int maxNodes = toIntExact(mn);
             StoppingCondition sc = new MaxNodeExceeded(maxNodes);
             stoppingConditions_.add(sc);
         }
 
-        Integer maxLinks = (Integer) obj.get("MaxLinks");
-        if (maxLinks != null) {
+        Long ml = (Long) obj.get("MaxLinks");
+        if (ml != null) {
+            int maxLinks = toIntExact(ml);
             StoppingCondition sc = new MaxLinksExceeded(maxLinks);
             stoppingConditions_.add(sc);
         }

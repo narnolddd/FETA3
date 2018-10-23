@@ -4,10 +4,6 @@ package feta.network;
 
 public class UndirectedLink extends Link implements Comparable<UndirectedLink> {
 
-    private String sourceNode_;
-    private String destNode_;
-    public long time_;
-
     public UndirectedLink(String src, String dst, long time)
     {
             sourceNode_ = dst;
@@ -15,22 +11,10 @@ public class UndirectedLink extends Link implements Comparable<UndirectedLink> {
             time_ = time;
     }
 
-    public String getSourceNode() {
-        return sourceNode_;
-    }
-
-    public String getDestNode() {
-        return destNode_;
-    }
-
-    public long getTime() {
-        return time_;
-    }
-
     public boolean equals(UndirectedLink link) {
-        if (link.getSourceNode() == sourceNode_ & link.getDestNode() == destNode_) {
+        if (link.sourceNode_.equals(sourceNode_) & link.destNode_ .equals(destNode_)) {
             return true;
-        } else if (link.getSourceNode() == destNode_ & link.getDestNode() == sourceNode_) {
+        } else if (link.sourceNode_.equals(destNode_) & link.destNode_.equals(sourceNode_)) {
             return true;
         }
         return false;
@@ -43,4 +27,5 @@ public class UndirectedLink extends Link implements Comparable<UndirectedLink> {
             return 1;
         return 0;
     }
+
 }

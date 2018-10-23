@@ -44,12 +44,6 @@ public class UndirectedNetwork extends Network {
         incrementDegDist(getDegree(dst));
     }
 
-    public void addLink(String src, String dst) {
-        int n1 = nodeNameToNo(src);
-        int n2 = nodeNameToNo(dst);
-        addLink(n1, n2);
-    }
-
     public boolean isLink(int a, int b) {
         if (neighbours_.get(a).contains(b)) {
             return true;

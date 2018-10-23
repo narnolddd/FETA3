@@ -1,6 +1,7 @@
 package feta;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -10,18 +11,24 @@ import org.json.simple.parser.ParseException;
 
 public class FetaOptions {
 
-    /** Options related to the data input and output files */
-    String netInputFile_;
+    /** Default options related to the data input and output files */
+    String netInputFile_="seed_graphs/clique-5.dat";
     String netOutputFile_;
     String inputType_ = "NNT";
-    boolean directedInput_=false;
-    String outputType_;
+    boolean directedInput_;
+    String outputType_="NNT";
     String sep_ = "\\s+";
 
     /** Type of action. Everything else related to the action will be parsed in the relevant action class */
     JSONObject actionOps_;
 
 
+    public FetaOptions(){
+
+        String dateTime = new SimpleDateFormat("yyyyMMddHHmmss'.txt'").format(new Date());
+        netOutputFile_="output/"+dateTime;
+
+    }
 
     public void readConfig(String file) {
 
@@ -51,8 +58,16 @@ public class FetaOptions {
     }
 
     public void parseDataTag(JSONObject df) {
-        netInputFile_ = (String) df.get("GraphInputFile");
-        netOutputFile_= (String) df.get("GraphOutputFile");
+
+        String ifile = (String) df.get("GraphInputFile");
+        if (ifile != null) {
+            netInputFile_=ifile;
+        }
+
+        String ofile = (String) df.get("GraphOutputFile");
+        if (ofile != null) {
+            netOutputFile_=ofile;
+        }
 
         String in = (String) df.get("GraphInputType");
         if (in != null) {

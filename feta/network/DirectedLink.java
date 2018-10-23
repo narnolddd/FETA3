@@ -2,10 +2,6 @@ package feta.network;
 
 public class DirectedLink extends Link implements Comparable<DirectedLink> {
 
-    private String sourceNode_;
-    private String destNode_;
-    private long time_;
-
     public DirectedLink(String src, String dst, long time) {
 
         sourceNode_ = src;
@@ -13,20 +9,8 @@ public class DirectedLink extends Link implements Comparable<DirectedLink> {
         time_= time;
     }
 
-    public String getSourceNode() {
-        return sourceNode_;
-    }
-
-    public String getDestNode() {
-        return destNode_;
-    }
-
-    public long getTime() {
-        return time_;
-    }
-
     public boolean equals(DirectedLink link) {
-        if (link.getSourceNode() == sourceNode_ & link.getDestNode() == destNode_) {
+        if (link.sourceNode_.equals(sourceNode_) & link.destNode_.equals(destNode_)) {
             return true;
         }
         return false;

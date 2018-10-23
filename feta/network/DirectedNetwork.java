@@ -52,13 +52,6 @@ public class DirectedNetwork extends Network {
         incrementOutDegDist(getOutDegree(src));
     }
 
-    /** Calls the addLink() method for ints to allow for string nodenames */
-    public void addLink(String src, String dst) {
-        int n1 = nodeNameToNo(src);
-        int n2 = nodeNameToNo(dst);
-        addLink(n1, n2);
-    }
-
     public boolean isLink(int a, int b) {
         if (outLinks_.get(a).contains(b)) {
             return true;
