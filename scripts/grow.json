@@ -56,7 +56,7 @@
         "Name": "PreferentialAttachment",
         "Parameters": {
           "InitDegree": 3,
-          "NewNodeProp":1.0,
+          "NewNodeProp":1.0
         }
       },
       {

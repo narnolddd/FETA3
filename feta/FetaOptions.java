@@ -57,33 +57,48 @@ public class FetaOptions {
 
     }
 
-    public void parseDataTag(JSONObject df) {
+    public void parseDataTag(JSONObject df) throws ParseException {
 
         String ifile = (String) df.get("GraphInputFile");
         if (ifile != null) {
             netInputFile_=ifile;
+            df.remove("GraphInputFile");
         }
+
 
         String ofile = (String) df.get("GraphOutputFile");
         if (ofile != null) {
             netOutputFile_=ofile;
+            df.remove("GraphOutputFile");
         }
 
         String in = (String) df.get("GraphInputType");
         if (in != null) {
             inputType_ = in;
+            df.remove("GraphInputType");
+        }
+
+        String out = (String) df.get("GraphOutputType");
+        if (out != null) {
+            outputType_= out;
+            df.remove("GraphOutputType");
         }
 
         String sep = (String) df.get("LineSeparator");
         if (sep != null) {
             sep_= sep;
+            df.remove("LineSeparator");
         }
 
         Boolean dir = (Boolean) df.get("Directed");
         if (dir != null) {
             directedInput_=dir;
+            df.remove("Directed");
+        }
+
+        if (df.keySet().size() != 0) {
+            System.out.println(df.keySet());
+            throw new ParseException(ParseException.ERROR_UNEXPECTED_TOKEN);
         }
     }
-
-
 }

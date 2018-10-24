@@ -1,5 +1,7 @@
 package feta.operations;
 
+import feta.network.Network;
+
 public abstract class Operation implements Comparable<Operation> {
 
     public int noChoices_;
@@ -15,6 +17,8 @@ public abstract class Operation implements Comparable<Operation> {
         }
         return 0;
     }
+
+    public abstract void build(Network net);
 
 
 }

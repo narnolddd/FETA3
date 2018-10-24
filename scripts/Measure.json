@@ -1,7 +1,7 @@
 {
   "Data": {
     "GraphInputFile": "data/BAgrown.dat",
-    "InputType": "NNT",
+    "GraphInputType": "NNT",
     "Directed": false
   },
   "Action": {
