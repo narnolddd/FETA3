@@ -2,13 +2,72 @@
   "Data": {
     "GraphInputFile": "feta/data/BAgrown.dat",
     "GraphOutputFile": "feta/data/growtest.dat",
-    "fileformatread": "NNT",
-    "fileformatwrite": "IIT"
+    "InputType": "NNT",
+    "OutputType": "IIT"
   },
-  "action": {
-    "type": "grow",
-    "start": 100,
-    "stop": 10000,
-    "interval": 10
+  "Action": {
+    "Grow": {
+      "Start": 10,
+      "Interval": 1,
+      "MaxNodes": 200
+    }
+  },
+  "Model": {
+    "ObjectModel": [
+      {
+        "Start": 10,
+        "Stop": 100,
+        "Components": [
+          {
+            "ComponentName": "Degree",
+            "Weight": 0.3
+          },
+          {
+            "ComponentName": "Random",
+            "Weight": 0.7
+          }
+        ]
+      },
+      {
+        "Start": 101,
+        "Stop": 200,
+        "Components": [
+          {
+            "ComponentName":"RankPreference",
+            "Weight":0.8,
+            "Parameters": {
+              "Delta":0.048
+            }
+          },
+          { "ComponentName": "DegreeTrichotomy",
+            "Weight":0.2,
+            "Parameters": {
+              "LowerDegree":5,
+              "UpperDegree":20
+            }
+          }
+        ]
+      }
+    ],
+    "OperationModel": [
+      {
+        "Start":10,
+        "Stop":50,
+        "Name": "PreferentialAttachment",
+        "Parameters": {
+          "InitDegree": 3,
+          "NewNodeProp":1.0,
+        }
+      },
+      {
+        "Start":51,
+        "Stop":200,
+        "Name": "PreferentialAttachment",
+        "Parameters":{
+          "InitDegree":2,
+          "NewNodeProp":0.2
+        }
+      }
+    ]
   }
 }
