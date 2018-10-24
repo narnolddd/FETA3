@@ -8,8 +8,7 @@ public class ReadNetNNT extends ReadNet{
     public Link parseLine(String line, long linkno) {
         String[] parts = line.split(sep_);
         if (parts.length != 3) {
-            System.err.println("Expected 3 entries per line but got "+line);
-            System.exit(-1);
+            throw new IllegalArgumentException("Expected 3 entries per line but got "+line);
         }
         else {
             String node1 = parts[0];
@@ -17,6 +16,5 @@ public class ReadNetNNT extends ReadNet{
             long time = Long.parseLong(parts[2]);
             return lb_.build(node1,node2,time);
         }
-        return null;
     }
 }

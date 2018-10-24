@@ -72,11 +72,12 @@ public class FetaModel {
     /** Sets which network file reader to do the job */
     private ReadNet newReader() {
         ReadNet reader;
-        if (options_.inputType_ == "NNT") {
+        if (options_.inputType_.equals("NNT")) {
             reader = new ReadNetNNT();
-        } else {
+        } else if (options_.inputType_.equals("NN")){
             reader = new ReadNetNN();
         }
+        else reader = null;
         reader.setSep(options_.sep_);
         if (options_.directedInput_) {
             reader.setLinkBuilder(new DirectedLinkBuilder());

@@ -11,6 +11,6 @@ public class Clique extends Operation {
     }
 
     public void build(Network net) {
-        
+        System.err.println("You haven't written this part yet!");
     }
 }
