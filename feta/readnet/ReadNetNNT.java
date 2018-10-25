@@ -1,10 +1,14 @@
 package feta.readnet;
 
+import feta.FetaOptions;
 import feta.network.Link;
 
 public class ReadNetNNT extends ReadNet{
 
-    @Override
+    public ReadNetNNT(FetaOptions options) {
+        super(options);
+    }
+
     public Link parseLine(String line, long linkno) {
         String[] parts = line.split(sep_);
         if (parts.length != 3) {

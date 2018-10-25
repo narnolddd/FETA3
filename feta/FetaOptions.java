@@ -12,15 +12,20 @@ import org.json.simple.parser.ParseException;
 public class FetaOptions {
 
     /** Default options related to the data input and output files */
-    String netInputFile_="seed_graphs/clique-5.dat";
-    String netOutputFile_;
-    String inputType_ = "NNT";
-    boolean directedInput_;
-    String outputType_="NNT";
-    String sep_ = "\\s+";
+    public String netInputFile_="seed_graphs/clique-5.dat";
+    public String netOutputFile_;
+    public String inputType_ = "NNT";
+    public boolean directedInput_;
+    public String outputType_="NNT";
+    public String inSep_ = "\\s+";
+    public String outSep_= "\\s+";
 
     /** Type of action. Everything else related to the action will be parsed in the relevant action class */
     JSONObject actionOps_;
+
+    /** Options relating to model, which will be parsed in the respective classes */
+    JSONObject objectModel_;
+    JSONObject operationModel_;
 
 
     public FetaOptions(){
@@ -84,10 +89,16 @@ public class FetaOptions {
             df.remove("GraphOutputType");
         }
 
-        String sep = (String) df.get("LineSeparator");
-        if (sep != null) {
-            sep_= sep;
-            df.remove("LineSeparator");
+        String insep = (String) df.get("InputLineSeparator");
+        if (insep != null) {
+            inSep_= insep;
+            df.remove("InputLineSeparator");
+        }
+
+        String outsep = (String) df.get("OutputLineSeparator");
+        if (outsep != null) {
+            outSep_=outsep;
+            df.remove("OutputLineSeparator");
         }
 
         Boolean dir = (Boolean) df.get("Directed");

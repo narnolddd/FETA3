@@ -42,6 +42,7 @@ public class FetaModel {
         for (String singleAction: actionNames_) {
             SimpleAction action = newAction(singleAction);
             action.parseActionOptions((JSONObject) actionList.get(singleAction));
+            action.parseStoppingConditions((JSONObject) actionList.get(singleAction));
             actionsToDo_.add(action);
         }
     }
@@ -73,16 +74,11 @@ public class FetaModel {
     private ReadNet newReader() {
         ReadNet reader;
         if (options_.inputType_.equals("NNT")) {
-            reader = new ReadNetNNT();
+            reader = new ReadNetNNT(options_);
         } else if (options_.inputType_.equals("NN")){
-            reader = new ReadNetNN();
+            reader = new ReadNetNN(options_);
         }
         else reader = null;
-        reader.setSep(options_.sep_);
-        if (options_.directedInput_) {
-            reader.setLinkBuilder(new DirectedLinkBuilder());
-        } else reader.setLinkBuilder(new UndirectedLinkBuilder());
-        reader.setFileInput(options_.netInputFile_);
         return reader;
     }
 

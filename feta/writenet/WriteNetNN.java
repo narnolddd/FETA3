@@ -1,12 +1,13 @@
 package feta.writenet;
 
+import feta.FetaOptions;
 import feta.network.Link;
 import java.util.ArrayList;
 
 public class WriteNetNN extends WriteNet{
 
-    public WriteNetNN(ArrayList<Link> links){
-        super(links);
+    public WriteNetNN(ArrayList<Link> links, FetaOptions options){
+        super(links, options);
     }
 
     public String linkToString(Link link) {

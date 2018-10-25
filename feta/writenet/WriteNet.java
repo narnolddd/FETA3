@@ -1,5 +1,6 @@
 package feta.writenet;
 
+import feta.FetaOptions;
 import feta.network.Link;
 
 import java.io.BufferedWriter;
@@ -9,31 +10,35 @@ import java.util.ArrayList;
 
 public abstract class WriteNet {
 
-    public String sep_= "\\+s";
-
+    public String sep_;
+    public String networkOutput_;
     public ArrayList<Link> linksToWrite_;
 
-    public WriteNet(ArrayList<Link> links){
-
+    public WriteNet(ArrayList<Link> links, FetaOptions options){
+        sep_= options.outSep_;
+        networkOutput_=options.netOutputFile_;
         linksToWrite_=links;
-
     }
 
-    public void write(String fname, long startTime, long endTime) throws IOException{
+    public void write(long startTime, long endTime) {
         BufferedWriter bw = null;
         FileWriter fw = null;
 
-        fw = new FileWriter(fname);
-        bw = new BufferedWriter(fw);
+        try {
+            fw = new FileWriter(networkOutput_);
+            bw = new BufferedWriter(fw);
 
-        for (Link link:linksToWrite_) {
-            if (link.time_<startTime){
-                continue;
+            for (Link link : linksToWrite_) {
+                if (link.time_ < startTime) {
+                    continue;
+                }
+                if (link.time_ > endTime) {
+                    break;
+                }
+                bw.write(linkToString(link));
             }
-            if (link.time_>endTime){
-                break;
-            }
-            bw.write(linkToString(link));
+        } catch (IOException e){
+            e.printStackTrace();
         }
     }
 

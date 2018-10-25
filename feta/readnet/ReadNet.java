@@ -1,6 +1,8 @@
 package feta.readnet;
 
+import feta.FetaOptions;
 import feta.network.Link;
+import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,24 +11,18 @@ public abstract class ReadNet {
 
     public ArrayList<Link> links_;
     LinkBuilder lb_;
-    public String sep_ = "\\s+";
+    public String sep_;
     String networkInput_;
     boolean removeDuplicates_;
 
-    public ReadNet(){
+    public ReadNet(FetaOptions options){
         links_= new ArrayList<Link>();
-    }
+        sep_=options.inSep_;
+        networkInput_=options.netInputFile_;
 
-    public void setLinkBuilder(LinkBuilder lb) {
-        lb_=lb;
-    }
-
-    public void setSep(String sep) {
-        sep_ = sep;
-    }
-
-    public void setFileInput(String fname) {
-        networkInput_= fname;
+        if (options.directedInput_) {
+            lb_= new DirectedLinkBuilder();
+        } else lb_= new UndirectedLinkBuilder();
     }
 
     public final void readNetwork(){
