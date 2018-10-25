@@ -2,6 +2,8 @@ package feta.objectmodels;
 
 import feta.TimeInterval;
 import feta.network.Network;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +15,9 @@ public class FullObjectModel {
     public ArrayList<TimeInterval> times_;
     public HashMap<TimeInterval, ObjectModel> timeToOM_;
 
-    public FullObjectModel(){}
+    public FullObjectModel(JSONArray model){
+
+    }
 
     /** Maps a node and network object to a probability of choosing node */
     public double calcProbability(Network net, int node, long time){
@@ -52,5 +56,14 @@ public class FullObjectModel {
         throw new IllegalArgumentException("No object model specified for this time");
     }
 
+    public void parseObjectModels(JSONArray model) {
+        int number = model.size();
+
+        objectModels_= new ArrayList<ObjectModel>(number);
+        times_= new ArrayList<TimeInterval>(number);
+
+        long start = 0, end= 0;
+
+    }
 
 }

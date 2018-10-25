@@ -24,8 +24,8 @@ public class FetaOptions {
     JSONObject actionOps_;
 
     /** Options relating to model, which will be parsed in the respective classes */
-    JSONObject objectModel_;
-    JSONObject operationModel_;
+    JSONArray fullObjectModel_;
+    JSONArray operationModel_;
 
 
     public FetaOptions(){
@@ -50,7 +50,9 @@ public class FetaOptions {
 
             actionOps_ = (JSONObject) jsonObject.get("Action");
 
+            fullObjectModel_= (JSONArray) jsonObject.get("ObjectModel");
 
+            operationModel_= (JSONArray) jsonObject.get("OperationModel");
 
         } catch (FileNotFoundException e) {
             System.err.println("JSON Options file "+file+" not found.");
