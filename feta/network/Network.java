@@ -24,10 +24,16 @@ public abstract class Network {
     public boolean duplicatesPresent_=false;
     public ReadNet networkReader_;
 
+    /** Data structures mapping node names to their index and vice versa */
     private HashMap <String, Integer> nodeNumbers_;
     private HashMap <Integer, String> nodeNames_;
     private ArrayList <Integer> nodes_;
+
+    /** List of links read from the network edgelist file */
     public ArrayList <Link> linksToBuild_;
+
+    /** Name for new nodes */
+    public static final String artificialNodeName= "NODE--NUMBER--";
 
     /** Initialise an empty network */
     public Network() {
@@ -100,6 +106,8 @@ public abstract class Network {
         linksToBuild_=networkReader_.links_;
     }
 
+
+
     /** Set which reader to use */
     public void setNetworkReader(ReadNet rn) {
         networkReader_=rn;
@@ -128,6 +136,11 @@ public abstract class Network {
     public String nodeNoToName(int node)
     {
         return nodeNames_.get(node);
+    }
+
+    /** Generates a node name for a node generated from a network model */
+    public String generateNodeName() {
+        return artificialNodeName+noNodes_;
     }
 
     /** Get number of links */
