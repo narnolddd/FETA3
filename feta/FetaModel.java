@@ -1,9 +1,6 @@
 package feta;
 
-import feta.actions.Grow;
-import feta.actions.SimpleAction;
-import feta.actions.ComplexAction;
-import feta.actions.Measure;
+import feta.actions.*;
 import feta.network.DirectedNetwork;
 import feta.network.Network;
 import feta.network.UndirectedNetwork;
@@ -64,9 +61,11 @@ public class FetaModel {
             return new Measure();
         } else if (name.equals("Grow")) {
             return new Grow();
-        } else {
-            System.err.println("Invalid action type: "+name);
-            return null;
+        } else if (name.equals("Translate")) {
+            return new Translate(options_);
+        }
+        else {
+            throw new IllegalArgumentException("Unrecognised or missing action name "+name);
         }
     }
 

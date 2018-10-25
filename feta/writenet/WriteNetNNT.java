@@ -11,6 +11,6 @@ public class WriteNetNNT extends WriteNet {
     }
 
     public String linkToString(Link link) {
-        return link.sourceNode_+sep_+link.destNode_+sep_+link.destNode_+"\n";
+        return link.sourceNode_+sep_+link.destNode_+sep_+link.time_+"\n";
     }
 }

@@ -1,14 +1,12 @@
 {
-  "dataoptions": {
-    "graphinput": "feta/data/BAgrown.dat",
-    "graphoutput": "feta/data/growtest.dat",
-    "fileformatread": "NNT",
-    "fileformatwrite": "IIT"
+  "Data": {
+    "GraphInputFile": "data/BAgrown.dat",
+    "GraphInputType": "NNT",
+    "Directed": false,
+    "GraphOutputFile": "output/BAgrown.csv",
+    "OutputLineSeparator":","
   },
-  "action": {
-    "type": "translate",
-    "start": 100,
-    "stop": 10000,
-    "interval": 10
+  "Action": {
+    "Translate": {}
   }
 }

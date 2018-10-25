@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Translate extends SimpleAction {
 
     public FetaOptions options_;
-    public long startTime_=10;
+    public long startTime_=1;
 
 
     public Translate(FetaOptions options){

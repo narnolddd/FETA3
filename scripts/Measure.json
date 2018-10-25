@@ -2,13 +2,10 @@
   "Data": {
     "GraphInputFile": "data/BAgrown.dat",
     "GraphInputType": "NNT",
-    "Directed": false
+    "Directed": false,
+    "OutputLineSeparator": ","
   },
   "Action": {
-    "Measure": {
-      "Start": 10,
-      "Interval": 10,
-      "MaxLinks": 300
-    }
+    "Translate": {}
   }
 }

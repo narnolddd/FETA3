@@ -7,3 +7,6 @@ META-INF
 
 # compiled class files
 *.class
+
+# user folders
+output
