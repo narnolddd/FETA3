@@ -3,7 +3,7 @@ package feta.objectmodels;
 import feta.network.Network;
 
 import java.util.ArrayList;
-
+import java.util.Arrays;
 
 public class ObjectModel {
 
@@ -30,7 +30,7 @@ public class ObjectModel {
         }
 
         if (sum == 0.0) {
-            throw new IllegalArgumentException("No weights specified");
+            throw new IllegalArgumentException("No object model weights specified");
         }
 
         // Normalise weights if not done already
@@ -45,6 +45,84 @@ public class ObjectModel {
             probability_+= weights_[i]*components_.get(i).calcProbability(net, node);
         }
         return probability_;
+    }
+
+
+    public void normaliseAll(Network net, int [] alreadySampled) {
+        for (ObjectModelComponent omc : components_) {
+            omc.calcNormalisation(net, alreadySampled);
+        }
+    }
+
+    public void normaliseAll(Network net) {
+        normaliseAll(net, new int[0]);
+    }
+
+    /** Performs check that normalisation is correct */
+    public void checkNorm(Network net) {
+        double sum = 0.0;
+        normaliseAll(net);
+        for (int node = 0; node < net.noNodes_; node++) {
+            sum += calcProbability(net, node);
+        }
+        if (Math.abs(sum - 1.0) > 0.0005) {
+            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);
+        }
+    }
+
+
+    /** This part of the code exists for growing networks - monte carlo sampling of nodes from prob distributions given by object model */
+
+    public int[] getNodesWithoutReplacement(Network net, int sampleSize) {
+        int[] chosenNodes = new int[sampleSize];
+        for (int i = 0; i < sampleSize; i++) {
+            int chosenNode = nodeSampleWithoutReplacement(net, chosenNodes);
+            chosenNodes[i]=chosenNode;
+        }
+        return chosenNodes;
+    }
+
+    public int[] getNodesWithReplacement(Network net, int sampleSize) {
+        int[] chosenNodes = new int[sampleSize];
+        for (int i = 0; i<sampleSize; i++) {
+            int chosenNode = nodeSampleWithReplacement(net);
+            chosenNodes[i]=chosenNode;
+        }
+        return chosenNodes;
+    }
+
+    public int nodeSampleWithoutReplacement(Network net, int[] alreadyChosenNodes) {
+        ArrayList<Integer> nodeList = new ArrayList<Integer>();
+        for (int j = 0; j < net.noNodes_; j++) {
+            nodeList.add(j);
+        }
+
+        // This bit of code deals with the "without replacement" aspect of the sampling, by removing the already chosen nodes from the sample space.
+        Arrays.sort(alreadyChosenNodes);
+        int numAlreadyChosen = 0;
+        for (int k = alreadyChosenNodes.length - 1; k>=0; k--) {
+            if (alreadyChosenNodes[k]>=0) {
+                nodeList.remove(alreadyChosenNodes[k]);
+                numAlreadyChosen++;
+            }
+        }
+
+        // This part does the sampling.
+
+        normaliseAll(net, alreadyChosenNodes);
+        double r = Math.random();
+        double weightSoFar = 0.0;
+        int l;
+        for (l = 0; l < nodeList.size(); l++) {
+            weightSoFar+= calcProbability(net, nodeList.get(l));
+            if (weightSoFar > r)
+                break;
+        }
+        return nodeList.get(l);
+    }
+
+    public int nodeSampleWithReplacement(Network net) {
+        return nodeSampleWithoutReplacement(net, new int[0]);
     }
 
 }

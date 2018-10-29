@@ -4,10 +4,16 @@ import feta.network.Network;
 
 public abstract class ObjectModelComponent {
 
-    private double weight = 1.0;
+    /** Normalisation constant (changing) to avoid calculating every time probability of node is needed */
+    double normalisationConstant_;
 
     /** Methods relating to Object Model */
 
     abstract double calcProbability(Network net, int node);
-    abstract double calcNormalisation(Network net);
+
+    abstract void calcNormalisation(Network net, int[] removed);
+
+    void calcNormalisation(Network net) {
+        calcNormalisation(net, new int[0]);
+    }
 }
