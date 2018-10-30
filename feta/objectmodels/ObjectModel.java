@@ -1,5 +1,6 @@
 package feta.objectmodels;
 
+import feta.Methods;
 import feta.network.Network;
 
 import java.util.ArrayList;
@@ -73,11 +74,16 @@ public class ObjectModel {
 
     /** This part of the code exists for growing networks - monte carlo sampling of nodes from prob distributions given by object model */
 
-    public int[] getNodesWithoutReplacement(Network net, int sampleSize) {
+    public int[] getNodesWithoutReplacement(Network net, int sampleSize, int[] alreadyChosen) {
         int[] chosenNodes = new int[sampleSize];
+        for (int j = 0; j<sampleSize; j++) {
+            chosenNodes[j] = -1;
+        }
+        int [] removedFromSample= concatenate(chosenNodes,alreadyChosen);
         for (int i = 0; i < sampleSize; i++) {
-            int chosenNode = nodeSampleWithoutReplacement(net, chosenNodes);
+            int chosenNode = nodeSampleWithoutReplacement(net, removedFromSample);
             chosenNodes[i]=chosenNode;
+            removedFromSample[i]=chosenNode;
         }
         return chosenNodes;
     }
@@ -123,6 +129,17 @@ public class ObjectModel {
 
     public int nodeSampleWithReplacement(Network net) {
         return nodeSampleWithoutReplacement(net, new int[0]);
+    }
+
+    /** Handy method for concatenating arrays */
+    public static int[] concatenate(int[] a1, int[] a2) {
+        int len1 = a1.length;
+        int len2 = a2.length;
+
+        int[] a3 = new int[len1+len2];
+        System.arraycopy(a1,0,a3,0,len1);
+        System.arraycopy(a2,0,a3,len1,len2);
+        return a3;
     }
 
 }

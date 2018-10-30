@@ -1,6 +1,7 @@
 package feta.operations;
 
 import feta.network.Network;
+import feta.objectmodels.ObjectModel;
 
 import java.util.ArrayList;
 
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 public class Star extends Operation {
 
     // Node at the centre of the star
-    public String centreNode_;
+    public String centreNodeName_;
+    public int centreNode_;
 
     // Leaf nodes
     public String[] leafNodes_;
@@ -23,8 +25,8 @@ public class Star extends Operation {
 
     public void build(Network net) {
 
-        if (net.newNode(centreNode_)) {
-            net.addNodeToList(centreNode_);
+        if (net.newNode(centreNodeName_)) {
+            net.addNodeToList(centreNodeName_);
             internal_=false;
         }
 
@@ -32,7 +34,17 @@ public class Star extends Operation {
             if(net.newNode(leaf)) {
                 net.addNodeToList(leaf);
             }
-            net.addLink(centreNode_,leaf);
+            net.addLink(centreNodeName_,leaf);
+        }
+    }
+
+    public void setCentreNode_(Network net, ObjectModel om) {
+        if (internal_) {
+            centreNode_ = om.nodeSampleWithoutReplacement(net, new int[0]);
+            centreNodeName_=net.nodeNoToName(centreNode_);
+        }
+        else {
+            centreNodeName_ = net.generateNodeName();
         }
     }
 
