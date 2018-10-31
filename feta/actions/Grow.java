@@ -1,6 +1,7 @@
 package feta.actions;
 
 import feta.FetaOptions;
+import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.Link;
 import feta.objectmodels.FullObjectModel;
 import feta.operations.OperationModel;
@@ -22,15 +23,14 @@ public class Grow extends SimpleAction {
 
     public OperationModel operationModel_;
     public FullObjectModel objectModel_;
-    public FetaOptions options_;
     public JSONObject operationModelJSON_;
+    public FetaOptions options_;
 
     public Grow(FetaOptions options) {
-        JSONArray fullObjectModel = options_.fullObjectModel_;
-        operationModelJSON_ = options_.operationModel_;
-
+        stoppingConditions_= new ArrayList<StoppingCondition>();
         options_=options;
-        objectModel_= new FullObjectModel(fullObjectModel);
+        operationModelJSON_ = options.operationModel_;
+        objectModel_= new FullObjectModel(options_.fullObjectModel_);
         parseOperationModel();
     }
 
@@ -40,16 +40,17 @@ public class Grow extends SimpleAction {
 
         // Clear any other links not built in seed network
         network_.linksToBuild_= new ArrayList<Link>();
-        network_.latestTime_+=interval;
+        Long time = startTime;
         while (!stoppingConditionsExceeded_(network_)) {
+            time+=interval;
             feta.operations.Operation op = operationModel_.nextOperation();
-            op.time_=network_.latestTime_;
-            op.fill(network_,objectModel_.objectModelAtTime(network_.latestTime_));
-            network_.latestTime_+=interval;
+            op.time_=time;
+            op.fill(network_,objectModel_.objectModelAtTime(time));
+            network_.buildUpTo(Long.MAX_VALUE);
         }
 
         WriteNet writer;
-        if (options_.outputType_== "NNT") {
+        if (options_.outputType_.equals("NNT")) {
             writer = new WriteNetNNT(network_.linksBuilt_, options_);
         } else if (options_.outputType_== "NN") {
             writer = new WriteNetNN(network_.linksBuilt_, options_);

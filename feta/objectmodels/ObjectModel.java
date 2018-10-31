@@ -15,7 +15,9 @@ public class ObjectModel {
     private ArrayList<ObjectModelComponent> components_;
     private double[] weights_;
 
-    public ObjectModel(){}
+    public ObjectModel(){
+        components_= new ArrayList<ObjectModelComponent>();
+    }
 
     /** Checks object model prescribed is valid */
     public void checkValid(){
@@ -148,6 +150,7 @@ public class ObjectModel {
 
     /** Read components and weights from JSON */
     public void readObjectModelOptions(JSONArray componentList) {
+        weights_= new double[componentList.size()];
         for (int i = 0; i< componentList.size(); i++) {
             JSONObject comp = (JSONObject) componentList.get(i);
 

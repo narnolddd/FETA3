@@ -16,6 +16,9 @@ public class FullObjectModel {
     public HashMap<TimeInterval, ObjectModel> timeToOM_;
 
     public FullObjectModel(JSONArray model){
+        objectModels_=new ArrayList<ObjectModel>();
+        times_= new ArrayList<TimeInterval>();
+        timeToOM_= new HashMap<TimeInterval, ObjectModel>();
         parseObjectModels(model);
     }
 
@@ -53,7 +56,7 @@ public class FullObjectModel {
                 return timeToOM_.get(ti);
             }
         }
-        throw new IllegalArgumentException("No object model specified for this time");
+        throw new IllegalArgumentException("No object model specified for this time "+time);
     }
 
     public void parseObjectModels(JSONArray model) {
@@ -70,8 +73,10 @@ public class FullObjectModel {
 
             long start = (Long) om.get("Start");
             long end = (Long) om.get("End");
+            System.out.println(start+" "+end);
+            TimeInterval ti = new TimeInterval(start,end);
+            times_.add(ti);
+            timeToOM_.put(ti, obm);
         }
-
     }
-
 }

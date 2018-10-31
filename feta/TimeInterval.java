@@ -34,7 +34,7 @@ public class TimeInterval {
     }
 
     public boolean contains(long time) {
-        if (time >= end_)
+        if (time > end_)
             return false;
         if (time < start_)
             return false;

@@ -1,24 +1,24 @@
 {
   "Data": {
-    "GraphInputFile": "feta/data/clique-5.dat",
-    "GraphOutputFile": "feta/data/growtest.dat",
+    "GraphInputFile": "seed_graphs/clique-5.dat",
+    "GraphOutputFile": "output/growtest.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT"
   },
   "Action": {
     "Grow": {
-      "Start": 10,
+      "Start": 1,
       "Interval": 1,
       "MaxNodes": 200
     }
   },
   "ObjectModel": [
       {
-        "Start": 10,
-        "Stop": 10000,
+        "Start": 1,
+        "End": 10000,
         "Components": [
           {
-            "ComponentName": "RandomAttachment",
+            "ComponentName": "feta.objectmodels.RandomAttachment",
             "Weight": 1.0
           }
         ]
@@ -26,6 +26,6 @@
     ],
     "OperationModel":
       {
-        "Name": "Email"
+        "Name": "feta.operations.Email"
       }
 }

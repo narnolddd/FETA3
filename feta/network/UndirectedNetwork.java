@@ -62,6 +62,7 @@ public class UndirectedNetwork extends Network {
             int[] newDegDist = new int[degArraySize_*2];
             System.arraycopy(degreeDist_, 0, newDegDist, 0, degArraySize_);
             Arrays.fill(newDegDist, degArraySize_, degArraySize_*2, 0);
+            degreeDist_=newDegDist;
             degArraySize_*=2;
             incrementDegDist(degree);
         }

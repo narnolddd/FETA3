@@ -17,8 +17,6 @@ public class Star extends Operation {
     // Leaf nodes
     public String[] leafNodeNames_;
     public int[] leafNodes_;
-
-    public ArrayList<String> choices_;
     public boolean internal_;
 
     public Star(int noLeaves, boolean internal_){
@@ -56,11 +54,14 @@ public class Star extends Operation {
             int [] chosen_ = new int[1];
             chosen_[0]=centreNode_;
             leafNodes_=om.getNodesWithoutReplacement(net, leafNodes_.length, chosen_);
+        } else {
+            leafNodes_=om.getNodesWithoutReplacement(net, leafNodes_.length, new int[0]);
         }
     }
 
     public void fill(Network net, ObjectModel om) {
         pickCentreNode_(net, om);
+        System.out.println(centreNodeName_);
         pickLeafNodes_(net, om);
 
         for(String leaf: leafNodeNames_) {

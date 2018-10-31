@@ -55,6 +55,9 @@ public abstract class Network {
         ArrayList<Link> remaining_ = linksToBuild_;
         int i = 0;
         while (true) {
+            if (i >= linksToBuild_.size()) {
+                break;
+            }
             Link link = linksToBuild_.get(i);
             if (link.time_ > time)
                 break;
