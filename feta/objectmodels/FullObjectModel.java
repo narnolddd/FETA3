@@ -16,7 +16,7 @@ public class FullObjectModel {
     public HashMap<TimeInterval, ObjectModel> timeToOM_;
 
     public FullObjectModel(JSONArray model){
-
+        parseObjectModels(model);
     }
 
     /** Maps a node and network object to a probability of choosing node */
@@ -62,7 +62,15 @@ public class FullObjectModel {
         objectModels_= new ArrayList<ObjectModel>(number);
         times_= new ArrayList<TimeInterval>(number);
 
-        long start = 0, end= 0;
+        for (int i = 0; i< number; i++) {
+            JSONObject om = (JSONObject) model.get(i);
+            JSONArray components = (JSONArray) om.get("Components");
+            ObjectModel obm = new ObjectModel();
+            obm.readObjectModelOptions(components);
+
+            long start = (Long) om.get("Start");
+            long end = (Long) om.get("End");
+        }
 
     }
 

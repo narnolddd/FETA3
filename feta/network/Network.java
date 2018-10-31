@@ -31,6 +31,7 @@ public abstract class Network {
 
     /** List of links read from the network edgelist file */
     public ArrayList <Link> linksToBuild_;
+    public ArrayList <Link> linksBuilt_;
 
     /** Name for new nodes */
     public static final String artificialNodeName= "NODE--NUMBER--";
@@ -41,6 +42,7 @@ public abstract class Network {
         noLinks_= 0;
         nodes_= new ArrayList<Integer>();
         linksToBuild_= new ArrayList<Link>();
+        linksBuilt_=new ArrayList<Link>();
         nodeNumbers_= new HashMap <String, Integer> ();
         nodeNames_= new HashMap <Integer, String>();
         latestNodeNo_=0;
@@ -65,6 +67,7 @@ public abstract class Network {
                 addNodeToList(dst);
             }
             addLink(src,dst);
+            linksBuilt_.add(link);
             remaining_.remove(link);
             latestTime_= link.time_;
             noLinks_++; i++;
@@ -79,7 +82,6 @@ public abstract class Network {
         }
         return true;
     }
-
 
     /** Add a new node to all data structures */
 
@@ -123,7 +125,6 @@ public abstract class Network {
     public abstract boolean isLink(int a, int b);
 
     /** Remove hanging edges for safe deletion of a node from data structures. IMPLEMENT AT YOUR PERIL */
-
     public abstract void removeLinks(String nodeName);
 
     /** For quick switching between node names and numbers */
@@ -158,5 +159,8 @@ public abstract class Network {
 
     /** Prints measurements to line */
     public abstract String measureToString();
+
+    /** Growth */
+    public abstract void addNewLink(String src, String dst, long time);
 
 }

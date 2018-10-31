@@ -20,10 +20,10 @@ public class TimeInterval {
 
     /** Does it overlap with time interval T2? */
     public boolean overlapsWith(TimeInterval T2) {
-        if (T2.end_ <= start_) {
+        if (T2.end_ < start_) {
             return false;
         }
-        if (T2.start_ >= end_) {
+        if (T2.start_ > end_) {
             return false;
         }
         return true;

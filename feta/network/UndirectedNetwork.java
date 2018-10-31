@@ -178,4 +178,9 @@ public class UndirectedNetwork extends Network {
     public String measureToString() {
         return noNodes_+" "+noLinks_+" "+avgDeg_+" "+density_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_+" "+assort_;
     }
+
+    /** Section related to growing networks */
+    public void addNewLink(String src, String dst, long time) {
+        linksToBuild_.add(new UndirectedLink(src, dst, time));
+    }
 }

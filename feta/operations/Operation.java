@@ -1,6 +1,7 @@
 package feta.operations;
 
 import feta.network.Network;
+import feta.objectmodels.ObjectModel;
 
 public abstract class Operation implements Comparable<Operation> {
 
@@ -20,5 +21,5 @@ public abstract class Operation implements Comparable<Operation> {
 
     public abstract void build(Network net);
 
-
+    public abstract void fill(Network net, ObjectModel om);
 }

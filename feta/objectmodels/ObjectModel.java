@@ -2,7 +2,11 @@ package feta.objectmodels;
 
 import feta.Methods;
 import feta.network.Network;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -140,6 +144,41 @@ public class ObjectModel {
         System.arraycopy(a1,0,a3,0,len1);
         System.arraycopy(a2,0,a3,len1,len2);
         return a3;
+    }
+
+    /** Read components and weights from JSON */
+    public void readObjectModelOptions(JSONArray componentList) {
+        for (int i = 0; i< componentList.size(); i++) {
+            JSONObject comp = (JSONObject) componentList.get(i);
+
+            /** Gets object model element class from string. Bit of a mouthful */
+            ObjectModelComponent omc = null;
+            String omcClass = (String) comp.get("ComponentName");
+            Class <?extends ObjectModelComponent> component = null;
+
+            try {
+                component= Class.forName(omcClass).asSubclass(ObjectModelComponent.class);
+                Constructor<?> c = component.getConstructor();
+                omc = (ObjectModelComponent)c.newInstance();
+            } catch (ClassNotFoundException e){
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+            // Heck...
+
+            double weight = (double) comp.get("Weight");
+
+            components_.add(omc);
+            weights_[i]=weight;
+        }
     }
 
 }

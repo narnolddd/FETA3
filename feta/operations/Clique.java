@@ -1,6 +1,7 @@
 package feta.operations;
 
 import feta.network.Network;
+import feta.objectmodels.ObjectModel;
 
 public class Clique extends Operation {
 
@@ -13,4 +14,6 @@ public class Clique extends Operation {
     public void build(Network net) {
         System.err.println("You haven't written this part yet!");
     }
+
+    public void fill(Network net, ObjectModel om) {};
 }

@@ -200,4 +200,8 @@ public class DirectedNetwork extends Network {
                 meanOutDegSq_+" "+inAssort_+" "+outAssort_;
     }
 
+    public void addNewLink(String src, String dst, long time) {
+        linksToBuild_.add(new DirectedLink(src, dst, time));
+    }
+
 }

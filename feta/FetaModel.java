@@ -23,6 +23,10 @@ public class FetaModel {
         actionsToDo_= new ArrayList<SimpleAction>();
     }
 
+    public void readConfigs(String configFile) {
+        options_.readConfig(configFile);
+    }
+
     public void goForIt() {
         System.out.println("Doing the thing");
         parseActionList(options_.actionOps_);
@@ -50,17 +54,13 @@ public class FetaModel {
         } else network_= new UndirectedNetwork();
     }
 
-    public void readConfigs(String configFile) {
-        options_.readConfig(configFile);
-    }
-
     /** Reads from a string the relevant action type */
     private SimpleAction newAction(String name) {
         if (name.equals("Measure")) {
             System.out.println("Measuring");
             return new Measure();
         } else if (name.equals("Grow")) {
-            return new Grow();
+            return new Grow(options_);
         } else if (name.equals("Translate")) {
             return new Translate(options_);
         }

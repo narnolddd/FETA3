@@ -1,9 +1,9 @@
 {
   "Data": {
-    "GraphInputFile": "feta/data/BAgrown.dat",
+    "GraphInputFile": "feta/data/clique-5.dat",
     "GraphOutputFile": "feta/data/growtest.dat",
-    "InputType": "NNT",
-    "OutputType": "IIT"
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT"
   },
   "Action": {
     "Grow": {
@@ -12,62 +12,20 @@
       "MaxNodes": 200
     }
   },
-  "Model": {
-    "ObjectModel": [
+  "ObjectModel": [
       {
         "Start": 10,
-        "Stop": 100,
+        "Stop": 10000,
         "Components": [
           {
-            "ComponentName": "Degree",
-            "Weight": 0.3
-          },
-          {
-            "ComponentName": "Random",
-            "Weight": 0.7
-          }
-        ]
-      },
-      {
-        "Start": 101,
-        "Stop": 200,
-        "Components": [
-          {
-            "ComponentName":"RankPreference",
-            "Weight":0.8,
-            "Parameters": {
-              "Delta":0.048
-            }
-          },
-          { "ComponentName": "DegreeTrichotomy",
-            "Weight":0.2,
-            "Parameters": {
-              "LowerDegree":5,
-              "UpperDegree":20
-            }
+            "ComponentName": "RandomAttachment",
+            "Weight": 1.0
           }
         ]
       }
     ],
-    "OperationModel": [
+    "OperationModel":
       {
-        "Start":10,
-        "Stop":50,
-        "Name": "PreferentialAttachment",
-        "Parameters": {
-          "InitDegree": 3,
-          "NewNodeProp":1.0
-        }
-      },
-      {
-        "Start":51,
-        "Stop":200,
-        "Name": "PreferentialAttachment",
-        "Parameters":{
-          "InitDegree":2,
-          "NewNodeProp":0.2
-        }
+        "Name": "Email"
       }
-    ]
-  }
 }
