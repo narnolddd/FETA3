@@ -64,8 +64,9 @@ public class Star extends Operation {
         System.out.println(centreNodeName_);
         pickLeafNodes_(net, om);
 
-        for(String leaf: leafNodeNames_) {
-            net.addNewLink(centreNodeName_, leaf, time_);
+        for(int leaf: leafNodes_) {
+            String leafName = net.nodeNoToName(leaf);
+            net.addNewLink(centreNodeName_, leafName, time_);
         }
     }
 

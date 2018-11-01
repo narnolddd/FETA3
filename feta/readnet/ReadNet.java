@@ -37,8 +37,9 @@ public abstract class ReadNet {
                 if (line.length() == 0)
                     continue;
                 Link link = parseLine(line, linkno);
-                if (removeDuplicates_ && links_.contains(link))
-                    continue;
+                System.out.println(link);
+//                if (removeDuplicates_ && links_.contains(link))
+//                    continue;
                 links_.add(link);
             }
         } catch (FileNotFoundException e) {

@@ -52,15 +52,16 @@ public abstract class Network {
     /** Build network from list of links */
 
     public void buildUpTo(long time) {
-        ArrayList<Link> remaining_ = linksToBuild_;
-        int i = 0;
-        while (true) {
-            if (i >= linksToBuild_.size()) {
+        ArrayList<Link> remaining_ = new ArrayList<Link>();
+        int i;
+        for (i=0; i < linksToBuild_.size(); i++) {
+            Link link = linksToBuild_.get(i);
+            if (link.time_ > time){
+                for (int j=i; j < linksToBuild_.size(); j++) {
+                    remaining_.add(linksToBuild_.get(i));
+                }
                 break;
             }
-            Link link = linksToBuild_.get(i);
-            if (link.time_ > time)
-                break;
             String src = link.sourceNode_;
             String dst = link.destNode_;
             if (newNode(src)) {
@@ -71,9 +72,8 @@ public abstract class Network {
             }
             addLink(src,dst);
             linksBuilt_.add(link);
-            remaining_.remove(link);
             latestTime_= link.time_;
-            noLinks_++; i++;
+            noLinks_++;
         }
         linksToBuild_=remaining_;
     }

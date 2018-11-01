@@ -41,7 +41,9 @@ public class UndirectedNetwork extends Network {
         neighbours_.get(dst).add(src);
 
         incrementDegDist(getDegree(src));
+        reduceDegDist(getDegree(src)-1);
         incrementDegDist(getDegree(dst));
+        reduceDegDist(getDegree(dst)-1);
     }
 
     public boolean isLink(int a, int b) {
@@ -68,8 +70,13 @@ public class UndirectedNetwork extends Network {
         }
     }
 
+    public void reduceDegDist(int degree) {
+        degreeDist_[degree]--;
+    }
+
     public void addNode(int nodeno) {
         neighbours_.put(nodeno, new ArrayList<Integer>());
+        incrementDegDist(0);
     }
 
     public void removeLinks(String nodename) {

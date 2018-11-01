@@ -6,8 +6,8 @@ public class UndirectedLink extends Link implements Comparable<UndirectedLink> {
 
     public UndirectedLink(String src, String dst, long time)
     {
-            sourceNode_ = dst;
-            destNode_ = src;
+            sourceNode_ = src;
+            destNode_ = dst;
             time_ = time;
     }
 

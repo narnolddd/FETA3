@@ -18,7 +18,7 @@ public class FetaOptions {
     public boolean directedInput_;
     public String outputType_="NNT";
     public String inSep_ = "\\s+";
-    public String outSep_= "\\s+";
+    public String outSep_= " ";
 
     /** Type of action. Everything else related to the action will be parsed in the relevant action class */
     JSONObject actionOps_;
