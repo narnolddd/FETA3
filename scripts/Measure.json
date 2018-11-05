@@ -1,11 +1,15 @@
 {
   "Data": {
-    "GraphInputFile": "data/BAgrown.dat",
+    "GraphInputFile": "output/growtest.dat",
     "GraphInputType": "NNT",
     "Directed": false,
-    "OutputLineSeparator": ","
+    "OutputLineSeparator": " "
   },
   "Action": {
-    "Translate": {}
+    "Measure": {
+      "Start": 10,
+      "Interval":10,
+      "MaxNodes": 100
+    }
   }
 }

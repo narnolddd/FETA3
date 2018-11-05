@@ -61,12 +61,14 @@ public class Star extends Operation {
 
     public void fill(Network net, ObjectModel om) {
         pickCentreNode_(net, om);
-        System.out.println(centreNodeName_);
         pickLeafNodes_(net, om);
 
         for(int leaf: leafNodes_) {
             String leafName = net.nodeNoToName(leaf);
+            if (net.isLink(centreNode_,leaf) && !net.allowDuplicates_)
+                continue;
             net.addNewLink(centreNodeName_, leafName, time_);
+            System.out.println(time_);
         }
     }
 

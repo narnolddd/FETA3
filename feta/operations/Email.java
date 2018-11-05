@@ -4,7 +4,7 @@ public class Email extends OperationModel {
 
     /** Network grows by internal and external stars */
 
-    public double propInternal_=0.5;
+    public double propInternal_=0.2;
     public int noRecipients_=3;
 
     public Operation nextOperation() {

@@ -37,6 +37,8 @@ public class UndirectedNetwork extends Network {
 
     /** Adds undirected link to data structures */
     public void addLink(int src, int dst) {
+        if (isLink(src,dst) && !allowDuplicates_)
+            return;
         neighbours_.get(src).add(dst);
         neighbours_.get(dst).add(src);
 

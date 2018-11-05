@@ -23,6 +23,7 @@ public abstract class Network {
     /** Options for reading network */
     public boolean duplicatesPresent_=false;
     public ReadNet networkReader_;
+    public boolean allowDuplicates_;
 
     /** Data structures mapping node names to their index and vice versa */
     private HashMap <String, Integer> nodeNumbers_;
@@ -58,7 +59,7 @@ public abstract class Network {
             Link link = linksToBuild_.get(i);
             if (link.time_ > time){
                 for (int j=i; j < linksToBuild_.size(); j++) {
-                    remaining_.add(linksToBuild_.get(i));
+                    remaining_.add(linksToBuild_.get(j));
                 }
                 break;
             }
