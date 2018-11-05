@@ -41,10 +41,17 @@ public class Grow extends SimpleAction {
         // Clear any other links not built in seed network
         network_.linksToBuild_= new ArrayList<Link>();
         Long time = startTime;
+        boolean checkModel = true;
         while (!stoppingConditionsExceeded_(network_)) {
             time+=interval;
+            if (time > 50) {
+                checkModel=false;
+            }
             feta.operations.Operation op = operationModel_.nextOperation();
             op.time_=time;
+            if (checkModel) {
+                objectModel_.objectModelAtTime(time).checkNorm(network_);
+            }
             op.fill(network_,objectModel_.objectModelAtTime(time));
             network_.buildUpTo(Long.MAX_VALUE);
         }
@@ -72,6 +79,7 @@ public class Grow extends SimpleAction {
             component= Class.forName(omcClass).asSubclass(OperationModel.class);
             Constructor<?> c = component.getConstructor();
             om = (OperationModel) c.newInstance();
+            om.parseJSON(operationModelJSON_);
         } catch (ClassNotFoundException e){
             e.printStackTrace();
         } catch (NoSuchMethodException e) {

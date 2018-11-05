@@ -1,6 +1,8 @@
 package feta.objectmodels;
 
+import feta.network.DirectedNetwork;
 import feta.network.Network;
+import feta.network.UndirectedNetwork;
 
 public abstract class ObjectModelComponent {
 
@@ -9,11 +11,25 @@ public abstract class ObjectModelComponent {
 
     /** Methods relating to Object Model */
 
-    abstract double calcProbability(Network net, int node);
+    public double calcProbability(Network net, int node) {
+        if (net.getClass() == UndirectedNetwork.class) {
+            return calcProbability((UndirectedNetwork) net, node);
+        } else return calcProbability((DirectedNetwork) net, node);
+    }
 
-    abstract void calcNormalisation(Network net, int[] removed);
+    public void calcNormalisation(Network network, int [] removed) {
+        if (network.getClass() == UndirectedNetwork.class) {
+            calcNormalisation((UndirectedNetwork) network, removed);
+        } else calcNormalisation((DirectedNetwork) network, removed);
+    }
 
-    void calcNormalisation(Network net) {
+    public abstract void calcNormalisation(UndirectedNetwork net, int [] removed);
+    public abstract void calcNormalisation(DirectedNetwork net, int[] removed);
+
+    public abstract double calcProbability(UndirectedNetwork net, int node);
+    public abstract double calcProbability(DirectedNetwork net, int node);
+
+    public void calcNormalisation(Network net) {
         calcNormalisation(net, new int[0]);
     }
 }

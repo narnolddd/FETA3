@@ -51,7 +51,6 @@ public class FetaOptions {
             actionOps_ = (JSONObject) jsonObject.get("Action");
 
             fullObjectModel_= (JSONArray) jsonObject.get("ObjectModel");
-            System.out.println(fullObjectModel_);
 
             operationModel_= (JSONObject) jsonObject.get("OperationModel");
 
@@ -111,7 +110,6 @@ public class FetaOptions {
         }
 
         if (df.keySet().size() != 0) {
-            System.out.println(df.keySet());
             throw new ParseException(ParseException.ERROR_UNEXPECTED_TOKEN);
         }
     }

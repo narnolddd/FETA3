@@ -1,5 +1,7 @@
 package feta.operations;
 
+import org.json.simple.JSONObject;
+
 public class Email extends OperationModel {
 
     /** Network grows by internal and external stars */
@@ -12,5 +14,22 @@ public class Email extends OperationModel {
         if (r<propInternal_) {
             return new Star(noRecipients_,true);
         } else return new Star(noRecipients_,false);
+    }
+
+    @Override
+    public void parseJSON(JSONObject params) {
+        Double p = (Double) params.get("PropInternal");
+        if (p != null) {
+            if (p < 0 || p > 1) {
+                throw new IllegalArgumentException("Proportion must be a probability.");
+            }
+            propInternal_=p;
+        }
+        Long noRecip = (Long) params.get("NoRecipients");
+        if (noRecip!= null) {
+            if (noRecip <= 0) {
+                throw new IllegalArgumentException("Number of recipients must be strictly positive");
+            }
+        }
     }
 }

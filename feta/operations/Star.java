@@ -65,10 +65,9 @@ public class Star extends Operation {
 
         for(int leaf: leafNodes_) {
             String leafName = net.nodeNoToName(leaf);
-            if (net.isLink(centreNode_,leaf) && !net.allowDuplicates_)
+            if (net.isLink(centreNodeName_,leafName) && !net.allowDuplicates_)
                 continue;
             net.addNewLink(centreNodeName_, leafName, time_);
-            System.out.println(time_);
         }
     }
 

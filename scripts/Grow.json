@@ -1,0 +1,43 @@
+{
+  "Data": {
+    "GraphInputFile": "seed_graphs/clique-5.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": true
+  },
+  "Action": {
+    "Grow": {
+      "Start": 1,
+      "Interval": 1,
+      "MaxNodes": 200
+    }
+  },
+  "ObjectModel": [
+      {
+        "Start": 1,
+        "End": 100,
+        "Components": [
+          {
+            "ComponentName": "feta.objectmodels.DegreeModelComponent",
+            "Weight": 1.0
+          }
+        ]
+      },
+    {
+      "Start":100,
+      "End": 1000,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.RankPreferentialAttachment",
+          "Weight": 1.0
+        }
+      ]
+    }
+    ],
+    "OperationModel":
+      {
+        "Name": "feta.operations.Email",
+        "NoRecipients": 3,
+        "PropInternal": 0.2
+      }
+}

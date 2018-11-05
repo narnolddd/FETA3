@@ -28,7 +28,6 @@ public class FetaModel {
     }
 
     public void goForIt() {
-        System.out.println("Doing the thing");
         parseActionList(options_.actionOps_);
         initialiseNetwork();
         network_.setNetworkReader(newReader());
@@ -57,7 +56,6 @@ public class FetaModel {
     /** Reads from a string the relevant action type */
     private SimpleAction newAction(String name) {
         if (name.equals("Measure")) {
-            System.out.println("Measuring");
             return new Measure();
         } else if (name.equals("Grow")) {
             return new Grow(options_);

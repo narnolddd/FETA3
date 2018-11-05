@@ -128,6 +128,13 @@ public abstract class Network {
     /** Is there a link between node a and node b? */
     public abstract boolean isLink(int a, int b);
 
+    public boolean isLink(String a, String b) {
+        if (!nodeNames_.containsValue(a) || !nodeNames_.containsValue(b)) {
+            return false;
+        }
+        return isLink(nodeNumbers_.get(a), nodeNumbers_.get(b));
+    }
+
     /** Remove hanging edges for safe deletion of a node from data structures. IMPLEMENT AT YOUR PERIL */
     public abstract void removeLinks(String nodeName);
 
