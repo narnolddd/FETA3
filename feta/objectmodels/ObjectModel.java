@@ -72,7 +72,6 @@ public class ObjectModel {
         for (int node = 0; node < net.noNodes_; node++) {
             sum += calcProbability(net, node);
         }
-        System.out.println(sum);
         if (Math.abs(sum - 1.0) > 0.0005) {
             System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);
         }

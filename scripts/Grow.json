@@ -36,8 +36,7 @@
     ],
     "OperationModel":
       {
-        "Name": "feta.operations.Email",
-        "NoRecipients": 3,
-        "PropInternal": 0.2
+        "Name": "feta.operations.PreferentialAttachment",
+        "InitialDegree": 3,
       }
 }

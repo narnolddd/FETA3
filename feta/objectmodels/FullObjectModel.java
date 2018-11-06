@@ -73,10 +73,11 @@ public class FullObjectModel {
 
             long start = (Long) om.get("Start");
             long end = (Long) om.get("End");
-            System.out.println(start+" "+end);
             TimeInterval ti = new TimeInterval(start,end);
             times_.add(ti);
+            objectModels_.add(obm);
             timeToOM_.put(ti, obm);
         }
+        checkValid();
     }
 }
