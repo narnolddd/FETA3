@@ -3,7 +3,7 @@
     "GraphInputFile": "seed_graphs/clique-5.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
-    "Directed": true
+    "Directed": false
   },
   "Action": {
     "Grow": {
@@ -15,28 +15,18 @@
   "ObjectModel": [
       {
         "Start": 1,
-        "End": 100,
+        "End": 300,
         "Components": [
           {
-            "ComponentName": "feta.objectmodels.DegreeModelComponent",
+            "ComponentName": "feta.objectmodels.DegreeWithAgeing",
             "Weight": 1.0
           }
         ]
-      },
-    {
-      "Start":100,
-      "End": 1000,
-      "Components": [
-        {
-          "ComponentName": "feta.objectmodels.RankPreferentialAttachment",
-          "Weight": 1.0
-        }
-      ]
-    }
+      }
     ],
     "OperationModel":
       {
         "Name": "feta.operations.PreferentialAttachment",
-        "InitialDegree": 3,
+        "InitialDegree": 3
       }
 }

@@ -150,19 +150,13 @@ public abstract class Network {
         return nodeNames_.get(node);
     }
 
+    public int age(int node) {
+        return noNodes_-node;
+    }
+
     /** Generates a node name for a node generated from a network model */
     public String generateNodeName() {
         return artificialNodeName+noNodes_;
-    }
-
-    /** Get number of links */
-    public int getNoLinks() {
-        return noLinks_;
-    }
-
-    /** Get number of nodes */
-    public int getNoNodes() {
-        return noNodes_;
     }
 
     /** Get measurements */

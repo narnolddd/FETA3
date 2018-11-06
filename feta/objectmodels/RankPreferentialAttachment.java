@@ -19,6 +19,7 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
                 rankSum-= Math.pow(removed[j]+1, - alpha_);
             }
         }
+        normalisationConstant_=rankSum;
     }
 
     public void calcNormalisation(UndirectedNetwork net, int[] removed){}
