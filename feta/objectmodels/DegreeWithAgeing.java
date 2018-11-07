@@ -2,6 +2,7 @@ package feta.objectmodels;
 
 import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;
+import org.json.simple.JSONObject;
 
 public class DegreeWithAgeing extends ObjectModelComponent{
 
@@ -50,5 +51,12 @@ public class DegreeWithAgeing extends ObjectModelComponent{
 
     public double calcProbability(DirectedNetwork net, int node) {
         return ageingFunction(node,net)/normalisationConstant_;
+    }
+
+    public void parseJSON(JSONObject params) {
+        Double ageExp = (Double) params.get("AgeingExponent");
+        if (ageExp != null){
+            ageingExponent_=ageExp;
+        }
     }
 }

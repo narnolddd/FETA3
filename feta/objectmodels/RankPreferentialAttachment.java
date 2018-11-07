@@ -3,6 +3,7 @@ package feta.objectmodels;
 import feta.network.DirectedNetwork;
 import feta.network.Network;
 import feta.network.UndirectedNetwork;
+import org.json.simple.JSONObject;
 
 public class RankPreferentialAttachment extends ObjectModelComponent {
 
@@ -31,5 +32,12 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
 
     public double calcProbability(DirectedNetwork net, int node) {
         return Math.pow(node + 1, - alpha_)/normalisationConstant_;
+    }
+
+    public void parseJSON(JSONObject params) {
+        Double alpha = (Double) params.get("Alpha");
+        if (alpha != null) {
+            alpha_=alpha;
+        }
     }
 }

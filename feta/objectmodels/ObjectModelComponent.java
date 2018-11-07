@@ -3,6 +3,7 @@ package feta.objectmodels;
 import feta.network.DirectedNetwork;
 import feta.network.Network;
 import feta.network.UndirectedNetwork;
+import org.json.simple.JSONObject;
 
 public abstract class ObjectModelComponent {
 
@@ -32,4 +33,7 @@ public abstract class ObjectModelComponent {
     public void calcNormalisation(Network net) {
         calcNormalisation(net, new int[0]);
     }
+
+    /** Parse JSON for parameters when necessary */
+    public void parseJSON(JSONObject params){};
 }

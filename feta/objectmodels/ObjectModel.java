@@ -179,6 +179,7 @@ public class ObjectModel {
 
             double weight = (double) comp.get("Weight");
 
+            omc.parseJSON(comp);
             components_.add(omc);
             weights_[i]=weight;
         }

@@ -9,14 +9,14 @@ public class UndirectedNetwork extends Network {
 
     /** Hashmap containing list of node's neighbours */
     private TreeMap<Integer, ArrayList<Integer>> neighbours_;
-    private int[] degreeDist_;
+    public int[] degreeDist_;
     private int degArraySize_ = 1000;
 
     /** Variables related to measurements */
     private double avgDeg_;
     private double averageCluster_;
     private double meanDegSq_;
-    private int maxDeg_;
+    public int maxDeg_;
     private double assort_;
     private double density_;
 
