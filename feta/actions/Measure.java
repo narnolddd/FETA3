@@ -1,18 +1,20 @@
 package feta.actions;
 
-import feta.actions.stoppingconditions.MaxLinksExceeded;
-import feta.actions.stoppingconditions.MaxNodeExceeded;
-import feta.actions.stoppingconditions.MaxTimeExceeded;
 import feta.actions.stoppingconditions.StoppingCondition;
 import org.json.simple.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import static java.lang.Math.toIntExact;
 
 public class Measure extends SimpleAction {
 
     private long startTime_=10;
     private long interval_=10;
+    public String fname = "output/DMAge1000degvector.dat";
+    public BufferedWriter bw = null;
+    public FileWriter fw = null;
 
     // Need to think how this will work alternating between directed and undirected networks.
     private boolean measureDegDist_=false;
@@ -21,14 +23,32 @@ public class Measure extends SimpleAction {
         stoppingConditions_= new ArrayList<StoppingCondition>();
     }
 
-    public void execute(){
+    public void execute() {
         long time = startTime_;
         network_.buildUpTo(time);
-        while (!stoppingConditionsExceeded_(network_)) {
+        setUpBR();
+        while (!stoppingConditionsExceeded_(network_) && network_.linksToBuild_.size() > 0) {
             network_.buildUpTo(time);
             network_.calcMeasurements();
             System.out.println(network_.measureToString());
+            try {
+                bw.write(network_.degreeVectorToString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             time += interval_;
+        }
+        try {bw.close();} catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setUpBR() {
+        try {
+            fw = new FileWriter(fname);
+            bw = new BufferedWriter(fw);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

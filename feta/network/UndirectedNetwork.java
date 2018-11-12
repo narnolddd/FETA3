@@ -189,6 +189,14 @@ public class UndirectedNetwork extends Network {
         return noNodes_+" "+noLinks_+" "+avgDeg_+" "+density_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_+" "+assort_;
     }
 
+    public String degreeVectorToString() {
+        String degs = "";
+        for (int i = 0; i < noNodes_; i++) {
+            degs +=getDegree(i)+" ";
+        }
+        return degs+" \n";
+    }
+
     /** Section related to growing networks */
     public void addNewLink(String src, String dst, long time) {
         linksToBuild_.add(new UndirectedLink(src, dst, time));

@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "output/20181106132841.dat",
+    "GraphInputFile": "output/20181109133841.dat",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
@@ -9,7 +9,7 @@
     "Measure": {
       "Start": 10,
       "Interval":10,
-      "MaxNodes": 200
+      "MaxNodes": 10000
     }
   }
 }

@@ -200,6 +200,14 @@ public class DirectedNetwork extends Network {
                 meanOutDegSq_+" "+inAssort_+" "+outAssort_;
     }
 
+    public String degreeVectorToString() {
+        String degs = "";
+        for (int i = 0; i < noNodes_; i++) {
+            degs +=getInDegree(i)+" ";
+        }
+        return degs+"\n";
+    }
+
     public void addNewLink(String src, String dst, long time) {
         linksToBuild_.add(new DirectedLink(src, dst, time));
     }

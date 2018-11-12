@@ -9,13 +9,13 @@
     "Grow": {
       "Start": 1,
       "Interval": 1,
-      "MaxNodes": 200
+      "MaxNodes": 1000
     }
   },
   "ObjectModel": [
       {
         "Start": 1,
-        "End": 300,
+        "End": 20000,
         "Components": [
           {
             "ComponentName": "feta.objectmodels.DegreeWithAgeing",
