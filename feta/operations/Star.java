@@ -85,4 +85,13 @@ public class Star extends Operation {
         return str;
     }
 
+    public double calcLogLike(Network net, ObjectModel obm) {
+        double like = 0.0;
+        for (String leaf: leafNodeNames_) {
+            int node = net.nodeNameToNo(leaf);
+            double prob = obm.calcProbability(net,node);
+        }
+        return 0.0;
+    }
+
 }

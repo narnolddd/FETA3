@@ -13,5 +13,7 @@ public class ParseNetDirected extends ParseNet{
 
     }
 
-    public ParseNetDirected(DirectedNetwork net){}
+    public ParseNetDirected(DirectedNetwork net){
+        System.err.println("You haven't written this part yet!!!");
+    }
 }

@@ -69,7 +69,7 @@ public class ParseNetUndirected extends ParseNet {
                         Star st = new Star(1, false);
                         st.time_=link.time_;
                         st.centreNodeName_=dst;
-                        st.leafNodeNames_[1]=src;
+                        st.leafNodeNames_[0]=src;
                         operations_.add(st);
                     }
                 }

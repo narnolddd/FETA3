@@ -1,15 +1,15 @@
 {
   "Data": {
-    "GraphInputFile": "output/20181112154621.dat",
+    "GraphInputFile": "data/enron.dat",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
   },
   "Action": {
     "ParseTest": {
-      "Start": 10,
-      "Interval":10,
-      "MaxNodes": 1000
+      "Start": 962004780,
+      "Interval":100000000,
+      "MaxNodes": 20000
     }
   }
 }
