@@ -71,4 +71,18 @@ public class Star extends Operation {
         }
     }
 
+    public String toString() {
+        String str = "CENTRE "+centreNodeName_+" LEAVES ";
+        for (String leaf: leafNodeNames_) {
+            str+=leaf+" ";
+        }
+        if (internal_){
+            str+="INTERNAL";
+        } else {
+            str+="EXTERNAL";
+        }
+
+        return str;
+    }
+
 }

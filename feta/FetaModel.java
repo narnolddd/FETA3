@@ -61,6 +61,8 @@ public class FetaModel {
             return new Grow(options_);
         } else if (name.equals("Translate")) {
             return new Translate(options_);
+        } else if (name.equals("ParseTest") & !options_.directedInput_) {
+            return new ParseTest(options_.directedInput_);
         }
         else {
             throw new IllegalArgumentException("Unrecognised or missing action name "+name);

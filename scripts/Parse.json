@@ -1,0 +1,15 @@
+{
+  "Data": {
+    "GraphInputFile": "output/20181112154621.dat",
+    "GraphInputType": "NNT",
+    "Directed": false,
+    "OutputLineSeparator": " "
+  },
+  "Action": {
+    "ParseTest": {
+      "Start": 10,
+      "Interval":10,
+      "MaxNodes": 1000
+    }
+  }
+}
