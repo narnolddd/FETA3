@@ -87,11 +87,20 @@ public class Star extends Operation {
 
     public double calcLogLike(Network net, ObjectModel obm) {
         double like = 0.0;
+        double logSum = 0.0;
+        double probUsed = 0.0;
         for (String leaf: leafNodeNames_) {
             int node = net.nodeNameToNo(leaf);
             double prob = obm.calcProbability(net,node);
+            if (prob <= 0) {
+                System.err.println("Node returned zero probability");
+                System.exit(0);
+            }
+            // Loglikelihood is calculated without replacement
+            logSum+= Math.log(prob) - Math.log(1 - probUsed);
+            probUsed+= prob;
         }
-        return 0.0;
+        return logSum;
     }
 
 }

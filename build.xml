@@ -1,0 +1,92 @@
+<project name="FETA3" default="usage" basedir=".">
+
+
+    <!-- Initializations -->
+    <target name="init">
+        <echo message="------------ Building FETA3 ----------"/>
+        <echo message=""/>
+        <property name="sources" value="${basedir}"/>
+        <property name="lib.dir" value="${basedir}/libs"/>
+        <property name="classes" value="${basedir}/classes"/>
+        <property name="external.jars" value="${basedir}/libs/json-simple-1.1.1.jar" />
+        <property name="api" value="${basedir}/docs"/>
+        <property name="year" value="2014"/>
+        <property name="release" value="1.0.0" />
+        <path id="feta.classpath">
+            <fileset dir="${basedir}/libs">
+                <include name="json-simple-1.1.1.jar"/>
+            </fileset>
+            <pathelement path="${basedir}"/>
+        </path>
+    </target>
+
+    <!-- Build -->
+    <target name="build" depends="init">
+        <echo message="------ Compiling application"/>
+        <mkdir dir="${classes}"/>
+        <javac debug="on" srcdir="${sources}"  includeantruntime="false">
+            <include name="feta/**" />
+            <classpath refid="feta.classpath"/>
+        </javac>
+
+    </target>
+
+    <!-- jar -->
+    <target name="jar" depends="build">
+        <echo message="------ Building Jar file"/>
+
+        <jar destfile="${basedir}/feta3-${release}.jar"
+             excludes="${basedir}/feta3-${release}.jar"
+        >
+            <fileset dir="${basedir}" includes="**/*.class" />
+            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="feta.FetaCLI" />
+            </manifest>
+
+        </jar>
+
+    </target>
+
+
+    <!-- JavaDoc -->
+    <target name="javadoc" depends="build">
+        <echo message="------ Running JavaDoc"/>
+        <javadoc packagenames="feta.*"
+                 sourcepath="${sources}"
+                 destdir="${api}"
+                 excludepackagenames=""
+                 bottom="User Space Routing ${release}"
+                 author="false">
+            <classpath>
+                <pathelement location="${classes}"/>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <target name="clean" depends="init" description="Delete class files and docs dir.">
+        <delete dir="${api}" />
+        <delete>
+            <fileset dir="${basedir}" includes="**/*.class"/>
+        </delete>
+    </target>
+
+    <!-- ALL -->
+    <target name="all" depends="build, jar, javadoc">
+    </target>
+
+    <!-- Usage -->
+    <target name="usage">
+        <echo message="*** User Space Routing ANT build script ***"/>
+        <echo message="Usage : "/>
+        <echo message="   ant [target]"/>
+        <echo message=""/>
+        <echo message="   target : "/>
+        <echo message="            build : Build Application"/>
+        <echo message="            jar  : Build Application + Archive (JAR)"/>
+        <echo message="            javadoc  : Build Application + Javadoc"/>
+        <echo message="            clean : Remove docs and .class files"/>
+        <echo message="            all   : Build Application + Archive + JavaDoc"/>
+    </target>
+
+</project>
