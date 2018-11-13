@@ -21,7 +21,8 @@ public class ParseNetUndirected extends ParseNet {
         net.buildUpTo(start);
     }
 
-    public void parseNewLinks(ArrayList <Link> links, Network net) {
+    public ArrayList<Operation> parseNewLinks(ArrayList <Link> links, Network net) {
+        ArrayList<Operation> newOps = new ArrayList<Operation>();
         UndirectedNetwork newNet = new UndirectedNetwork();
         for (Link l: links){
             newNet.linksToBuild_.add(l);
@@ -46,8 +47,9 @@ public class ParseNetUndirected extends ParseNet {
                     count++;
                 }
                 op.time_=newNet.latestTime_;
-                System.out.println(op);
+                //System.out.println(op);
                 operations_.add(op);
+                newOps.add(op);
                 done=true;
             } else {
                 for (Link link : links) {
@@ -59,18 +61,21 @@ public class ParseNetUndirected extends ParseNet {
                         st.centreNodeName_=src;
                         st.leafNodeNames_[0]=dst;
                         operations_.add(st);
+                        newOps.add(st);
                     } else if (net.newNode(src)) {
                         Star st = new Star(1, false);
                         st.time_=link.time_;
                         st.centreNodeName_=src;
                         st.leafNodeNames_[0]=dst;
                         operations_.add(st);
+                        newOps.add(st);
                     } else {
                         Star st = new Star(1, false);
                         st.time_=link.time_;
                         st.centreNodeName_=dst;
                         st.leafNodeNames_[0]=src;
                         operations_.add(st);
+                        newOps.add(st);
                     }
                 }
                 done=true;
@@ -78,6 +83,7 @@ public class ParseNetUndirected extends ParseNet {
 
 
         }
+        return newOps;
     }
 
     /** Is network a star? */

@@ -16,4 +16,8 @@ public class Clique extends Operation {
     }
 
     public void fill(Network net, ObjectModel om) {};
+
+    public double calcLogLike(Network net, ObjectModel om){
+        return 0.0;
+    }
 }

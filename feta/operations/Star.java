@@ -23,6 +23,7 @@ public class Star extends Operation {
         this.internal_=internal_;
         leafNodeNames_= new String[noLeaves];
         leafNodes_= new int[noLeaves];
+        noChoices_=noLeaves;
     }
 
     public void build(Network net) {
@@ -35,7 +36,7 @@ public class Star extends Operation {
             if(net.newNode(leaf)) {
                 net.addNodeToList(leaf);
             }
-            net.addNewLink(centreNodeName_, leaf, time_);
+            net.addLink(centreNodeName_,leaf);
         }
     }
 
@@ -88,7 +89,9 @@ public class Star extends Operation {
     public double calcLogLike(Network net, ObjectModel obm) {
         double like = 0.0;
         double logSum = 0.0;
+        double logRand = 0.0;
         double probUsed = 0.0;
+        double randUsed = 0.0;
         for (String leaf: leafNodeNames_) {
             int node = net.nodeNameToNo(leaf);
             double prob = obm.calcProbability(net,node);
@@ -96,11 +99,12 @@ public class Star extends Operation {
                 System.err.println("Node returned zero probability");
                 System.exit(0);
             }
-            // Loglikelihood is calculated without replacement
+            // Log Likelihood is calculated without replacement
             logSum+= Math.log(prob) - Math.log(1 - probUsed);
+            logRand+=Math.log(1.0/net.noNodes_) - Math.log(1 - randUsed);
+            randUsed+= 1.0/net.noNodes_;
             probUsed+= prob;
         }
-        return logSum;
+        return logSum - logRand;
     }
-
 }

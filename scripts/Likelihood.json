@@ -1,0 +1,32 @@
+{
+  "Data": {
+    "GraphInputFile": "output/20181112154621.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "Likelihood": {
+      "Start": 1,
+      "Interval": 1,
+      "MaxNodes": 1000
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 1,
+      "End": 20000,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.DegreeWithAgeing",
+          "Weight": 1.0
+        }
+      ]
+    }
+  ],
+  "OperationModel":
+  {
+    "Name": "feta.operations.Email",
+    "NoRecipients": 3
+  }
+}

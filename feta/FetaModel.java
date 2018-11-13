@@ -63,6 +63,8 @@ public class FetaModel {
             return new Translate(options_);
         } else if (name.equals("ParseTest") & !options_.directedInput_) {
             return new ParseTest(options_.directedInput_);
+        } else if (name.equals("Likelihood")) {
+            return new Likelihood(options_);
         }
         else {
             throw new IllegalArgumentException("Unrecognised or missing action name "+name);
