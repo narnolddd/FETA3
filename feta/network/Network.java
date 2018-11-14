@@ -72,9 +72,9 @@ public abstract class Network {
                 addNodeToList(dst);
             }
             addLink(src,dst);
-            linksBuilt_.add(link);
-            latestTime_= link.time_;
             noLinks_++;
+            latestTime_=link.time_;
+            linksBuilt_.add(link);
         }
         linksToBuild_=remaining_;
     }

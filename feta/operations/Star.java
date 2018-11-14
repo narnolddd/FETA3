@@ -37,7 +37,9 @@ public class Star extends Operation {
                 net.addNodeToList(leaf);
             }
             net.addLink(centreNodeName_,leaf);
+            net.noLinks_++;
         }
+        net.latestTime_=time_;
     }
 
     public void pickCentreNode_(Network net, ObjectModel om) {
@@ -87,7 +89,6 @@ public class Star extends Operation {
     }
 
     public double calcLogLike(Network net, ObjectModel obm) {
-        double like = 0.0;
         double logSum = 0.0;
         double logRand = 0.0;
         double probUsed = 0.0;

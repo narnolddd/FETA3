@@ -3,14 +3,15 @@ package feta.parsenet;
 import feta.network.DirectedNetwork;
 import feta.network.Link;
 import feta.network.Network;
+import feta.operations.Operation;
 
 import java.util.ArrayList;
 
 public class ParseNetDirected extends ParseNet{
 
     @Override
-    public void parseNewLinks(ArrayList<Link> links, Network net) {
-
+    public ArrayList<Operation> parseNewLinks(ArrayList<Link> links, Network net) {
+        return new ArrayList<Operation>();
     }
 
     public ParseNetDirected(DirectedNetwork net){
