@@ -8,8 +8,6 @@ import feta.operations.OperationModel;
 import feta.writenet.WriteNet;
 import feta.writenet.WriteNetNN;
 import feta.writenet.WriteNetNNT;
-import jdk.dynalink.Operation;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.lang.reflect.Constructor;

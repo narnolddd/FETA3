@@ -1,6 +1,5 @@
 package feta.network;
 
-import com.sun.jdi.event.ExceptionEvent;
 import feta.readnet.ReadNet;
 
 import java.io.*;

@@ -7,7 +7,6 @@ import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.Network;
 import org.json.simple.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.lang.Math.toIntExact;

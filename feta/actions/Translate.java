@@ -6,8 +6,6 @@ import feta.writenet.WriteNetNN;
 import feta.writenet.WriteNetNNT;
 import org.json.simple.JSONObject;
 
-import java.io.IOException;
-
 public class Translate extends SimpleAction {
 
     public FetaOptions options_;
