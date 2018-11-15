@@ -186,7 +186,7 @@ public class UndirectedNetwork extends Network {
     }
 
     public String measureToString() {
-        return noNodes_+" "+noLinks_+" "+avgDeg_+" "+density_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_+" "+assort_;
+        return latestTime_+" "+noNodes_+" "+noLinks_+" "+avgDeg_+" "+density_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_+" "+assort_;
     }
 
     public String degreeVectorToString() {
