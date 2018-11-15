@@ -1,4 +1,4 @@
-# FETA3 (WIP, only partially running)
+![logo](FETAlogo.png)
 
 ## About
 FETA stands for "Framework for Evolving Topology Analysis", and is a multi-purpose java-based software for the analysis of evolving networks and models for their topology.
