@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "output/20181109133841.dat",
+    "GraphInputFile": "data/cit-HepPh-ordered.txt",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "

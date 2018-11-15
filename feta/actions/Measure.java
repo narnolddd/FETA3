@@ -26,16 +26,16 @@ public class Measure extends SimpleAction {
     public void execute() {
         long time = startTime_;
         network_.buildUpTo(time);
-        setUpBR();
+//        setUpBR();
         while (!stoppingConditionsExceeded_(network_) && network_.linksToBuild_.size() > 0) {
             network_.buildUpTo(time);
             network_.calcMeasurements();
             System.out.println(network_.measureToString());
-            try {
-                bw.write(network_.degreeVectorToString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                bw.write(network_.degreeVectorToString());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             time += interval_;
         }
         try {bw.close();} catch (IOException e) {

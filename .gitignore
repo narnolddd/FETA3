@@ -5,8 +5,18 @@ src
 out
 META-INF
 
+# tex files
+*.aux
+*.log
+*.gz
+*.tex
+
 # compiled class files
 *.class
 
 # user folders
 output
+
+# tutorial files
+tutorial_scripts/*.dat
+tutorial_scripts/plots/*.eps
