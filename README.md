@@ -23,6 +23,8 @@ This software runs using Java, so if you haven't already, install the latest ver
 
 The jar file is built using Apache Ant, which can be found [here](https://ant.apache.org/).
 
+Optionally, I have some scripts for gnuplot in the tutorial for plotting - you can find gnuplot [here](http://www.gnuplot.info/)
+
 ## Installation
 
 First clone the repository, either manually or using the command: 
@@ -94,5 +96,22 @@ The `Action` tag tells FETA what to do with the inputted file; in this case we w
 In the terminal, run the command 
 
 ```$xslt
-java -jar feta3-1.0.0.jar tutorial_scripts > 
+java -jar feta3-1.0.0.jar tutorial_scripts/MeasureCitations.json > tutorial_scripts/CitationsTS.dat
 ```
+
+It may take a minute or so to run, as the network file is quite big.
+
+You should now have the file `CitationsTS.dat` in the `tutorial_scripts` folder. The columns are ordered as: timestamp, number of nodes,
+number of links, average degree, density (number of links/number of possible links), maximum degree, average clustering coeff,
+mean squared degree, degree assortativity.
+
+To see what these time series look like, you can use your favourite plotting device. Mine happens to be [gnuplot](http://www.gnuplot.info/)
+which is reasonably quick to download and usable from the terminal. If you have gnuplot installed, I have written a script for plotting these 
+measurements you've just calculated - run the command:
+
+```$xslt
+gnuplot tutorial_scripts/CitationsTS.gnu
+```
+
+and there should now be some .eps plots in your `tutorial_scripts/plots` folder.
+
