@@ -3,6 +3,18 @@
 ## About
 FETA stands for "Framework for Evolving Topology Analysis", and is a multi-purpose java-based software for the analysis of evolving networks and models for their topology.
 
+### What can I use FETA for?
+
+* Obtaining time series of measurements on growing directed and undirected networks
+* Growing networks from a range of models and combinations of these
+* Fitting models to timestamped network data.
+* (Soon) investigating changes in network growth over time
+
+### What can't I use FETA for?
+
+* Networks with disappearing nodes or edges
+* Weighted networks/multigraphs
+
 ## Building and running
 
 ### Requirements
