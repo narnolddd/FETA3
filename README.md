@@ -55,7 +55,7 @@ The single argument `scripts/[some-script-name].json` is a JSON config file tell
 
 # Examples
 
-## Obtaining time series of time series measurements
+## Obtaining time series of network measurements
 
 Let's do an example of obtaining a time series of measurements from a timestamped network dataset. In the `data` folder there's a file 'cit-HepPh-ordered.txt'
 which is a timestamped citation network dataset from ArXiV high energy physics, available from [SNAP](https://snap.stanford.edu/data/). We will 
