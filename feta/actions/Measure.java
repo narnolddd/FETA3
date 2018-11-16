@@ -38,9 +38,9 @@ public class Measure extends SimpleAction {
 //            }
             time += interval_;
         }
-        try {bw.close();} catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {bw.close();} catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void setUpBR() {

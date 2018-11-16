@@ -1,0 +1,14 @@
+{
+  "Data": {
+    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputType": "NNT",
+    "Directed": true
+  },
+  "Action": {
+    "Measure": {
+      "Start": 10,
+      "Interval":100,
+      "MaxNodes": 10000
+    }
+  }
+}

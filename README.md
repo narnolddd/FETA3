@@ -91,7 +91,8 @@ The `Action` tag tells FETA what to do with the inputted file; in this case we w
 
 * `Interval` - time between measurements
 
-* Stopping condition. This can either be a latest time `MaxTime`, maximum number of nodes `MaxNodes` or links `MaxLinks`.
+* Stopping condition. This can either be a latest time `MaxTime`, maximum number of nodes `MaxNodes` or links `MaxLinks`. This specifies
+how long the measurements should take place for - in this example the measurements will finish when the network size has reached 10000 nodes.
 
 In the terminal, run the command 
 
@@ -115,3 +116,58 @@ gnuplot tutorial_scripts/CitationsTS.gnu
 
 and there should now be some .eps plots in your `tutorial_scripts/plots` folder.
 
+Whilst these plots are informative, note that we have treated the citation network edgelist as undirected, whereas since citations are always 
+*from* one paper to another, it may more naturally be considered a directed network. What happens if we do the same process but treat the 
+network as directed? 
+
+We're going to run the same command as before, but with the file `tutorial_scripts/MeasureCitationsDirected.json` which looks like:
+
+```JSON
+{
+  "Data": {
+    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputType": "NNT",
+    "Directed": true
+  },
+  "Action": {
+    "Measure": {
+      "Start": 10,
+      "Interval":100,
+      "MaxNodes": 10000
+    }
+  }
+}
+```
+
+This is identical to the previous file `tutorial_scripts/MeasureCitations.json` apart from the `Directed` tag being changed from
+`false` to `true`. 
+
+Let's run the command 
+
+```$xslt
+java -jar feta3-1.0.0.jar tutorial_scripts/MeasureCitationsDirected.json > tutorial_scripts/CitationsTSDirected.dat
+```
+
+Now, notice that some of the measurements which made sense for undirected networks may not make sense or at the very least need some
+adaptation for directed networks. For instance, 'average degree' will be split into two measurements of 'average in-degree' and 'average
+out-degree'. Also, the clustering coefficient is now ill-defined as the concept of a triangle of nodes in directed networks doesn't make 
+much sense now. With this in mind, the columns are ordered as: timestamp, number of nodes, number of links, average in-degree, average 
+out-degree (both identical), maximum in-degree, maximum out-degree, mean squared in-degree, mean squared out-degree, and four measures of degree assortativity
+(in-in, in-out, out-in, out-out).
+
+Again, if you have gnuplot, run:
+
+```$xslt
+gnuplot tutorial_scripts/CitationsTSDirected.gnu
+```
+
+which will generate some .eps files in the plots folder. Compare with the plots generated when we treated the network as undirected.
+
+## Working with evolving network models
+
+Whilst taking network measurements of timestamped is certainly one helpful feature of FETA, the main focus of the software is on 
+a versatile modelling framework for evolving networks. For a mathematically detailed description of the framework, see the paper
+[Likelihood-based assessment of dynamic networks](https://eprints.soton.ac.uk/397485/1/feta_comnet_2015.pdf) by Richard Clegg, Ben 
+Parker and Miguel Rio. For the purpose of using the code, I'll give a basic overview.
+
+TBC
