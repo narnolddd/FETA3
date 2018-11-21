@@ -192,6 +192,26 @@ a versatile modelling and model validation framework for evolving networks. For 
 [Likelihood-based assessment of dynamic networks](https://eprints.soton.ac.uk/397485/1/feta_comnet_2015.pdf) by Richard Clegg, Ben 
 Parker and Miguel Rio. For the purpose of using the code, I'll give a basic overview.
 
+Network growth models are specified in two parts. The first is the *Operation Model*, which determines the type of graph transformation
+that occurs at each iteration. For example, adding a new node and connecting to 3 existing nodes, such as in the traditional Barabasi-Albert
+model. The second part is the *Object Model*. This model takes a network topology (possibly with some metadata) and assigns a probability to
+each of the nodes in the network to be chosen. For example, in the Barabasi-Albert model, the probability of a node being chosen is proportional
+to its degree. 
 
+### Operation Model
 
-TBC
+For the operation model, we consider just two very simple types of growth operations which we'll call *external* and *internal stars*.
+
+Either a new node joins the network and connects to a number of (existing or new) nodes as below, which we term an *external star*
+
+![start](README_pics/startinggraph.png)  ![newnode](README_pics/newnode.png)
+
+Alternatively, an existing node connects to a number of other existing nodes, which we call an *internal star*:
+
+![start2](README_pics/startinggraph.png) ![oldnode](README_pics/oldnode.png)
+
+The full operation model specifies a sequence of these operations for the network evolution. 
+
+The current choices of Operation Model for the user are `Email` and `PreferentialAttachment` - Email is named as such to mimic email 
+networks, with growth comprising a mixture of internal and external stars, and PreferentialAttachment is named after the original 
+Barabasi-Albert paper, with networks growing by addition of a single node connecting to a fixed number of existing nodes.
