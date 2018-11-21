@@ -12,7 +12,7 @@ public class Measure extends SimpleAction {
 
     private long startTime_=10;
     private long interval_=10;
-    public String fname = "output/DMAge1000degvector.dat";
+    public String fname = "output/citationsdegvector.dat";
     public BufferedWriter bw = null;
     public FileWriter fw = null;
 
