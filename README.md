@@ -202,7 +202,7 @@ to its degree.
 
 For the operation model, we consider just two very simple types of growth operations which we'll call *external* and *internal stars*.
 
-Either a new node joins the network and connects to a number of (existing or new) nodes as below, which we term an *external star*
+Either a new node joins the network and connects to a number of (existing or new) nodes as below, which we term an *external star*:
 
 ![start](README_pics/startinggraph.png)  ![newnode](README_pics/newnode.png)
 
@@ -212,6 +212,33 @@ Alternatively, an existing node connects to a number of other existing nodes, wh
 
 The full operation model specifies a sequence of these operations for the network evolution. 
 
-The current choices of Operation Model for the user are `Email` and `PreferentialAttachment` - Email is named as such to mimic email 
-networks, with growth comprising a mixture of internal and external stars, and PreferentialAttachment is named after the original 
-Barabasi-Albert paper, with networks growing by addition of a single node connecting to a fixed number of existing nodes.
+The current choices of Operation Model for the user are:
+* `Email` - named as such to mimic email networks, with growth comprising a mixture of internal and external stars. User can specify
+`NoRecipients` which is the number of links for each star, and `PropInternal` which specifies the probability that the star stems from
+an internal node.
+* `PreferentialAttachment` - named after the original Barabasi-Albert paper, with networks growing by addition of a single node connecting 
+to a fixed number of existing nodes. User can specify `InitDegree`, the number of nodes each new node should connect to.
+
+### Object Model
+
+The Object Model assigns, at each timestep, attachment probabilities to each of the nodes. The different models currently loaded in
+the software are:
+
+* Random/Null/Uniform - all nodes equally likely.
+* Degree ([Barabasi-Albert](http://science.sciencemag.org/content/286/5439/509)) - nodes of higher degree are more attractive
+* Degree with Ageing ([Dorogovtsev-Mendes](https://arxiv.org/pdf/cond-mat/0001419.pdf)) - like the above but older nodes become less 
+attractive
+* Rank-Preference ([Fortunato, Flammini, Menczer](https://arxiv.org/abs/cond-mat/0602081)) - highest ranked nodes are the most attractive
+
+In addition, the modelling framework allows for flexibility in two ways:
+
+#### Model Mixtures
+
+Firstly, mixtures of object models may be used, for example a model that is 'half BA and half random' to capture multiple factors driving
+attachment. 
+
+#### Time varying models
+
+Secondly, models are allowed to vary throughout the time of a network's evolution, for example, growing for the first 1000 timesteps
+according to pure random attachment, from 1000-2000 as half-random half-BA, and 2000-3000 pure BA.
+
