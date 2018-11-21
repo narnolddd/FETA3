@@ -117,7 +117,14 @@ gnuplot tutorial_scripts/CitationsTS.gnu
 
 and there should now be some .eps plots in your `tutorial_scripts/plots` folder which should contain some looking something like this:
 
-![maxdeg](README_pics/cit_maxdeg.pdf)
+![maxdeg](README_pics/cit_maxdeg.jpg) 
+
+![meandegsq](README_pics/cit_meandegsq.jpg)
+
+![cluster](README_pics/cit_cluster.jpg)
+
+![assort](README_pics/cit_assort.jpg)
+
 
 Whilst these plots are informative, note that we have treated the citation network edgelist as undirected, whereas since citations are always 
 *from* one paper to another, it may more naturally be considered a directed network. What happens if we do the same process but treat the 
@@ -169,8 +176,10 @@ which will generate some .eps files in the plots folder. Compare with the plots 
 ## Working with evolving network models
 
 Whilst taking network measurements of timestamped is certainly one helpful feature of FETA, the main focus of the software is on 
-a versatile modelling framework for evolving networks. For a mathematically detailed description of the framework, see the paper
+a versatile modelling and model validation framework for evolving networks. For a mathematically detailed description of the framework, see the paper
 [Likelihood-based assessment of dynamic networks](https://eprints.soton.ac.uk/397485/1/feta_comnet_2015.pdf) by Richard Clegg, Ben 
 Parker and Miguel Rio. For the purpose of using the code, I'll give a basic overview.
+
+
 
 TBC
