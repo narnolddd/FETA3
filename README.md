@@ -118,11 +118,9 @@ gnuplot tutorial_scripts/CitationsTS.gnu
 and there should now be some .eps plots in your `tutorial_scripts/plots` folder which should contain some looking something like this:
 
 ![maxdeg](README_pics/cit_maxdeg.jpg) 
-
 ![meandegsq](README_pics/cit_meandegsq.jpg)
 
 ![cluster](README_pics/cit_cluster.jpg)
-
 ![assort](README_pics/cit_assort.jpg)
 
 
@@ -172,6 +170,20 @@ gnuplot tutorial_scripts/CitationsTSDirected.gnu
 ```
 
 which will generate some .eps files in the plots folder. Compare with the plots generated when we treated the network as undirected.
+
+![maxindeg](README_pics/cit_maxdeg_in.jpg) 
+![maxoutdeg](README_pics/cit_maxdeg_out.jpg)
+
+![meanindegsq](README_pics/cit_meandegsq_in.jpg)
+![meanoutdegsq](README_pics/cit_meandegsq_out.jpg)
+
+![assortii](README_pics/cit_assort_inin.jpg)
+![assortio](README_pics/cit_assort_inout.jpg)
+
+![assortoi](README_pics/cit_assort_outin.jpg)
+![assortoo](README_pics/cit_assort_outout.jpg)
+
+
 
 ## Working with evolving network models
 
