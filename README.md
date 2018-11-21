@@ -115,7 +115,9 @@ measurements you've just calculated - run the command:
 gnuplot tutorial_scripts/CitationsTS.gnu
 ```
 
-and there should now be some .eps plots in your `tutorial_scripts/plots` folder.
+and there should now be some .eps plots in your `tutorial_scripts/plots` folder which should contain some looking something like this:
+
+![maxdeg](README_pics/cit_maxdeg.eps)
 
 Whilst these plots are informative, note that we have treated the citation network edgelist as undirected, whereas since citations are always 
 *from* one paper to another, it may more naturally be considered a directed network. What happens if we do the same process but treat the 
