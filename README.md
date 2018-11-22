@@ -38,7 +38,7 @@ git clone https://github.com/narnolddd/FETA3.git
 
 Then run the command:
 
-```$xslt
+``` shell 
 ant jar
 ```
 
@@ -48,7 +48,7 @@ to make the jar file.
 
 Once you have the jar file, FETA is executed from the command line as:
 
-```$xslt
+``` shell
 java -jar feta3-1.0.0.jar scripts/[some-script-name].json
 ```
 
@@ -97,7 +97,7 @@ how long the measurements should take place for - in this example the measuremen
 
 In the terminal, run the command 
 
-```$xslt
+``` shell
 java -jar feta3-1.0.0.jar tutorial_scripts/MeasureCitations.json > tutorial_scripts/CitationsTS.dat
 ```
 
@@ -111,7 +111,7 @@ To see what these time series look like, you can use your favourite plotting dev
 which is reasonably quick to download and usable from the terminal. If you have gnuplot installed, I have written a script for plotting these 
 measurements you've just calculated - run the command:
 
-```$xslt
+``` shell
 gnuplot tutorial_scripts/CitationsTS.gnu
 ```
 
@@ -224,11 +224,11 @@ to a fixed number of existing nodes. User can specify `InitDegree`, the number o
 The Object Model assigns, at each timestep, attachment probabilities to each of the nodes. The different models currently loaded in
 the software are:
 
-* Random/Null/Uniform - all nodes equally likely.
-* Degree ([Barabasi-Albert](http://science.sciencemag.org/content/286/5439/509)) - nodes of higher degree are more attractive
-* Degree with Ageing ([Dorogovtsev-Mendes](https://arxiv.org/pdf/cond-mat/0001419.pdf)) - like the above but older nodes become less 
+* `RandomAttachment` - all nodes equally likely.
+* `DegreeModelComponent` ([Barabasi-Albert](http://science.sciencemag.org/content/286/5439/509)) - nodes of higher degree are more attractive
+* `DegreeWithAgeing` ([Dorogovtsev-Mendes](https://arxiv.org/pdf/cond-mat/0001419.pdf)) - like the above but older nodes become less 
 attractive
-* Rank-Preference ([Fortunato, Flammini, Menczer](https://arxiv.org/abs/cond-mat/0602081)) - highest ranked nodes are the most attractive
+* `RankPreferentialAttachment` ([Fortunato, Flammini, Menczer](https://arxiv.org/abs/cond-mat/0602081)) - highest ranked nodes are the most attractive
 
 In addition, the modelling framework allows for flexibility in two ways:
 
@@ -244,6 +244,81 @@ according to pure random attachment, from 1000-2000 as half-random half-BA, and 
 
 ### Growing a network from a specified model
 
-One of the capabilities of FETA is to generate networks from the modelling framework described. Let's look at an example growing script.
+One of the capabilities of FETA is to generate networks from the modelling framework described. Let's look at an example growing script 
+called `GrowExample1.json`.
 For the sake of exhaustiveness, I've made it a bit more complicated than is probably necessary. 
 
+```JSON
+
+{
+  "Data": {
+    "GraphInputFile": "seed_graphs/clique-5.dat",
+    "GraphOutputFile": "tutorial_scripts/GrowExample1.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "Grow": {
+      "Start": 1,
+      "Interval": 10,
+      "MaxTime": 3000
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 1,
+      "End": 1000,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.DegreeWithAgeing",
+          "Weight": 1.0,
+          "AgeingExponent": 0.8
+        }
+      ]
+    },
+    {
+     "Start": 1000,
+      "End": 2000,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "Weight": 0.5
+        },
+        {
+          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "Weight": 0.5
+        }
+      ]
+    },
+    {
+      "Start": 2000,
+      "End": 3001,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.RankPreferentialAttachment",
+          "Weight": 1.0,
+          "Alpha": 0.6
+        }
+      ]
+    }
+  ],
+  "OperationModel":
+  {
+    "Name": "feta.operations.Email",
+    "NoRecipients": 3,
+    "PropInternal":0.2
+  }
+}
+```
+
+Run the command 
+``` shell
+java -jar feta3-1.0.0.jar tutorial_scripts/
+```
+
+#### Subtleties
+
+The object model must be fully specified for the whole time period that the network is growing. That is, the value for `End` tag on
+the last `ObjectModel` must be at least the value for `MaxTime` in `Action`. Similarly, the last value of each subsequent time interval must
+be equal to the start of the next (here 1-1000, 1000-2000, 2000-3000).
