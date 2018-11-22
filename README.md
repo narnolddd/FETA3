@@ -322,7 +322,7 @@ Let's get some measurements on the network we've grown.
 Run 
 
 ``` shell
-java -jar feta3-1.0.0.jar tutorial_scripts/MeasureArtificial.json > tutorial_scripts/
+java -jar feta3-1.0.0.jar tutorial_scripts/MeasureArtificial.json > tutorial_scripts/ArtificialTS.dat
 ```
 
 #### Subtleties

@@ -65,6 +65,8 @@ public class FetaModel {
             return new ParseTest(options_.directedInput_);
         } else if (name.equals("Likelihood")) {
             return new Likelihood(options_);
+        } else if (name.equals("NormalisedLikelihood")) {
+            return new NormalisedLikelihood(options_);
         }
         else {
             throw new IllegalArgumentException("Unrecognised or missing action name "+name);

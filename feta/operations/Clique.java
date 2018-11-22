@@ -20,4 +20,6 @@ public class Clique extends Operation {
     public double calcLogLike(Network net, ObjectModel om){
         return 0.0;
     }
+
+    public void printMeanLike(double meanLike, ObjectModel om, Network network){}
 }

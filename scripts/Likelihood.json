@@ -1,15 +1,15 @@
 {
   "Data": {
-    "GraphInputFile": "output/20181112154621.dat",
+    "GraphInputFile": "output/20181122173138.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false
   },
   "Action": {
-    "Likelihood": {
+    "NormalisedLikelihood": {
       "Start": 1,
       "Interval": 1,
-      "MaxNodes": 1000
+      "MaxNodes": 200
     }
   },
   "ObjectModel": [
@@ -18,7 +18,7 @@
       "End": 20000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "feta.objectmodels.DegreeWithAgeing",
           "Weight": 1.0
         }
       ]

@@ -24,4 +24,6 @@ public abstract class Operation implements Comparable<Operation> {
     public abstract void fill(Network net, ObjectModel om);
 
     public abstract double calcLogLike(Network net, ObjectModel obm);
+
+    public abstract void printMeanLike(double meanLike, ObjectModel om, Network network);
 }

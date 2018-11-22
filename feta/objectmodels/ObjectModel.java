@@ -185,4 +185,18 @@ public class ObjectModel {
         }
     }
 
+    public double[] calcMeanSDLike(Network net) {
+        double mean_ = 0.0;
+        double var_= 0.0;
+        double sd_=0.0;
+        for (int i = 0; i < net.noNodes_; i++) {
+            double pi2 = calcProbability(net,i)*calcProbability(net,i);
+            mean_+=pi2;
+            var_+=pi2*calcProbability(net,i);
+        }
+        var_-= mean_*mean_;
+        sd_=Math.sqrt(var_);
+        return new double[]{mean_,sd_};
+    }
+
 }

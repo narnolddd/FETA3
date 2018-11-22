@@ -108,4 +108,13 @@ public class Star extends Operation {
         }
         return logSum - logRand;
     }
+
+    public void printMeanLike(double meanLike, ObjectModel om, Network network){
+        for (String leaf : leafNodeNames_) {
+            int node = network.nodeNameToNo(leaf);
+            double prob = om.calcProbability(network,node);
+            double normLike = prob/meanLike;
+            System.out.println(time_+" "+normLike);
+        }
+    }
 }

@@ -14,19 +14,24 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-public class Likelihood extends SimpleAction {
+public class NormalisedLikelihood extends SimpleAction {
 
-    public long startTime_=10;
-    public long endTime_;
     public FetaOptions options_;
     public FullObjectModel objectModel_;
+    public long startTime_;
     public ParseNet parser_;
 
+    public NormalisedLikelihood(FetaOptions options) {
+        stoppingConditions_ = new ArrayList<StoppingCondition>();
+        options_ = options;
+        objectModel_ = new FullObjectModel(options_.fullObjectModel_);
+    }
 
-    public Likelihood(FetaOptions options){
-        stoppingConditions_= new ArrayList<StoppingCondition>();
-        options_=options;
-        objectModel_= new FullObjectModel(options_.fullObjectModel_);
+    public void execute() {
+        if (!options_.directedInput_) {
+            parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
+        } else parser_= new ParseNetDirected((DirectedNetwork) network_);
+        getLike(startTime_, Long.MAX_VALUE);
     }
 
     public void parseActionOptions(JSONObject obj) {
@@ -35,26 +40,19 @@ public class Likelihood extends SimpleAction {
             startTime_=start;
     }
 
-    public void execute() {
-        if (!options_.directedInput_) {
-            parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
-        } else parser_= new ParseNetDirected((DirectedNetwork) network_);
-        getLogLike(startTime_, Long.MAX_VALUE);
-    }
-
-    public void getLogLike(long start, long end) {
+    public void getLike(long start, long end) {
         network_.buildUpTo(start);
-        double like = 0.0;
-        int noChoices = 0;
+        long time = start;
         while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
             ArrayList<Link> links = network_.linksToBuild_;
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
+            time = newOps.get(0).time_;
+            objectModel_.objectModelAtTime(time).normaliseAll(network_);
+            double[] meanSD_ = objectModel_.objectModelAtTime(time).calcMeanSDLike(network_);
+            System.out.println(meanSD_[0]);
             for (Operation op: newOps) {
-                objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
-                like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_));
-                System.out.println(like);
-                noChoices+=op.noChoices_;
+                op.printMeanLike(meanSD_[0], objectModel_.objectModelAtTime(time),network_);
                 op.build(network_);
             }
             ArrayList<Link> newLinks = new ArrayList<Link>();
@@ -63,7 +61,5 @@ public class Likelihood extends SimpleAction {
             }
             network_.linksToBuild_=newLinks;
         }
-        double c0 = Math.exp(like/noChoices);
-        System.out.println(c0);
     }
 }
