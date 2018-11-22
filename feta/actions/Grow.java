@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 public class Grow extends SimpleAction {
 
-    long startTime=10;
-    long interval=1;
+    long startTime_=10;
+    long interval_=1;
 
     public OperationModel operationModel_;
     public FullObjectModel objectModel_;
@@ -34,14 +34,13 @@ public class Grow extends SimpleAction {
 
     public void execute() {
         // Build network up to starting time from seed
-        network_.buildUpTo(startTime);
+        network_.buildUpTo(startTime_);
 
         // Clear any other links not built in seed network
         network_.linksToBuild_= new ArrayList<Link>();
-        Long time = startTime;
+        Long time = startTime_;
         boolean checkModel = true;
         while (!stoppingConditionsExceeded_(network_)) {
-            time+=interval;
             if (time > 50) {
                 checkModel=false;
             }
@@ -51,6 +50,7 @@ public class Grow extends SimpleAction {
                 objectModel_.objectModelAtTime(time).checkNorm(network_);
             }
             op.fill(network_,objectModel_.objectModelAtTime(time));
+            time+=interval_;
             network_.buildUpTo(Long.MAX_VALUE);
         }
 
@@ -64,7 +64,18 @@ public class Grow extends SimpleAction {
     }
 
     public void parseActionOptions(JSONObject obj){
+        Long start = (Long) obj.get("Start");
+        if (start != null)
+            startTime_=start;
 
+        Long interval = (Long) obj.get("Interval");
+        if (interval != null) {
+            if (interval >= 0) {
+                interval_= interval;
+            } else {
+                System.err.println("Invalid interval");
+            }
+        }
     }
 
     public void parseOperationModel() {

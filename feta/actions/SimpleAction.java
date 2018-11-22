@@ -35,7 +35,7 @@ public abstract class SimpleAction {
     /** Parses the json for any stopping conditions */
     public void parseStoppingConditions(JSONObject obj) {
 
-        Long stopTime = (Long) obj.get("StoppingTime");
+        Long stopTime = (Long) obj.get("MaxTime");
         if (stopTime != null) {
             StoppingCondition sc = new MaxTimeExceeded(stopTime);
             stoppingConditions_.add(sc);

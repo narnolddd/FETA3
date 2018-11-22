@@ -1,0 +1,60 @@
+{
+  "Data": {
+    "GraphInputFile": "seed_graphs/clique-5.dat",
+    "GraphOutputFile": "tutorial_scripts/GrowExample1.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "Grow": {
+      "Start": 1,
+      "Interval": 10,
+      "MaxTime": 3000
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 1,
+      "End": 1000,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.DegreeWithAgeing",
+          "Weight": 1.0,
+          "AgeingExponent": 0.8
+        }
+      ]
+    },
+    {
+     "Start": 1000,
+      "End": 2000,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "Weight": 0.5
+        },
+        {
+          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "Weight": 0.5
+        }
+      ]
+    },
+    {
+      "Start": 2000,
+      "End": 3001,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.RankPreferentialAttachment",
+          "Weight": 1.0,
+          "Alpha": 0.6
+        }
+      ]
+    }
+  ],
+  "OperationModel":
+  {
+    "Name": "feta.operations.Email",
+    "NoRecipients": 3,
+    "PropInternal":0.2
+  }
+}

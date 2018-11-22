@@ -242,3 +242,8 @@ attachment.
 Secondly, models are allowed to vary throughout the time of a network's evolution, for example, growing for the first 1000 timesteps
 according to pure random attachment, from 1000-2000 as half-random half-BA, and 2000-3000 pure BA.
 
+### Growing a network from a specified model
+
+One of the capabilities of FETA is to generate networks from the modelling framework described. Let's look at an example growing script.
+For the sake of exhaustiveness, I've made it a bit more complicated than is probably necessary. 
+
