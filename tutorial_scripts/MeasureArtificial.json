@@ -1,0 +1,14 @@
+{
+  "Data": {
+    "GraphInputFile": "tutorial_scripts/GrowExample1.dat",
+    "GraphInputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "Measure": {
+      "Start": 10,
+      "Interval":10,
+      "MaxTime": 3000
+    }
+  }
+}

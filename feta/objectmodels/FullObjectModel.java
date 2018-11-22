@@ -14,12 +14,14 @@ public class FullObjectModel {
     public ArrayList<ObjectModel> objectModels_;
     public ArrayList<TimeInterval> times_;
     public HashMap<TimeInterval, ObjectModel> timeToOM_;
+    public long lastTime_;
 
     public FullObjectModel(JSONArray model){
         objectModels_=new ArrayList<ObjectModel>();
         times_= new ArrayList<TimeInterval>();
         timeToOM_= new HashMap<TimeInterval, ObjectModel>();
         parseObjectModels(model);
+        lastTime_=times_.get(times_.size()-1).end_;
     }
 
     /** Maps a node and network object to a probability of choosing node */

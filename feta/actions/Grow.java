@@ -40,7 +40,7 @@ public class Grow extends SimpleAction {
         network_.linksToBuild_= new ArrayList<Link>();
         Long time = startTime_;
         boolean checkModel = true;
-        while (!stoppingConditionsExceeded_(network_)) {
+        while (!stoppingConditionsExceeded_(network_) && time < objectModel_.lastTime_) {
             if (time > 50) {
                 checkModel=false;
             }

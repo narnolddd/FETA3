@@ -293,7 +293,7 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
     },
     {
       "Start": 2000,
-      "End": 3001,
+      "End": 3000,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.RankPreferentialAttachment",
@@ -314,7 +314,15 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
 
 Run the command 
 ``` shell
-java -jar feta3-1.0.0.jar tutorial_scripts/
+java -jar feta3-1.0.0.jar tutorial_scripts/GrowExample1.json
+```
+
+Let's get some measurements on the network we've grown. 
+
+Run 
+
+``` shell
+java -jar feta3-1.0.0.jar tutorial_scripts/MeasureArtificial.json > tutorial_scripts/
 ```
 
 #### Subtleties
