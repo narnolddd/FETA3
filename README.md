@@ -30,7 +30,7 @@ Optionally, I have some scripts for gnuplot in the tutorial for plotting - you c
 
 First clone the repository, either manually or using the command: 
 
-```$xslt
+```bash
 git clone https://github.com/narnolddd/FETA3.git
 ```
 
@@ -38,7 +38,7 @@ git clone https://github.com/narnolddd/FETA3.git
 
 Then run the command:
 
-``` shell 
+```bash
 ant jar
 ```
 
@@ -48,7 +48,7 @@ to make the jar file.
 
 Once you have the jar file, FETA is executed from the command line as:
 
-``` shell
+```bash
 java -jar feta3-1.0.0.jar scripts/[some-script-name].json
 ```
 
@@ -97,7 +97,7 @@ how long the measurements should take place for - in this example the measuremen
 
 In the terminal, run the command 
 
-``` shell
+```bash
 java -jar feta3-1.0.0.jar tutorial/MeasureCitations.json > tutorial/CitationsTS.dat
 ```
 
@@ -111,7 +111,7 @@ To see what these time series look like, you can use your favourite plotting dev
 which is reasonably quick to download and usable from the terminal. If you have gnuplot installed, I have written a script for plotting these 
 measurements you've just calculated - run the command:
 
-``` shell
+```bash
 gnuplot tutorial/CitationsTS.gnu
 ```
 
@@ -313,7 +313,7 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
 ```
 
 Run the command 
-``` shell
+```bash
 java -jar feta3-1.0.0.jar tutorial/GrowExample1.json
 ```
 
@@ -321,12 +321,36 @@ Let's get some measurements on the network we've grown.
 
 Run 
 
-``` shell
+```bash
 java -jar feta3-1.0.0.jar tutorial/MeasureArtificial.json > tutorial/ArtificialTS.dat
 ```
+
+and finally get some measurements using:
+
+```bash
+gnuplot tutorial/ArtificialTS.gnu
+```
+
+(You should get something like the below in the `tutorial/plots` folder)
+
+![maxdeg](README_pics/artificial_maxdeg.jpg)
+![meandegsq](README_pics/artificial_meandegsq.jpg)
+
+![cluster](README_pics/artificial_cluster.jpg)
+![assort](README_pics/artificial_assort.jpg)
+
 
 #### Subtleties
 
 The object model must be fully specified for the whole time period that the network is growing. That is, the value for `End` tag on
 the last `ObjectModel` must be at least the value for `MaxTime` in `Action`. Similarly, the last value of each subsequent time interval must
 be equal to the start of the next (here 1-1000, 1000-2000, 2000-3000).
+
+### Model likelihood
+
+The main feature of the FETA software, along with generating networks, is to calculate likelihoods of network *object models* for a 
+timestamped network dataset. Please refer to the [paper](https://eprints.soton.ac.uk/397485/1/feta_comnet_2015.pdf) for an in depth
+description, but informally, a null hypothesis H0 of random (uniform) attachment is used, and the user may specify an alternative model H1.
+The value c0 is given, which is a rescaling of the log-likelihood ratio of H1 to H0. One should interpret c0>1 as a model being more
+likely than random attachment and vice versa for c0<1.
+
