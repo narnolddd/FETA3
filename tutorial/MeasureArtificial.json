@@ -1,14 +1,14 @@
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "tutorial/GrowExample1.dat",
     "GraphInputType": "NNT",
     "Directed": false
   },
   "Action": {
     "Measure": {
       "Start": 10,
-      "Interval":100,
-      "MaxNodes": 10000
+      "Interval":10,
+      "MaxTime": 3000
     }
   }
 }

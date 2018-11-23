@@ -1,7 +1,7 @@
 {
   "Data": {
     "GraphInputFile": "seed_graphs/clique-5.dat",
-    "GraphOutputFile": "tutorial_scripts/GrowExample1.dat",
+    "GraphOutputFile": "tutorial/GrowExample1.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false

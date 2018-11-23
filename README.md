@@ -60,7 +60,7 @@ The single argument `scripts/[some-script-name].json` is a JSON config file tell
 
 Let's do an example of obtaining a time series of measurements from a timestamped network dataset. In the `data` folder there's a file 'cit-HepPh-ordered.txt'
 which is a timestamped citation network dataset from ArXiV high energy physics, available from [SNAP](https://snap.stanford.edu/data/). We will 
-use the script `MeasureCitations.json` in the `tutorial_scripts` folder, which looks like:
+use the script `MeasureCitations.json` in the `tutorial` folder, which looks like:
 
 ```JSON
 {
@@ -98,12 +98,12 @@ how long the measurements should take place for - in this example the measuremen
 In the terminal, run the command 
 
 ``` shell
-java -jar feta3-1.0.0.jar tutorial_scripts/MeasureCitations.json > tutorial_scripts/CitationsTS.dat
+java -jar feta3-1.0.0.jar tutorial/MeasureCitations.json > tutorial/CitationsTS.dat
 ```
 
 It may take a minute or so to run, as the network file is quite big.
 
-You should now have the file `CitationsTS.dat` in the `tutorial_scripts` folder. The columns are ordered as: timestamp, number of nodes,
+You should now have the file `CitationsTS.dat` in the `tutorial` folder. The columns are ordered as: timestamp, number of nodes,
 number of links, average degree, density (number of links/number of possible links), maximum degree, average clustering coeff,
 mean squared degree, degree assortativity.
 
@@ -112,10 +112,10 @@ which is reasonably quick to download and usable from the terminal. If you have 
 measurements you've just calculated - run the command:
 
 ``` shell
-gnuplot tutorial_scripts/CitationsTS.gnu
+gnuplot tutorial/CitationsTS.gnu
 ```
 
-and there should now be some .eps plots in your `tutorial_scripts/plots` folder which should contain some looking something like this:
+and there should now be some .eps plots in your `tutorial/plots` folder which should contain some looking something like this:
 
 ![maxdeg](README_pics/cit_maxdeg.jpg) 
 ![meandegsq](README_pics/cit_meandegsq.jpg)
@@ -128,7 +128,7 @@ Whilst these plots are informative, note that we have treated the citation netwo
 *from* one paper to another, it may more naturally be considered a directed network. What happens if we do the same process but treat the 
 network as directed? 
 
-We're going to run the same command as before, but with the file `tutorial_scripts/MeasureCitationsDirected.json` which looks like:
+We're going to run the same command as before, but with the file `tutorial/MeasureCitationsDirected.json` which looks like:
 
 ```JSON
 {
@@ -147,13 +147,13 @@ We're going to run the same command as before, but with the file `tutorial_scrip
 }
 ```
 
-This is identical to the previous file `tutorial_scripts/MeasureCitations.json` apart from the `Directed` tag being changed from
+This is identical to the previous file `tutorial/MeasureCitations.json` apart from the `Directed` tag being changed from
 `false` to `true`. 
 
 Let's run the command 
 
 ```$xslt
-java -jar feta3-1.0.0.jar tutorial_scripts/MeasureCitationsDirected.json > tutorial_scripts/CitationsTSDirected.dat
+java -jar feta3-1.0.0.jar tutorial/MeasureCitationsDirected.json > tutorial/CitationsTSDirected.dat
 ```
 
 Now, notice that some of the measurements which made sense for undirected networks may not make sense or at the very least need some
@@ -166,7 +166,7 @@ out-degree (both identical), maximum in-degree, maximum out-degree, mean squared
 Again, if you have gnuplot, run:
 
 ```$xslt
-gnuplot tutorial_scripts/CitationsTSDirected.gnu
+gnuplot tutorial/CitationsTSDirected.gnu
 ```
 
 which will generate some .eps files in the plots folder. Compare with the plots generated when we treated the network as undirected.
@@ -253,7 +253,7 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
 {
   "Data": {
     "GraphInputFile": "seed_graphs/clique-5.dat",
-    "GraphOutputFile": "tutorial_scripts/GrowExample1.dat",
+    "GraphOutputFile": "tutorial/GrowExample1.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false
@@ -314,7 +314,7 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
 
 Run the command 
 ``` shell
-java -jar feta3-1.0.0.jar tutorial_scripts/GrowExample1.json
+java -jar feta3-1.0.0.jar tutorial/GrowExample1.json
 ```
 
 Let's get some measurements on the network we've grown. 
@@ -322,7 +322,7 @@ Let's get some measurements on the network we've grown.
 Run 
 
 ``` shell
-java -jar feta3-1.0.0.jar tutorial_scripts/MeasureArtificial.json > tutorial_scripts/ArtificialTS.dat
+java -jar feta3-1.0.0.jar tutorial/MeasureArtificial.json > tutorial/ArtificialTS.dat
 ```
 
 #### Subtleties
