@@ -94,17 +94,20 @@ public class Star extends Operation {
         double probUsed = 0.0;
         double randUsed = 0.0;
         for (String leaf: leafNodeNames_) {
-            int node = net.nodeNameToNo(leaf);
-            double prob = obm.calcProbability(net,node);
-            if (prob <= 0) {
-                System.err.println("Node returned zero probability");
-                System.exit(0);
+            if (!net.newNode(leaf)) {
+                int node = net.nodeNameToNo(leaf);
+                double prob = obm.calcProbability(net,node);
+                if (prob <= 0) {
+                    System.err.println("Node returned zero probability");
+                    System.exit(0);
+                }
+                // Log Likelihood is calculated without replacement
+                logSum+= Math.log(prob) - Math.log(1 - probUsed);
+                logRand+=Math.log(1.0/net.noNodes_) - Math.log(1 - randUsed);
+                randUsed+= 1.0/net.noNodes_;
+                probUsed+= prob;
             }
-            // Log Likelihood is calculated without replacement
-            logSum+= Math.log(prob) - Math.log(1 - probUsed);
-            logRand+=Math.log(1.0/net.noNodes_) - Math.log(1 - randUsed);
-            randUsed+= 1.0/net.noNodes_;
-            probUsed+= prob;
+            else continue;
         }
         return logSum - logRand;
     }

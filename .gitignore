@@ -16,6 +16,8 @@ META-INF
 
 # user folders
 output
+experiments
+venv
 
 # tutorial files
 tutorial_scripts/*.dat

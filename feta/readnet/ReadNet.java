@@ -37,6 +37,9 @@ public abstract class ReadNet {
                 if (line.length() == 0)
                     continue;
                 Link link = parseLine(line, linkno);
+                // aint got time for loops
+                if (link.sourceNode_.equals(link.destNode_))
+                    continue;
 //                if (removeDuplicates_ && links_.contains(link))
 //                    continue;
                 links_.add(link);

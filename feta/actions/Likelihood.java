@@ -62,6 +62,7 @@ public class Likelihood extends SimpleAction {
             }
             network_.linksToBuild_=newLinks;
         }
+
         double c0 = Math.exp(like/noChoices);
         System.out.println(c0);
     }
