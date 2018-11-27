@@ -124,11 +124,11 @@ gnuplot tutorial/CitationsTS.gnu
 
 and there should now be some .eps plots in your `tutorial/plots` folder which should contain some looking something like this:
 
-![maxdeg](README_pics/cit_maxdeg.jpg) 
-![meandegsq](README_pics/cit_meandegsq.jpg)
+![maxdeg](README_pics/cit_maxdeg.png) 
+![meandegsq](README_pics/cit_meandegsq.png)
 
-![cluster](README_pics/cit_cluster.jpg)
-![assort](README_pics/cit_assort.jpg)
+![cluster](README_pics/cit_cluster.png)
+![assort](README_pics/cit_assort.png)
 
 
 Whilst these plots are informative, note that we have treated the citation network edgelist as undirected, whereas since citations are always 
@@ -180,17 +180,17 @@ gnuplot tutorial/CitationsTSDirected.gnu
 
 which will generate some .eps files in the plots folder. Compare with the plots generated when we treated the network as undirected.
 
-![maxindeg](README_pics/cit_maxdeg_in.jpg) 
-![maxoutdeg](README_pics/cit_maxdeg_out.jpg)
+![maxindeg](README_pics/cit_maxdeg_in.png) 
+![maxoutdeg](README_pics/cit_maxdeg_out.png)
 
-![meanindegsq](README_pics/cit_meandegsq_in.jpg)
-![meanoutdegsq](README_pics/cit_meandegsq_out.jpg)
+![meanindegsq](README_pics/cit_meandegsq_in.png)
+![meanoutdegsq](README_pics/cit_meandegsq_out.png)
 
-![assortii](README_pics/cit_assort_inin.jpg)
-![assortio](README_pics/cit_assort_inout.jpg)
+![assortii](README_pics/cit_assort_inin.png)
+![assortio](README_pics/cit_assort_inout.png)
 
-![assortoi](README_pics/cit_assort_outin.jpg)
-![assortoo](README_pics/cit_assort_outout.jpg)
+![assortoi](README_pics/cit_assort_outin.png)
+![assortoo](README_pics/cit_assort_outout.png)
 
 We can also look at the degree distribution at different time-slices. You should notice in the tutorial folder three files all something 
 like `CitationsTSDeg.dat` which are the degree distributions recorded at the specified time intervals. Let's plot the distributions at 
@@ -202,7 +202,7 @@ gnuplot tutorial/CitationsDegDist.gnu
 
 and we should get something in the plots folder like:
 
-![degdist](README_pics/CitationsTSDeg.jpg)
+![degdist](README_pics/CitationsTSDeg.png)
 
 ## Working with evolving network models
 
@@ -352,11 +352,11 @@ gnuplot tutorial/ArtificialTS.gnu
 
 (You should get something like the below in the `tutorial/plots` folder)
 
-![maxdeg](README_pics/artificial_maxdeg.jpg)
-![meandegsq](README_pics/artificial_meandegsq.jpg)
+![maxdeg](README_pics/artificial_maxdeg.png)
+![meandegsq](README_pics/artificial_meandegsq.png)
 
-![cluster](README_pics/artificial_cluster.jpg)
-![assort](README_pics/artificial_assort.jpg)
+![cluster](README_pics/artificial_cluster.png)
+![assort](README_pics/artificial_assort.png)
 
 
 #### Subtleties
