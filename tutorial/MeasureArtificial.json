@@ -8,7 +8,8 @@
     "Measure": {
       "Start": 10,
       "Interval":10,
-      "MaxTime": 3000
+      "MaxTime": 3000,
+      "FileName": "tutorial/ArtificialTS.dat"
     }
   }
 }

@@ -341,7 +341,7 @@ Let's get some measurements on the network we've grown.
 Run 
 
 ```bash
-java -jar feta3-1.0.0.jar tutorial/MeasureArtificial.json > tutorial/ArtificialTS.dat
+java -jar feta3-1.0.0.jar tutorial/MeasureArtificial.json
 ```
 
 and finally get some measurements using:
