@@ -8,7 +8,8 @@
     "Measure": {
       "Start": 10,
       "Interval":100,
-      "MaxNodes": 10000
+      "MaxNodes": 10000,
+      "FileName":"tutorial/CitationsTS.dat"
     }
   }
 }

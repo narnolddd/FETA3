@@ -1,5 +1,8 @@
 package feta.network;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -19,6 +22,7 @@ public class UndirectedNetwork extends Network {
     public int maxDeg_;
     private double assort_;
     private double density_;
+    private BufferedWriter br_;
 
     public UndirectedNetwork() {
         neighbours_= new TreeMap<Integer, ArrayList<Integer>>();
@@ -53,6 +57,35 @@ public class UndirectedNetwork extends Network {
             return true;
         }
         return false;
+    }
+
+    public void setUpDegDistWriters(String fname) {
+        int dot = fname.lastIndexOf('.');
+        String degFile = fname.substring(0,dot)+"Deg"+fname.substring(dot);
+
+        try {
+            FileWriter fwIn = new FileWriter(degFile);
+            br_ = new BufferedWriter(fwIn);
+        } catch (IOException ioe) {
+            System.err.println("Could not set up degree distribution writer.");
+            ioe.printStackTrace();
+        }
+    }
+
+    public void writeDegDist() {
+        String degString = "";
+        for (int i = 0; i < degArraySize_; i++) {
+            degString+=degreeDist_[i]+" ";
+        }
+        try {
+            br_.write(degString+"\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeWriters() throws IOException {
+        br_.close();
     }
 
     /** Increments the degree distribution array in the correct place */

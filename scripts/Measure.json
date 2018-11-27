@@ -2,14 +2,15 @@
   "Data": {
     "GraphInputFile": "data/cit-HepPh-ordered.txt",
     "GraphInputType": "NNT",
-    "Directed": false,
+    "Directed": true,
     "OutputLineSeparator": " "
   },
   "Action": {
     "Measure": {
       "Start": 10,
-      "Interval":10,
-      "MaxNodes": 10000
+      "Interval":100,
+      "MaxNodes": 10000,
+      "FileName": "output/citationsMeasurements.dat"
     }
   }
 }

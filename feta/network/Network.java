@@ -111,7 +111,10 @@ public abstract class Network {
         linksToBuild_=networkReader_.links_;
     }
 
-
+    /** Makes buffered writers for writing degree distribution */
+    public abstract void setUpDegDistWriters(String fname);
+    public abstract void writeDegDist();
+    public abstract void closeWriters() throws IOException;
 
     /** Set which reader to use */
     public void setNetworkReader(ReadNet rn) {

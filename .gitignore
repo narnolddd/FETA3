@@ -20,5 +20,5 @@ experiments/
 venv
 
 # tutorial files
-tutorial_scripts/*.dat
-tutorial_scripts/plots/*.eps
+tutorial/*.dat
+tutorial/plots/*.eps

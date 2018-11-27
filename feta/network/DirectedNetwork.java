@@ -1,5 +1,8 @@
 package feta.network;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -26,6 +29,8 @@ public class DirectedNetwork extends Network {
     private double OutOutAssort_;
     private int maxInDeg_;
     private int maxOutDeg_;
+    private BufferedWriter brIn_=null;
+    private BufferedWriter brOut_=null;
 
     public DirectedNetwork() {
         inLinks_ = new TreeMap<Integer, ArrayList<Integer>>();
@@ -47,13 +52,19 @@ public class DirectedNetwork extends Network {
     public void addNode(int nodeno) {
         inLinks_.put(nodeno, new ArrayList<Integer>());
         outLinks_.put(nodeno, new ArrayList<Integer>());
+        incrementInDegDist(0);
+        incrementOutDegDist(0);
     }
 
     public void addLink(int src, int dst){
+        if (isLink(src,dst) && !allowDuplicates_)
+            return;
         inLinks_.get(dst).add(src);
         outLinks_.get(src).add(dst);
         incrementInDegDist(getInDegree(dst));
+        reduceInDegDist(getInDegree(dst)-1);
         incrementOutDegDist(getOutDegree(src));
+        reduceOutDegDist(getOutDegree(src)-1);
     }
 
     public boolean isLink(int a, int b) {
@@ -61,6 +72,44 @@ public class DirectedNetwork extends Network {
             return true;
         }
         return false;
+    }
+
+    public void setUpDegDistWriters(String fname) {
+        int dot = fname.lastIndexOf('.');
+        String inDegFile = fname.substring(0,dot)+"InDeg"+fname.substring(dot);
+        String outDegFile = fname.substring(0,dot)+"OutDeg"+fname.substring(dot);
+
+        try {
+            FileWriter fwIn = new FileWriter(inDegFile);
+            brIn_ = new BufferedWriter(fwIn);
+            FileWriter fwOut = new FileWriter(outDegFile);
+            brOut_= new BufferedWriter(fwOut);
+        } catch (IOException ioe) {
+            System.err.println("Could not set up degree distribution writer.");
+            ioe.printStackTrace();
+        }
+    }
+
+    public void writeDegDist() {
+        String inString = "";
+        String outString = "";
+        for (int i = 0; i < inDegArraySize_; i++) {
+            inString +=inDegreeDist_[i]+" ";
+        }
+        for (int j = 0; j < outDegArraySize_; j++) {
+            outString +=outDegreeDist_[j]+" ";
+        }
+        try {
+            brIn_.write(inString+"\n");
+            brOut_.write(outString+"\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeWriters() throws IOException {
+        brIn_.close();
+        brOut_.close();
     }
 
     public int getInDegree(int node) {
@@ -103,6 +152,14 @@ public class DirectedNetwork extends Network {
             outDegArraySize_*=2;
             incrementOutDegDist(degree);
         }
+    }
+
+    public void reduceInDegDist(int degree) {
+        inDegreeDist_[degree]--;
+    }
+
+    public void reduceOutDegDist(int degree) {
+        outDegreeDist_[degree]--;
     }
 
 

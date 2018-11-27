@@ -79,7 +79,8 @@ use the script `MeasureCitations.json` in the `tutorial` folder, which looks lik
     "Measure": {
       "Start": 10,
       "Interval":100,
-      "MaxNodes": 10000
+      "MaxNodes": 10000,
+      "FileName":"tutorial/CitationsTS.dat"
     }
   }
 }
@@ -104,7 +105,7 @@ how long the measurements should take place for - in this example the measuremen
 In the terminal, run the command 
 
 ```bash
-java -jar feta3-1.0.0.jar tutorial/MeasureCitations.json > tutorial/CitationsTS.dat
+java -jar feta3-1.0.0.jar tutorial/MeasureCitations.json
 ```
 
 It may take a minute or so to run, as the network file is quite big.
@@ -147,19 +148,21 @@ We're going to run the same command as before, but with the file `tutorial/Measu
     "Measure": {
       "Start": 10,
       "Interval":100,
-      "MaxNodes": 10000
+      "MaxNodes": 10000,
+      "FileName": "tutorial/CitationsTSDirected.dat"
     }
   }
 }
+
 ```
 
 This is identical to the previous file `tutorial/MeasureCitations.json` apart from the `Directed` tag being changed from
-`false` to `true`. 
+`false` to `true`, and a different filename given to print the measurements to.
 
 Let's run the command 
 
 ```$xslt
-java -jar feta3-1.0.0.jar tutorial/MeasureCitationsDirected.json > tutorial/CitationsTSDirected.dat
+java -jar feta3-1.0.0.jar tutorial/MeasureCitationsDirected.json
 ```
 
 Now, notice that some of the measurements which made sense for undirected networks may not make sense or at the very least need some
@@ -189,7 +192,17 @@ which will generate some .eps files in the plots folder. Compare with the plots 
 ![assortoi](README_pics/cit_assort_outin.jpg)
 ![assortoo](README_pics/cit_assort_outout.jpg)
 
+We can also look at the degree distribution at different time-slices. You should notice in the tutorial folder three files all something 
+like `CitationsTSDeg.dat` which are the degree distributions recorded at the specified time intervals. Let's plot the distributions at 
+the last timeslot by running:
 
+```bash
+gnuplot tutorial/CitationsDegDist.gnu
+```
+
+and we should get something in the plots folder like:
+
+![degdist](README_pics/CitationsTSDeg.jpg)
 
 ## Working with evolving network models
 

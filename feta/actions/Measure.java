@@ -12,10 +12,8 @@ public class Measure extends SimpleAction {
 
     private long startTime_=10;
     private long interval_=10;
-    public String fname = "output/citationsdegvector.dat";
-    public BufferedWriter bw = null;
-    public FileWriter fw = null;
-
+    public String measureName_ = "output/measurements.dat";
+    public BufferedWriter bw_ = null;
     // Need to think how this will work alternating between directed and undirected networks.
     private boolean measureDegDist_=false;
 
@@ -24,29 +22,31 @@ public class Measure extends SimpleAction {
     }
 
     public void execute() {
+        setUpMeasureWriter(measureName_);
+        network_.setUpDegDistWriters(measureName_);
         long time = startTime_;
         network_.buildUpTo(time);
-//        setUpBR();
-        while (!stoppingConditionsExceeded_(network_) && network_.linksToBuild_.size() > 0) {
-            network_.buildUpTo(time);
-            network_.calcMeasurements();
-            System.out.println(network_.measureToString());
-//            try {
-//                bw.write(network_.degreeVectorToString());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            time += interval_;
+        try {
+            while (!stoppingConditionsExceeded_(network_) && network_.linksToBuild_.size() > 0) {
+                network_.buildUpTo(time);
+                network_.calcMeasurements();
+                bw_.write(network_.measureToString()+"\n");
+                network_.writeDegDist();
+                time += interval_;
+            }
+            bw_.close();
+            network_.closeWriters();
+        } catch (IOException e) {
+            System.out.println("Problem writing measurements to: "+measureName_);
+            e.printStackTrace();
         }
-//        try {bw.close();} catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
     }
 
-    public void setUpBR() {
-        try {
-            fw = new FileWriter(fname);
-            bw = new BufferedWriter(fw);
+    public void setUpMeasureWriter(String fname) {
+        try{
+            FileWriter fw = new FileWriter(fname);
+            bw_= new BufferedWriter(fw);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,6 +64,10 @@ public class Measure extends SimpleAction {
             } else {
                 System.err.println("Invalid interval");
             }
+        }
+        String measureFName = (String) obj.get("FileName");
+        if (measureFName != null) {
+            measureName_=measureFName;
         }
     }
 }
