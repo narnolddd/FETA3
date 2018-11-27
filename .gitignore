@@ -16,7 +16,7 @@ META-INF
 
 # user folders
 output
-experiments
+experiments/
 venv
 
 # tutorial files

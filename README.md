@@ -34,6 +34,12 @@ First clone the repository, either manually or using the command:
 git clone https://github.com/narnolddd/FETA3.git
 ```
 
+For everything else, let's now jump into the `FETA3` folder if you haven't already:
+
+```bash
+cd FETA3
+```
+
 ## Building
 
 Then run the command:
