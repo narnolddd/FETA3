@@ -9,12 +9,15 @@ based on [FETA2](https://github.com/richardclegg/FETA2)
 * Obtaining time series of measurements on growing directed and undirected networks
 * Growing networks from a range of models and combinations of these
 * Fitting models to timestamped network data.
-* (Soon) investigating changes in network growth over time
 
 ## What can't I use FETA for?
 
 * Networks with disappearing nodes or edges
 * Weighted networks/multigraphs
+
+## Contact
+
+If you have questions, comments, ideas or are having bugs, please don't hesitate to get in touch.
 
 # Building and running
 
@@ -101,6 +104,9 @@ The `Action` tag tells FETA what to do with the inputted file; in this case we w
 
 * Stopping condition. This can either be a latest time `MaxTime`, maximum number of nodes `MaxNodes` or links `MaxLinks`. This specifies
 how long the measurements should take place for - in this example the measurements will finish when the network size has reached 10000 nodes.
+
+* `FileName` - where to write the measurements to. This will also generate one, or two files (depending on whether or not the network
+is directed) to store the degree distribution at different snapshots.
 
 In the terminal, run the command 
 
@@ -248,6 +254,7 @@ the software are:
 * `DegreeWithAgeing` ([Dorogovtsev-Mendes](https://arxiv.org/pdf/cond-mat/0001419.pdf)) - like the above but older nodes become less 
 attractive
 * `RankPreferentialAttachment` ([Fortunato, Flammini, Menczer](https://arxiv.org/abs/cond-mat/0602081)) - highest ranked nodes are the most attractive
+* `DegreePower` [Krapivsky, Redner, Leyvraz](https://arxiv.org/abs/cond-mat/0005139) - nonlinear preferential attachment to node degree
 
 In addition, the modelling framework allows for flexibility in two ways:
 
