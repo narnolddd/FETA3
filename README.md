@@ -92,10 +92,11 @@ use the script `MeasureCitations.json` in the `tutorial` folder, which looks lik
 
 The `Data` tag tells FETA what type of input to expect:
 
-* The `GraphInputFile` tag should be self-explanatory. 
+* The `GraphInputFile` tag specifies the location of the network file to read. Acceptable formats are tab/comma separated edgelists, 
+with or without timestamps. 
 * `GraphInputType` allows either "NNT" or"NN" - this refers to whether or not the edgelist is timestamped. "NNT" is for edges 
 which look like `NODE-1 NODE-2 TIMESTAMP`, "NN" for `NODE-1 NODE-2`. In the latter case, edges will be treated as arriving sequentially. 
-* `Directed` refers to whether the edges should be treated as directed or not.
+* `Directed` refers to whether the edges should be treated as directed or not - default false.
 
 The `Action` tag tells FETA what to do with the inputted file; in this case we want to take measurements of it. We can specify:
 
@@ -340,6 +341,9 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
   }
 }
 ```
+
+The tag `GraphInputFile` now points to the seed graph with which we want to start - here a file with edgelist comprising a clique of
+5 nodes.
 
 Run the command 
 ```bash
