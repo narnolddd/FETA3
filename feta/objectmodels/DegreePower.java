@@ -63,5 +63,9 @@ public class DegreePower extends ObjectModelComponent {
         if (useInDeg!= null) {
             useInDegree_=useInDeg;
         }
+        Double power = (Double) params.get("Power");
+        if (power!=null) {
+            power_=power;
+        }
     }
 }

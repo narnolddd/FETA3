@@ -17,7 +17,8 @@ based on [FETA2](https://github.com/richardclegg/FETA2)
 
 ## Contact
 
-If you have questions, comments, ideas or are having bugs, please don't hesitate to get in touch.
+If you have questions, comments, ideas or are having bugs, please don't hesitate to get in touch. Drop me an email at
+n.a.arnold@qmul.ac.uk
 
 # Building and running
 
@@ -252,9 +253,11 @@ the software are:
 * `RandomAttachment` - all nodes equally likely.
 * `DegreeModelComponent` ([Barabasi-Albert](http://science.sciencemag.org/content/286/5439/509)) - nodes of higher degree are more attractive
 * `DegreeWithAgeing` ([Dorogovtsev-Mendes](https://arxiv.org/pdf/cond-mat/0001419.pdf)) - like the above but older nodes become less 
-attractive
-* `RankPreferentialAttachment` ([Fortunato, Flammini, Menczer](https://arxiv.org/abs/cond-mat/0602081)) - highest ranked nodes are the most attractive
-* `DegreePower` [Krapivsky, Redner, Leyvraz](https://arxiv.org/abs/cond-mat/0005139) - nonlinear preferential attachment to node degree
+attractive. Has parameter `AgeingExponent` controlling the effect of node's age on attractiveness.
+* `RankPreferentialAttachment` ([Fortunato, Flammini, Menczer](https://arxiv.org/abs/cond-mat/0602081)) - with parameter `Alpha`. Positive
+values of alpha lead to oldest nodes being most attractive, vice versa for negative values.
+* `DegreePower` [Krapivsky, Redner, Leyvraz](https://arxiv.org/abs/cond-mat/0005139) - nonlinear preferential attachment to node degree.
+Parameter `Power` specifying the degree power.
 
 In addition, the modelling framework allows for flexibility in two ways:
 
