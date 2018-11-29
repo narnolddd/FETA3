@@ -15,6 +15,13 @@ based on [FETA2](https://github.com/richardclegg/FETA2) by [Richard Clegg](https
 * Networks with disappearing nodes or edges
 * Weighted networks/multigraphs
 
+## Changes from FETA2
+
+* Flexibility to specify models which may change over time
+* More graph file types supported
+* Scripts for configuring now written in JSON rather than XML
+* Different types of network growth considered
+
 ## Contact
 
 If you have questions, comments, ideas or are having bugs, please don't hesitate to get in touch. Drop me an email at
