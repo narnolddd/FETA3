@@ -258,52 +258,53 @@ public class DirectedNetwork extends Network {
         double assProdOutIn = 0.0;
         double assProdOutOut = 0.0;
 
-        double assSqInIn = 0.0;
-        double assSqInOut = 0.0;
-        double assSqOutIn = 0.0;
-        double assSqOutOut = 0.0;
+        double degSqIn = 0.0;
+        double degSqOut = 0.0;
 
         for (int i = 0; i < noNodes_; i++) {
+            int srcDegIn = getInDegree(i);
+            int srcDegOut = getOutDegree(i);
+
+            degSqIn+= (1.0/noLinks_)*srcDegIn * srcDegIn;
+            degSqOut+= (1.0/noLinks_)*srcDegOut * srcDegOut;
+
             ArrayList<Integer> links = outLinks_.get(i);
             for (int j = 0; j < links.size(); j++) {
                 int l = links.get(j);
                 if (l < i)
                     continue;
-                int srcDegIn = getInDegree(i);
-                int srcDegOut = getOutDegree(i);
                 int dstDegIn = getInDegree(l);
                 int dstDegOut = getOutDegree(l);
 
-                assSumInIn += 0.5 * (1.0/noLinks_) * (srcDegIn + dstDegIn);
-                assSumInOut += 0.5 * (1.0/noLinks_) * (srcDegIn + dstDegOut);
-                assSumOutIn += 0.5 * (1.0/noLinks_) * (srcDegOut + dstDegIn);
-                assSumOutOut += 0.5 * (1.0/noLinks_) * (srcDegOut + dstDegOut);
+                assSumInIn += (1.0/noNodes_) * (srcDegIn + dstDegIn);
+                assSumInOut += (1.0/noNodes_) * (srcDegIn + dstDegOut);
+                assSumOutIn += (1.0/noNodes_) * (srcDegOut + dstDegIn);
+                assSumOutOut += (1.0/noNodes_) * (srcDegOut + dstDegOut);
 
-                assProdInIn += srcDegIn * dstDegIn;
-                assProdInOut += srcDegIn * dstDegOut;
-                assProdOutIn += srcDegOut * dstDegIn;
-                assProdOutOut += srcDegOut * dstDegOut;
-
-                assSqInIn += 0.5 * (1.0/noLinks_) * (srcDegIn*srcDegIn + dstDegIn*dstDegIn);
-                assSqInOut += 0.5 * (1.0/noLinks_) * (srcDegIn*srcDegIn + dstDegOut*dstDegOut);
-                assSqOutIn += 0.5 * (1.0/noLinks_) * (srcDegOut*srcDegOut + dstDegIn*dstDegIn);
-                assSqOutOut += 0.5 * (1.0/noLinks_) * (srcDegOut*srcDegOut + dstDegOut*dstDegOut);
+                assProdInIn += (1.0/noLinks_) * srcDegIn*dstDegIn;
+                assProdInOut += (1.0/noLinks_)* srcDegIn*dstDegOut;
+                assProdOutIn += (1.0/noLinks_) * srcDegOut*dstDegIn;
+                assProdOutOut += (1.0/noLinks_)* srcDegOut*dstDegOut;
             }
         }
-        double assNumInIn = (1.0/noLinks_) * assProdInIn - assSumInIn * assSumInIn;
-        double assNumInOut = (1.0/noLinks_) * assProdInOut - assSumInOut * assSumInOut;
-        double assNumOutIn = (1.0/noLinks_) * assProdOutIn - assSumOutIn * assSumOutIn;
-        double assNumOutOut = (1.0/noLinks_) * assProdOutOut - assSumOutOut * assSumOutOut;
 
-        double assDomInIn = assSqInIn - assSumInIn * assSumInIn;
-        double assDomInOut = assSqInOut - assSumInOut * assSumInOut;
-        double assDomOutIn = assSqOutIn - assSumOutIn * assSumOutIn;
-        double assDomOutOut = assSqOutOut - assSumOutOut * assSumOutOut;
+        double numInIn = assProdInIn - assSumInIn + (1.0/noNodes_)*(noLinks_/noNodes_);
+        double numInOut = assProdInOut - assSumInOut + (1.0/noNodes_)*(noLinks_/noNodes_);
+        double numOutIn = assProdOutIn - assSumOutIn + (1.0/noNodes_)*(noLinks_/noNodes_);
+        double numOutOut = assProdOutOut - assSumOutOut + (1.0/noNodes_)*(noLinks_/noNodes_);
 
-        InInAssort_=assNumInIn/assDomInIn;
-        InOutAssort_=assNumInOut/assDomInOut;
-        OutInAssort_=assNumOutIn/assDomOutIn;
-        OutOutAssort_=assNumOutOut/assDomOutOut;
+        double sigmaIn = Math.sqrt(degSqIn - noLinks_/noNodes_);
+        double sigmaOut = Math.sqrt(degSqOut - noLinks_/noNodes_);
+
+        double denInIn = sigmaIn*sigmaIn;
+        double denInOut = sigmaIn*sigmaOut;
+        double denOutOut = sigmaOut*sigmaOut;
+
+        InInAssort_= numInIn/denInIn;
+        InOutAssort_= numInOut/denInOut;
+        OutInAssort_= numOutIn/denInOut;
+        OutOutAssort_= numOutOut/denOutOut;
+
     }
 
     public void calcMeasurements() {

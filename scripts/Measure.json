@@ -1,16 +1,16 @@
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "output/20181129112456.dat",
     "GraphInputType": "NNT",
-    "Directed": true,
+    "Directed": false,
     "OutputLineSeparator": " "
   },
   "Action": {
     "Measure": {
       "Start": 10,
-      "Interval":100,
-      "MaxNodes": 10000,
-      "FileName": "output/citationsMeasurements.dat"
+      "Interval":10,
+      "MaxTime": 10000,
+      "FileName": "output/BAtoRand.dat"
     }
   }
 }
