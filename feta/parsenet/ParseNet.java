@@ -4,11 +4,15 @@ import feta.network.Link;
 import feta.network.Network;
 import feta.operations.Operation;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class ParseNet {
 
     Network net_;
+    BufferedWriter bw_;
 
     public ArrayList<Operation> operations_;
 
@@ -40,6 +44,19 @@ public abstract class ParseNet {
             linkSet.add(l2);
         }
         return linkSet;
+    }
+
+    public void writeToFile(String fname) {
+        try {
+            FileWriter fw = new FileWriter(fname);
+            bw_ = new BufferedWriter(fw);
+            for (Operation op: operations_) {
+                bw_.write(op+"\n");
+            }
+            bw_.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

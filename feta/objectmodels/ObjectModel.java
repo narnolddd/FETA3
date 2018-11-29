@@ -130,6 +130,8 @@ public class ObjectModel {
             if (weightSoFar > r)
                 break;
         }
+        if (l == nodeList.size())
+            l--;
         return nodeList.get(l);
     }
 

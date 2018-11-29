@@ -394,3 +394,5 @@ description, but informally, a null hypothesis H0 of random (uniform) attachment
 The value c0 is given, which is a rescaling of the log-likelihood ratio of H1 to H0. One should interpret c0>1 as a model being more
 likely than random attachment and vice versa for c0<1.
 
+Let's
+

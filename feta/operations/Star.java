@@ -75,7 +75,7 @@ public class Star extends Operation {
     }
 
     public String toString() {
-        String str = "CENTRE "+centreNodeName_+" LEAVES ";
+        String str = time_+" STAR "+centreNodeName_+" LEAVES ";
         for (String leaf: leafNodeNames_) {
             str+=leaf+" ";
         }

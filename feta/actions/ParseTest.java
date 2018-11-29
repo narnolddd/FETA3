@@ -14,6 +14,7 @@ public class ParseTest extends SimpleAction {
 
     public long startTime_=10;
     public long interval_=10;
+    public String fileName_;
 
     boolean directed_;
     ParseNet parser_;
@@ -36,6 +37,12 @@ public class ParseTest extends SimpleAction {
                 System.err.println("Invalid interval");
             }
         }
+        String fname = (String) obj.get("FileName");
+        if (fname == null) {
+            System.err.println("No filename specified");
+        } else {
+            fileName_=fname;
+        }
     }
 
     public void execute() {
@@ -47,5 +54,6 @@ public class ParseTest extends SimpleAction {
             parser_.parseNetwork(time_,time_+interval_);
             time_+=interval_;
         }
+        parser_.writeToFile(fileName_);
     }
 }
