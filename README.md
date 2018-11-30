@@ -394,5 +394,88 @@ description, but informally, a null hypothesis H0 of random (uniform) attachment
 The value c0 is given, which is a rescaling of the log-likelihood ratio of H1 to H0. One should interpret c0>1 as a model being more
 likely than random attachment and vice versa for c0<1.
 
-Let's
+To do a quick example, run:
+
+```bash
+java -jar feta3-1.0.0.jar tutorial/CitationsBALikelihood.json
+```
+
+Let's look in closer detail at the JSON file:
+
+```JSON
+{
+  "Data": {
+    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "Likelihood": {
+      "Start": 1,
+      "Interval": 1,
+      "MaxNodes": 10000
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 1,
+      "End": 20000,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "Weight": 1.0
+        }
+      ]
+    }
+  ]
+}
+```
+
+We are calculating the likelihood (c0) value of the degree preferential attachment (BA) model for the citation network as 
+before, for the network's entire evolution up to 10,000 nodes. Running the above script may take a couple of minutes but 
+should produce a value around 1.5.
+
+#### Model fitting
+
+Being able to calculate likelihoods, we can also find maximum likelihood estimators for models with parameters to find the
+highest likelihood model from a model family for a particular network. Because of the broad scope of model families comprised
+in the framework (combining two or more mixtures of model components, finding MLEs for parameters of single models e.g. power
+in the degree power model, etc), I have approached this in a reasonably ad-hoc way, writing scripts for one off experiments as 
+required. However to see an example for finding the best fit of two models, see the python script `tutorial/fitMixedModel.py`
+for an idea.
+
+### 'Cloning' a network's operation model
+
+Another useful feature of FETA, having defined the *Operation Model* earlier, is to be able to extract from a timestamped 
+network the sequence of growth operations that occurred at each time step. The edgelist is processed iteratively starting 
+at a given timestamp. Links arriving at the same timestamp as processed as follows:
+
+* If the new links (viewed in isolation) form a k-star, that is, one node of degree k, k nodes of degree 1, then the operation
+comprising those links is processed as a star of k leaves.
+
+* If the node at the centre of that star is a new node (not previously present in the edgelist), then that star is an 
+*external* star.
+
+* If the node at the centre is an existing node (already seen in the edgelist), then the star is an *internal* star.
+
+* Anything more complex than this is processed as a series of links (or 1-stars), treated as arriving in the same order
+in which they appear in the edgelist.
+
+Let's do an example with the citation network. Run 
+
+```bash
+java -jar feta3-1.0.0.jar tutorial/CloneOperationModel.json
+```
+
+You'll find a file in the `data` folder called `citations.feta` which contains the extracted *Operation Model* for the 
+network up to 1000 nodes.
+
+Having this, we may grow a network using this operation model, and whatever object model we like. Run:
+
+```bash
+java -jar feta3-1.0.0.jar tutorial/GrowExample2.json
+```
+
+for a network grown in this way, but with object model half BA, half random attachment.
 
