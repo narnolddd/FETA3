@@ -390,9 +390,9 @@ be equal to the start of the next (here 1-1000, 1000-2000, 2000-3000).
 
 The main feature of the FETA software, along with generating networks, is to calculate likelihoods of network *object models* for a 
 timestamped network dataset. Please refer to the [paper](https://eprints.soton.ac.uk/397485/1/feta_comnet_2015.pdf) for an in depth
-description, but informally, a null hypothesis H0 of random (uniform) attachment is used, and the user may specify an alternative model H1.
-The value c0 is given, which is a rescaling of the log-likelihood ratio of H1 to H0. One should interpret c0>1 as a model being more
-likely than random attachment and vice versa for c0<1.
+description, but informally, the value c0 calculated is a rescaling of the log-likelihood ratio of the model proposed against 
+pure random/uniform attachment. Then c0 > 1 should be interpreted as a model being more likely than the random attachment model,
+c0 < 1 less likely. 
 
 To do a quick example, run:
 
@@ -440,8 +440,8 @@ should produce a value around 1.5.
 
 Being able to calculate likelihoods, we can also find maximum likelihood estimators for models with parameters to find the
 highest likelihood model from a model family for a particular network. Because of the broad scope of model families comprised
-in the framework (combining two or more mixtures of model components, finding MLEs for parameters of single models e.g. power
-in the degree power model, etc), I have approached this in a reasonably ad-hoc way, writing scripts for one off experiments as 
+in the framework (combining two or more mixtures of model components, single model components which are parametrised e.g. 
+power exponent in degree power model), I have approached this in a reasonably ad-hoc way, writing scripts for one off experiments as 
 required. However to see an example for finding the best fit of two models, see the python script `tutorial/fitMixedModel.py`
 for an idea.
 
@@ -478,4 +478,12 @@ java -jar feta3-1.0.0.jar tutorial/GrowExample2.json
 ```
 
 for a network grown in this way, but with object model half BA, half random attachment.
+
+## Future development
+
+I intend to improve the codebase over time in the following ways:
+
+* Speedup of likelihood calculation, which is currently not optimised
+* Inclusion of models with higher triadic closure element
+
 
