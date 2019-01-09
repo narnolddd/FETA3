@@ -12,7 +12,6 @@ public class TimeInterval {
 
     public TimeInterval(long tStart, long tEnd) {
 
-        if (tStart < 0 || tStart >= tEnd) throw new IllegalArgumentException("Invalid time interval "+toString());
         start_=tStart;
         end_=tEnd;
         length_=end_-start_;
