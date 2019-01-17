@@ -15,7 +15,7 @@
   "ObjectModel": [
     {
       "Start": 1,
-      "End": 20000,
+      "End": 100000,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeWithAgeing",

@@ -1,16 +1,16 @@
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "experiments/enron/enron.dat",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
   },
   "Action": {
     "ParseTest": {
-      "Start": 100,
-      "Interval":10,
+      "Start": 514912927,
+      "Interval":100000000,
       "MaxNodes": 1000,
-      "FileName": "data/citations.feta"
+      "FileName": "experiments/enron/enrontest.feta"
     }
   }
 }

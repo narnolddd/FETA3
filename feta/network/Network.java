@@ -57,8 +57,9 @@ public abstract class Network {
         for (i=0; i < linksToBuild_.size(); i++) {
             Link link = linksToBuild_.get(i);
             if (link.time_ > time){
-                for (int j=i; j < linksToBuild_.size(); j++) {
-                    remaining_.add(linksToBuild_.get(j));
+                remaining_=linksToBuild_;
+                for (int j=0; j < i; j++) {
+                    remaining_.remove(0);
                 }
                 break;
             }
@@ -80,10 +81,10 @@ public abstract class Network {
 
     /** Is a given node new? */
     public boolean newNode(String node) {
-        if (nodeNames_.containsValue(node)) {
-            return false;
+        if (nodeNumbers_.get(node) == null) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     /** Add a new node to all data structures */
