@@ -8,7 +8,7 @@
   "Action": {
     "ParseTest": {
       "Start": 514912927,
-      "Interval":100000000,
+      "Interval":200000000,
       "MaxNodes": 1000,
       "FileName": "experiments/enron/enrontest.feta"
     }

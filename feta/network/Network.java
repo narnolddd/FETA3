@@ -22,7 +22,7 @@ public abstract class Network {
     /** Options for reading network */
     public boolean duplicatesPresent_=false;
     public ReadNet networkReader_;
-    public boolean allowDuplicates_;
+    public boolean allowDuplicates_=true;
 
     /** Data structures mapping node names to their index and vice versa */
     private HashMap <String, Integer> nodeNumbers_;

@@ -61,9 +61,11 @@ public class ParseNetUndirected extends ParseNet {
 
             int ct = 0;
             for (String leaf: leaves_) {
-                op_.leafNodeNames_[ct]=leaf;
+                op_.leafNodeNames_[ct] = leaf;
                 ct++;
             }
+            op_.centreNodeName_=sourceNode;
+            op_.time_=links.get(0).time_;
             newOps.add(op_);
         }
         return newOps;
