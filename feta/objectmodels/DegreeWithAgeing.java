@@ -10,7 +10,7 @@ public class DegreeWithAgeing extends ObjectModelComponent{
     public boolean useInDegree_=true;
 
     public double ageingFunction(int node, UndirectedNetwork net) {
-        return Math.pow(net.age(node), - ageingExponent_) * net.getDegree(node);
+        return Math.pow(net.age(node), - ageingExponent_) * net.degrees_[node];
     }
 
     public double ageingFunction(int node, DirectedNetwork net) {

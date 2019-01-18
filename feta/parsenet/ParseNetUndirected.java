@@ -1,5 +1,6 @@
 package feta.parsenet;
 
+import feta.actions.Likelihood;
 import feta.network.Link;
 import feta.network.Network;
 import feta.network.UndirectedLink;
@@ -8,6 +9,8 @@ import feta.operations.Operation;
 import feta.operations.Star;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ParseNetUndirected extends ParseNet {
 
@@ -23,67 +26,69 @@ public class ParseNetUndirected extends ParseNet {
 
     public ArrayList<Operation> parseNewLinks(ArrayList <Link> links, Network net) {
         ArrayList<Operation> newOps = new ArrayList<Operation>();
-        UndirectedNetwork newNet = new UndirectedNetwork();
-        for (Link l: links){
-            newNet.linksToBuild_.add(l);
-        }
-        newNet.buildUpTo(Long.MAX_VALUE);
-        boolean done = false;
-        while (!done) {
-
-            if (isStar(newNet)) {
-                Star op= new Star(newNet.noNodes_-1, false);
-                int count = 0;
-                for (int node = 0; node < newNet.noNodes_; node++){
-                    // Get centre of the star
-                    if (newNet.getDegree(node) == newNet.maxDeg_ && op.centreNodeName_==null) {
-                        if (!net.newNode(newNet.nodeNoToName(node))) {
-                          op.internal_=true;
-                        }
-                        op.centreNodeName_=newNet.nodeNoToName(node);
-                        continue;
-                    }
-                    op.leafNodeNames_[count]=newNet.nodeNoToName(node);
-                    count++;
+        if (links.size()==1) {
+            newOps.add(processAsLink(links.get(0),net));
+        } else {
+            Link l = links.get(0);
+            Set<String> intersect_ = new HashSet<String>();
+            Set<String> leaves_= new HashSet<String>();
+            intersect_.add(l.sourceNode_);
+            leaves_.add(l.destNode_);
+            leaves_.add(l.sourceNode_);
+            intersect_.add(l.destNode_);
+            for (int j=1; j < links.size(); j++) {
+                Set<String> newLink = new HashSet<String>();
+                newLink.add(links.get(j).sourceNode_);
+                newLink.add(links.get(j).destNode_);
+                intersect_.retainAll(newLink);
+                leaves_.addAll(newLink);
+            }
+            if (intersect_.size()==0){
+                System.out.println("Processing events as links for this time "+links.get(0).time_);
+                for (Link l1: links) {
+                    newOps.add(processAsLink(l1,net));
                 }
-                op.time_=newNet.latestTime_;
-                //System.out.println(op);
-                operations_.add(op);
-                newOps.add(op);
-                done=true;
+                return newOps;
+            }
+            leaves_.removeAll(intersect_);
+            String sourceNode= intersect_.iterator().next();
+            Star op_;
+            if (net.newNode(sourceNode)) {
+                op_ = new Star(leaves_.size(), false);
             } else {
-                for (Link link : links) {
-                    String src = link.sourceNode_;
-                    String dst = link.destNode_;
-                    if (!net.newNode(src) && !net.newNode(dst)) {
-                        Star st = new Star(1, true);
-                        st.time_=link.time_;
-                        st.centreNodeName_=src;
-                        st.leafNodeNames_[0]=dst;
-                        operations_.add(st);
-                        newOps.add(st);
-                    } else if (net.newNode(src)) {
-                        Star st = new Star(1, false);
-                        st.time_=link.time_;
-                        st.centreNodeName_=src;
-                        st.leafNodeNames_[0]=dst;
-                        operations_.add(st);
-                        newOps.add(st);
-                    } else {
-                        Star st = new Star(1, false);
-                        st.time_=link.time_;
-                        st.centreNodeName_=dst;
-                        st.leafNodeNames_[0]=src;
-                        operations_.add(st);
-                        newOps.add(st);
-                    }
-                }
-                done=true;
+                op_= new Star(leaves_.size(), true);
             }
 
-
+            int ct = 0;
+            for (String leaf: leaves_) {
+                op_.leafNodeNames_[ct]=leaf;
+                ct++;
+            }
+            newOps.add(op_);
         }
         return newOps;
+    }
+
+    public Operation processAsLink(Link l, Network net) {
+        if (net.newNode(l.sourceNode_)) {
+            Star op = new Star(1,false);
+            op.centreNodeName_=l.sourceNode_;
+            op.leafNodeNames_[0]=l.destNode_;
+            op.time_=l.time_;
+            return op;
+        } else if (net.newNode(l.destNode_)) {
+            Star op = new Star(1,false);
+            op.centreNodeName_=l.destNode_;
+            op.leafNodeNames_[0]=l.sourceNode_;
+            op.time_=l.time_;
+            return op;
+        } else {
+            Star op = new Star(1, true);
+            op.centreNodeName_=l.sourceNode_;
+            op.leafNodeNames_[0]=l.destNode_;
+            op.time_=l.time_;
+            return op;
+        }
     }
 
     /** Is network a star? */

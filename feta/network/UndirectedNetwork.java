@@ -14,6 +14,8 @@ public class UndirectedNetwork extends Network {
     private TreeMap<Integer, ArrayList<Integer>> neighbours_;
     public int[] degreeDist_;
     private int degArraySize_ = 1000;
+    public int[] degrees_;
+    private int maxNodeNumber = 1000;
 
     /** Variables related to measurements */
     private double avgDeg_;
@@ -28,10 +30,7 @@ public class UndirectedNetwork extends Network {
         neighbours_= new TreeMap<Integer, ArrayList<Integer>>();
 
         degreeDist_= new int[degArraySize_];
-        for (int i = 0; i < degArraySize_; i++) {
-            degreeDist_[i] = 0;
-        }
-
+        degrees_= new int[maxNodeNumber];
         avgDeg_=0.0;
         averageCluster_=0.0;
         meanDegSq_=0.0;
@@ -46,6 +45,17 @@ public class UndirectedNetwork extends Network {
         neighbours_.get(src).add(dst);
         neighbours_.get(dst).add(src);
 
+        if (src < maxNodeNumber && dst < maxNodeNumber) {
+            degrees_[src]++;
+            degrees_[dst]++;
+        } else {
+            int[] newDegrees_= new int[2*maxNodeNumber];
+            System.arraycopy(degrees_,0,newDegrees_,0,maxNodeNumber);
+            degrees_=newDegrees_;
+            maxNodeNumber*=2;
+            degrees_[src]++;
+            degrees_[dst]++;
+        }
         incrementDegDist(getDegree(src));
         reduceDegDist(getDegree(src)-1);
         incrementDegDist(getDegree(dst));
@@ -120,7 +130,7 @@ public class UndirectedNetwork extends Network {
 
     /** Returns degree of a node */
     public int getDegree(int nodeno) {
-        return neighbours_.get(nodeno).size();
+        return degrees_[nodeno];
     }
 
     /** Gets average degree of network */

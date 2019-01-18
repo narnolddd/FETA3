@@ -18,7 +18,7 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeWithAgeing",
+          "ComponentName": "feta.objectmodels.DegreeModelComponent",
           "Weight": 1.0
         }
       ]
