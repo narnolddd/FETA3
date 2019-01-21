@@ -3,6 +3,8 @@ package feta.operations;
 import feta.network.Network;
 import feta.objectmodels.ObjectModel;
 
+import java.util.ArrayList;
+
 public abstract class Operation implements Comparable<Operation> {
 
     public int noChoices_;
@@ -24,6 +26,8 @@ public abstract class Operation implements Comparable<Operation> {
     public abstract void fill(Network net, ObjectModel om);
 
     public abstract double calcLogLike(Network net, ObjectModel obm);
+
+    public abstract ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm);
 
     public abstract void printMeanLike(double meanLike, ObjectModel om, Network network);
 }

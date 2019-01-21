@@ -3,6 +3,8 @@ package feta.operations;
 import feta.network.Network;
 import feta.objectmodels.ObjectModel;
 
+import java.util.ArrayList;
+
 public class Clique extends Operation {
 
     String[] members_;
@@ -19,6 +21,10 @@ public class Clique extends Operation {
 
     public double calcLogLike(Network net, ObjectModel om){
         return 0.0;
+    }
+
+    public ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm) {
+        return new ArrayList<double[]>();
     }
 
     public void printMeanLike(double meanLike, ObjectModel om, Network network){}

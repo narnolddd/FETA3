@@ -67,6 +67,8 @@ public class FetaModel {
             return new Likelihood(options_);
         } else if (name.equals("NormalisedLikelihood")) {
             return new NormalisedLikelihood(options_);
+        } else if (name.equals("FitMixedModel")) {
+            return new FitMixedModel(options_);
         }
         else {
             throw new IllegalArgumentException("Unrecognised or missing action name "+name);

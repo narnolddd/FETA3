@@ -47,6 +47,8 @@ public class Likelihood extends SimpleAction {
         double like = 0.0;
         int noChoices = 0;
         while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
+            if (network_.latestTime_ > end)
+                break;
             ArrayList<Link> links = network_.linksToBuild_;
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);

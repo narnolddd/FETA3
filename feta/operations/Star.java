@@ -112,6 +112,20 @@ public class Star extends Operation {
         return logSum - logRand;
     }
 
+    public ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm) {
+        ArrayList<double[]> probs = new ArrayList<>();
+        for (String leaf: leafNodeNames_) {
+            if (!net.newNode(leaf)) {
+                int node = net.nodeNameToNo(leaf);
+                double[] nodeprobs = obm.getComponentProbabilities(net, node);
+                probs.add(nodeprobs);
+            }
+            else continue;
+        }
+        return probs;
+    }
+
+
     public void printMeanLike(double meanLike, ObjectModel om, Network network){
         for (String leaf : leafNodeNames_) {
             int node = network.nodeNameToNo(leaf);

@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class ObjectModel {
 
-    private ArrayList<ObjectModelComponent> components_;
+    public ArrayList<ObjectModelComponent> components_;
     private double[] weights_;
 
     public ObjectModel(){
@@ -52,6 +52,14 @@ public class ObjectModel {
             probability_+= weights_[i]*components_.get(i).calcProbability(net, node);
         }
         return probability_;
+    }
+
+    public double[] getComponentProbabilities(Network net, int node) {
+        double [] probabilities_ = new double[components_.size()];
+        for (int i = 0; i < components_.size(); i++) {
+            probabilities_[i] = components_.get(i).calcProbability(net,node);
+        }
+        return probabilities_;
     }
 
 
