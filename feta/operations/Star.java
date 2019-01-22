@@ -38,6 +38,11 @@ public class Star extends Operation {
             }
             net.addLink(centreNodeName_,leaf);
             net.noLinks_++;
+
+            net.recentlyPickedNodes_.add(net.nodeNameToNo(leaf));
+            if (net.recentlyPickedNodes_.size()>net.numRecents_) {
+                net.recentlyPickedNodes_.remove(0);
+            }
         }
         net.latestTime_=time_;
     }

@@ -29,6 +29,10 @@ public abstract class Network {
     private HashMap <Integer, String> nodeNames_;
     private ArrayList <Integer> nodes_;
 
+    /** This bit is for aiming to get good triangle closure */
+    public ArrayList<Integer> recentlyPickedNodes_;
+    public int numRecents_=3;
+
     /** List of links read from the network edgelist file */
     public ArrayList <Link> linksToBuild_;
     public ArrayList <Link> linksBuilt_;
@@ -47,6 +51,7 @@ public abstract class Network {
         nodeNames_= new HashMap <Integer, String>();
         latestNodeNo_=0;
         latestTime_=0;
+        recentlyPickedNodes_= new ArrayList<>();
     }
 
     /** Build network from list of links */
@@ -72,6 +77,12 @@ public abstract class Network {
                 addNodeToList(dst);
             }
             addLink(src,dst);
+
+            recentlyPickedNodes_.add(nodeNameToNo(dst));
+            if (recentlyPickedNodes_.size()>numRecents_){
+                recentlyPickedNodes_.remove(0);
+            }
+
             noLinks_++;
             latestTime_=link.time_;
             linksBuilt_.add(link);

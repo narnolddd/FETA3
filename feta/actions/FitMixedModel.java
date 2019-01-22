@@ -62,7 +62,11 @@ public class FitMixedModel extends SimpleAction {
         if (!options_.directedInput_) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
-        getLikelihoods(startTime_,Long.MAX_VALUE);
+        for (int j = 0; j < objectModel_.objectModels_.size(); j++) {
+            long start = objectModel_.times_.get(j).start_;
+            long end = objectModel_.times_.get(j).end_;
+            getLikelihoods(start,end);
+        }
     }
 
     public void getLikelihoods(long start, long end) {
@@ -162,5 +166,8 @@ public class FitMixedModel extends SimpleAction {
     public void parseActionOptions(JSONObject obj) {
         long granuLong = (Long) obj.get("Granularity");
         granularity_=Math.toIntExact(granuLong);
+        Long start = (Long) obj.get("Start");
+        if (start != null)
+            startTime_=start;
     }
 }
