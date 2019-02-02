@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "output/20181129112456.dat",
+    "GraphInputFile": "output/triangletest.dat",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
@@ -8,9 +8,8 @@
   "Action": {
     "Measure": {
       "Start": 10,
-      "Interval":10,
-      "MaxTime": 10000,
-      "FileName": "output/BAtoRand.dat"
+      "Interval":1000,
+      "MaxTime": 50000
     }
   }
 }

@@ -3,27 +3,24 @@
     "GraphInputFile": "seed_graphs/clique-5.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
+    "GraphOutputFile": "output/triangletest.dat",
     "Directed": false
   },
   "Action": {
     "Grow": {
       "Start": 1,
       "Interval": 1,
-      "MaxTime": 10000
+      "MaxNodes": 10000
     }
   },
   "ObjectModel": [
     {
       "Start": 1,
-      "End": 5000,
+      "End": 10000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
-          "Weight": 0.5
-        },
-        {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Weight": 0.5
+          "ComponentName": "feta.objectmodels.TriangleClosure",
+          "Weight": 1.0
         }
       ]
     }],

@@ -1,17 +1,17 @@
 package feta.objectmodels;
 
 import feta.network.DirectedNetwork;
-import feta.network.Network;
 import feta.network.UndirectedNetwork;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class TriangleClosure extends ObjectModelComponent {
+public class TriangleClosureDegree extends ObjectModelComponent{
 
     public Set<Integer> neighbourhood_;
 
     public void calcNormalisation(UndirectedNetwork network, int [] removed) {
+        normalisationConstant_=0.0;
         Set<Integer> recents = new HashSet<Integer>(network.recentlyPickedNodes_);
         neighbourhood_= new HashSet<>();
         for (Integer r: recents) {
@@ -20,13 +20,19 @@ public class TriangleClosure extends ObjectModelComponent {
                 neighbourhood_.add(n);
             }
         }
+        for (int nd: neighbourhood_) {
+            normalisationConstant_ += network.degrees_[nd];
+        }
         for (int node: removed) {
+            if (neighbourhood_.contains(node)){
+                normalisationConstant_-= network.degrees_[node];
+            }
             neighbourhood_.remove(node);
         }
-        normalisationConstant_=neighbourhood_.size();
     }
 
     public void calcNormalisation(DirectedNetwork net, int[] removed) {
+        normalisationConstant_=0.0;
         Set<Integer> recents = new HashSet<Integer>(net.recentlyPickedNodes_);
         neighbourhood_= new HashSet<>();
         for (Integer r: recents) {
@@ -35,10 +41,15 @@ public class TriangleClosure extends ObjectModelComponent {
                 neighbourhood_.add(n);
             }
         }
+        for (int nd: neighbourhood_) {
+            normalisationConstant_+=net.getInDegree(nd);
+        }
         for (int node: removed) {
+            if (neighbourhood_.contains(node)) {
+                normalisationConstant_-= net.getInDegree(node);
+            }
             neighbourhood_.remove(node);
         }
-        normalisationConstant_=neighbourhood_.size();
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
@@ -47,7 +58,7 @@ public class TriangleClosure extends ObjectModelComponent {
             return 1.0/net.noNodes_;
         } else {
             if (neighbourhood_.contains(node)) {
-                return 1.0/normalisationConstant_;
+                return net.getInDegree(node)/normalisationConstant_;
             } else return 0.0;
         }
     }
@@ -58,7 +69,7 @@ public class TriangleClosure extends ObjectModelComponent {
             return 1.0/net.noNodes_;
         } else {
             if (neighbourhood_.contains(node)) {
-                return 1.0/normalisationConstant_;
+                return net.degrees_[node]/normalisationConstant_;
             } else return 0.0;
         }
     }

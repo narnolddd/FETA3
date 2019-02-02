@@ -11,7 +11,7 @@ import java.util.TreeMap;
 public class UndirectedNetwork extends Network {
 
     /** Hashmap containing list of node's neighbours */
-    private TreeMap<Integer, ArrayList<Integer>> neighbours_;
+    public TreeMap<Integer, ArrayList<Integer>> neighbours_;
     public int[] degreeDist_;
     private int degArraySize_ = 1000;
     public int[] degrees_;

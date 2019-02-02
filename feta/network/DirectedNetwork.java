@@ -11,7 +11,7 @@ public class DirectedNetwork extends Network {
 
     /** Hashmaps containing info about node inlinks and outlinks */
     private TreeMap<Integer, ArrayList<Integer>> inLinks_;
-    private TreeMap<Integer, ArrayList<Integer>> outLinks_;
+    public TreeMap<Integer, ArrayList<Integer>> outLinks_;
 
     private int[] inDegreeDist_;
     private int[] outDegreeDist_;
