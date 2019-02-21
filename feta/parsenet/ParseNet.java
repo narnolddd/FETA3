@@ -52,6 +52,7 @@ public abstract class ParseNet {
             bw_ = new BufferedWriter(fw);
             for (Operation op: operations_) {
                 bw_.write(op+"\n");
+                // Print for debugging: System.out.println(op);
             }
             bw_.close();
         } catch (IOException e) {

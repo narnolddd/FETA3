@@ -38,14 +38,16 @@ public class Clone extends OperationModel {
         Long time = Long.parseLong(parts[0]);
         String type_ = parts[1];
         if (type_.equals("STAR")) {
-            int noLeaves_ = parts.length - 5;
-            String internal = parts[parts.length-1];
+            int noLeaves_ = parts.length - 6;
+            int noExisting_ = Integer.parseInt(parts[parts.length - 1]);
+            String internal = parts[parts.length-2];
             if (internal.equals("INTERNAL")) {
                 op_= new Star(noLeaves_,true);
             } else {
                 op_= new Star(noLeaves_, false);
             }
             op_.time_=time;
+            op_.noExisting_=noExisting_;
             operations_.add(op_);
         }
     }

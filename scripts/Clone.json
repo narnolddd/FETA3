@@ -9,7 +9,7 @@
     "Grow": {
       "Start": 1,
       "Interval": 1,
-      "MaxTime": 10000
+      "MaxTime": 2000
     }
   },
   "ObjectModel": [
@@ -37,6 +37,6 @@
   "OperationModel":
   {
     "Name": "feta.operations.Clone",
-    "FileName": "data/citations.feta"
+    "FileName": "experiments/citationstest.feta"
   }
 }

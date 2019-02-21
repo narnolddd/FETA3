@@ -18,6 +18,8 @@ public class Star extends Operation {
     public String[] leafNodeNames_;
     public int[] leafNodes_;
     public boolean internal_;
+    // How many of the leaf nodes are already existing in the network?
+    public int noExisting_=0;
 
     public Star(int noLeaves, boolean internal_){
         this.internal_=internal_;
@@ -58,13 +60,23 @@ public class Star extends Operation {
     }
 
     public void pickLeafNodes_(Network net, ObjectModel om) {
+        int[] existingLeaves= new int[noExisting_];
         if (internal_) {
             int [] chosen_ = new int[1];
             chosen_[0]=centreNode_;
-            leafNodes_=om.getNodesWithoutReplacement(net, leafNodes_.length, chosen_);
+            existingLeaves=om.getNodesWithoutReplacement(net, noExisting_, chosen_);
         } else {
-            leafNodes_=om.getNodesWithoutReplacement(net, leafNodes_.length, new int[0]);
+            existingLeaves=om.getNodesWithoutReplacement(net, noExisting_, new int[0]);
         }
+        // Add new nodes
+        int noNew_ = leafNodes_.length - noExisting_;
+        int[] newLeaves_= new int[noNew_];
+        for (int i = 0; i < noNew_; i++) {
+            String newName = net.generateNodeName();
+            net.addNodeToList(newName);
+            newLeaves_[i]=net.nodeNameToNo(newName);
+        }
+        leafNodes_=ObjectModel.concatenate(existingLeaves,newLeaves_);
     }
 
     public void fill(Network net, ObjectModel om) {
@@ -89,7 +101,7 @@ public class Star extends Operation {
         } else {
             str+="EXTERNAL";
         }
-
+        str+=" "+noExisting_;
         return str;
     }
 
