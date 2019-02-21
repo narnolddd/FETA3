@@ -22,3 +22,6 @@ venv
 # tutorial files
 tutorial/*.dat
 tutorial/plots/*.eps
+
+# datasets
+data/language_net.dat

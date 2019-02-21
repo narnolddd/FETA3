@@ -3,7 +3,7 @@
     "GraphInputFile": "seed_graphs/clique-5.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
-    "GraphOutputFile": "output/triangletest.dat",
+    "GraphOutputFile": "output/netmobility/RandomMobility.dat",
     "Directed": false
   },
   "Action": {
@@ -19,7 +19,7 @@
       "End": 10000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.TriangleClosure",
+          "ComponentName": "feta.objectmodels.RandomAttachment",
           "Weight": 1.0
         }
       ]

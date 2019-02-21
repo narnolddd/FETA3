@@ -239,7 +239,7 @@ public class UndirectedNetwork extends Network {
         for (int i = 0; i < noNodes_; i++) {
             degs +=getDegree(i)+" ";
         }
-        return degs+" \n";
+        return degs;
     }
 
     /** Section related to growing networks */

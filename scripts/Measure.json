@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "output/triangletest.dat",
+    "GraphInputFile": "output/netmobility/RandomMobility.dat",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
@@ -8,8 +8,9 @@
   "Action": {
     "Measure": {
       "Start": 10,
-      "Interval":1000,
-      "MaxTime": 50000
+      "Interval":100,
+      "MaxNodes": 10000,
+      "PrintDegVector": true
     }
   }
 }

@@ -13,7 +13,7 @@ public abstract class ReadNet {
     LinkBuilder lb_;
     public String sep_;
     String networkInput_;
-    boolean removeDuplicates_;
+    boolean removeDuplicates_=true;
 
     public ReadNet(FetaOptions options){
         links_= new ArrayList<Link>();
@@ -40,8 +40,8 @@ public abstract class ReadNet {
                 // aint got time for loops
                 if (link.sourceNode_.equals(link.destNode_))
                     continue;
-//                if (removeDuplicates_ && links_.contains(link))
-//                    continue;
+               if (removeDuplicates_ && links_.contains(link))
+                    continue;
                 links_.add(link);
             }
         } catch (FileNotFoundException e) {

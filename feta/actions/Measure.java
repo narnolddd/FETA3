@@ -16,6 +16,7 @@ public class Measure extends SimpleAction {
     public BufferedWriter bw_ = null;
     // Need to think how this will work alternating between directed and undirected networks.
     private boolean measureDegDist_=false;
+    private boolean printDegVector_= false;
 
     public Measure() {
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -31,6 +32,9 @@ public class Measure extends SimpleAction {
                 network_.buildUpTo(time);
                 network_.calcMeasurements();
                 bw_.write(network_.measureToString()+"\n");
+                if (printDegVector_) {
+                    System.out.println(network_.degreeVectorToString());
+                }
                 network_.writeDegDist();
                 time += interval_;
             }
@@ -68,6 +72,10 @@ public class Measure extends SimpleAction {
         String measureFName = (String) obj.get("FileName");
         if (measureFName != null) {
             measureName_=measureFName;
+        }
+        Boolean degVector = (Boolean) obj.get("PrintDegVector");
+        if (degVector != null) {
+            printDegVector_=true;
         }
     }
 }
