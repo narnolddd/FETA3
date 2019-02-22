@@ -7,7 +7,9 @@ public class PreferentialAttachment extends OperationModel {
     public int initDegree_= 3;
 
     public Operation nextOperation() {
-        return new Star(initDegree_,false);
+        Operation op = new Star(initDegree_,false);
+        op.noExisting_=initDegree_;
+        return op;
     }
 
     public void parseJSON(JSONObject params) {

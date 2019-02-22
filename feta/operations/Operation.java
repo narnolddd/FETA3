@@ -11,7 +11,7 @@ public abstract class Operation implements Comparable<Operation> {
     public int[] nodeChoices_;
     public long time_;
     // How many of the leaf nodes are already existing in the network?
-    public int noExisting_=0;
+    public int noExisting_;
 
     public int compareTo(Operation o2) {
         if (time_ < o2.time_) {

@@ -19,7 +19,6 @@ public class Star extends Operation {
     public int[] leafNodes_;
     public boolean internal_;
     // How many of the leaf nodes are already existing in the network?
-    public int noExisting_=0;
 
     public Star(int noLeaves, boolean internal_){
         this.internal_=internal_;
@@ -56,11 +55,12 @@ public class Star extends Operation {
         }
         else {
             centreNodeName_ = net.generateNodeName();
+            net.addNodeToList(centreNodeName_);
         }
     }
 
     public void pickLeafNodes_(Network net, ObjectModel om) {
-        int[] existingLeaves= new int[noExisting_];
+        int[] existingLeaves= new int[this.noExisting_];
         if (internal_) {
             int [] chosen_ = new int[1];
             chosen_[0]=centreNode_;

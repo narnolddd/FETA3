@@ -97,11 +97,4 @@ public class ParseNetUndirected extends ParseNet {
         }
     }
 
-    /** Is network a star? */
-    public boolean isStar(UndirectedNetwork net) { //Assume no links
-        if (net.degreeDist_[1] == net.noNodes_-1 && net.degreeDist_[net.noNodes_-1]==1 || net.noLinks_==1)
-            return true;
-        System.out.println("Ambiguous growth operation at time "+net.latestTime_+". Processing as set of links.");
-        return false;
-    }
 }
