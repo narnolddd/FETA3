@@ -75,7 +75,7 @@ public class Measure extends SimpleAction {
         }
         Boolean degVector = (Boolean) obj.get("PrintDegVector");
         if (degVector != null) {
-            printDegVector_=true;
+            printDegVector_=degVector;
         }
     }
 }

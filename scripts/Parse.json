@@ -9,7 +9,7 @@
     "ParseTest": {
       "Start": 100,
       "Interval":10,
-      "MaxNodes": 1000,
+      "MaxNodes": 10000,
       "FileName": "experiments/citationstest.feta"
     }
   }

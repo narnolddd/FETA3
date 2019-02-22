@@ -31,7 +31,7 @@ public abstract class Network {
 
     /** This bit is for aiming to get good triangle closure */
     public ArrayList<Integer> recentlyPickedNodes_;
-    public int numRecents_=1;
+    public int numRecents_=5;
 
     /** List of links read from the network edgelist file */
     public ArrayList <Link> linksToBuild_;

@@ -9,27 +9,25 @@
     "Grow": {
       "Start": 1,
       "Interval": 1,
-      "MaxTime": 2000
+      "MaxNodes": 10000
     }
   },
   "ObjectModel": [
     {
       "Start": 1,
-      "End": 5000,
+      "End": 100000,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",
-          "Weight": 1.0
-        }
-      ]
-    },
-    {
-      "Start": 5000,
-      "End": 10000,
-      "Components": [
+          "Weight": 0.93
+        },
         {
           "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Weight": 1.0
+          "Weight": 0.06
+        },
+        {
+          "ComponentName": "feta.objectmodels.TriangleClosure",
+          "Weight": 0.01
         }
       ]
     }

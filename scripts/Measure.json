@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "output/netmobility/RandomMobility.dat",
+    "GraphInputFile": "output/Citations_Copy_Graph.dat",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
@@ -8,9 +8,10 @@
   "Action": {
     "Measure": {
       "Start": 10,
-      "Interval":100,
+      "Interval":10,
       "MaxNodes": 10000,
-      "PrintDegVector": true
+      "PrintDegVector": false,
+      "FileName": "experiments/Citations_Copy_Undir_Measurements.dat"
     }
   }
 }
