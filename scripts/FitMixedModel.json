@@ -9,7 +9,7 @@
     "FitMixedModel": {
       "Start": 100,
       "Interval": 10,
-      "MaxNodes": 10000,
+      "MaxNodes": 100,
       "Granularity": 100
     }
   },

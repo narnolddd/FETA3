@@ -59,4 +59,9 @@ public class DegreeWithAgeing extends ObjectModelComponent{
             ageingExponent_=ageExp;
         }
     }
+
+    @Override
+    public String toString() {
+        return "DegreeWithAgeing "+ageingExponent_;
+    }
 }

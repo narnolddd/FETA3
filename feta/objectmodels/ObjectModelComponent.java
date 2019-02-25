@@ -35,5 +35,6 @@ public abstract class ObjectModelComponent {
     }
 
     /** Parse JSON for parameters when necessary */
-    public void parseJSON(JSONObject params){};
+    public void parseJSON(JSONObject params){}
+
 }

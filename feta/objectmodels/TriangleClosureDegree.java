@@ -73,4 +73,9 @@ public class TriangleClosureDegree extends ObjectModelComponent{
             } else return 0.0;
         }
     }
+
+    @Override
+    public String toString() {
+        return "TriangleClosureDegree";
+    }
 }

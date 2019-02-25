@@ -123,8 +123,8 @@ public class FitMixedModel extends SimpleAction {
         }
 
         System.out.println("Max likelihood : "+maxLike);
-        for (double d: bestConfig_){
-            System.out.println(d+" ");
+        for (int l=0; l < bestConfig_.length; l++){
+            System.out.println(bestConfig_[l]+" "+objectModel_.objectModelAtTime(start).components_.get(l));
         }
 
     }

@@ -122,8 +122,15 @@ public class UndirectedNetwork extends Network {
     }
 
     public void addNode(int nodeno) {
+        if (nodeno>= maxNodeNumber) {
+            int[] newDegrees_= new int[2*maxNodeNumber];
+            System.arraycopy(degrees_,0,newDegrees_,0,maxNodeNumber);
+            degrees_=newDegrees_;
+            maxNodeNumber*=2;
+        }
         neighbours_.put(nodeno, new ArrayList<Integer>());
         incrementDegDist(0);
+
     }
 
     public void removeLinks(String nodename) {

@@ -27,4 +27,8 @@ public class RandomAttachment extends ObjectModelComponent {
         return 1.0/normalisationConstant_;
     }
 
+    @Override
+    public String toString() {
+        return "Random";
+    }
 }

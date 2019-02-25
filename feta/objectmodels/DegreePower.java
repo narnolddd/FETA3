@@ -68,4 +68,9 @@ public class DegreePower extends ObjectModelComponent {
             power_=power;
         }
     }
+
+    @Override
+    public String toString() {
+        return "DegreePower "+power_;
+    }
 }

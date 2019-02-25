@@ -55,4 +55,8 @@ public class DegreeModelComponent extends ObjectModelComponent{
         }
     }
 
+    @Override
+    public String toString() {
+        return "Degree";
+    }
 }

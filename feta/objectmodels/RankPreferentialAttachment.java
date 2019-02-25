@@ -40,4 +40,9 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
             alpha_=alpha;
         }
     }
+
+    @Override
+    public String toString() {
+        return "RankPreference "+alpha_;
+    }
 }
