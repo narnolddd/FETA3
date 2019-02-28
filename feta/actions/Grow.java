@@ -45,11 +45,14 @@ public class Grow extends SimpleAction {
                 checkModel=false;
             }
             feta.operations.Operation op = operationModel_.nextOperation();
-            op.time_=time;
-            if (checkModel) {
-                objectModel_.objectModelAtTime(time).checkNorm(network_);
+            if (op.time_ == 0) {
+                op.time_=time;
             }
-            op.fill(network_,objectModel_.objectModelAtTime(time));
+            if (checkModel) {
+                objectModel_.objectModelAtTime(op.time_).checkNorm(network_);
+            }
+            op.fill(network_,objectModel_.objectModelAtTime(op.time_));
+            time = op.time_;
             time+=interval_;
             network_.buildUpTo(Long.MAX_VALUE);
         }

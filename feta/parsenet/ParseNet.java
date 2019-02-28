@@ -26,7 +26,9 @@ public abstract class ParseNet {
             long time = linkSet.get(0).time_;
             if (time>end)
                 break;
-            parseNewLinks(linkSet,net_);
+            for (Operation op: parseNewLinks(linkSet,net_)) {
+                operations_.add(op);
+            }
             net_.buildUpTo(time);
         }
     }
