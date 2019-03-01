@@ -438,12 +438,74 @@ should produce a value around 1.5.
 
 #### Model fitting
 
-Being able to calculate likelihoods, we can also find maximum likelihood estimators for models with parameters to find the
-highest likelihood model from a model family for a particular network. Because of the broad scope of model families comprised
-in the framework (combining two or more mixtures of model components, single model components which are parametrised e.g. 
-power exponent in degree power model), I have approached this in a reasonably ad-hoc way, writing scripts for one off experiments as 
-required. However to see an example for finding the best fit of two models, see the python script `tutorial/fitMixedModel.py`
-for an idea.
+Another feature of FETA, following on from being able to calculate individual likelihoods, is to be able to fit a mixed model
+to a dataset, identifying the mixture of models which gives the highest likelihood for the dataset. Let's do an example for 
+the citations network dataset - see the file `tutorial/CitationsFitMixed.json`:
+
+```JSON
+
+{
+  "Data": {
+    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "FitMixedModel": {
+      "Start": 100,
+      "Interval": 10,
+      "MaxNodes": 10000,
+      "Granularity": 100
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 10,
+      "End": 100000,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "Weight": 1.0
+        },
+        {
+          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "Weight": 1.0
+        },
+        {
+          "ComponentName": "feta.objectmodels.TriangleClosureDegree",
+          "Weight":1.0
+        }
+      ]
+    }
+  ]
+}
+
+```
+
+Here we invoke the action `FitMixedModel`, a routine for finding the highest likelihood mixture of the model components chosen,
+here degree (BA), random attachment and triangle closure. Granularity refers to how fine-grained a search over all possible model
+mixtures (in terms of weights) - here granularity 100 means a search over the parameter space in increments of 0.01 for 
+each model component weight. (It's worth pointing out that there are a few redundant tags here: `Interval`, `Weight` since this is what we are trying to 
+estimate.)
+
+Running the command:
+
+```bash
+java -jar feta3-1.0.0.jar tutorial/CitationsFitMixed.json
+```
+
+should yield the response after a couple of minutes:
+
+```
+Max likelihood : 1.5415581814313457
+0.93 Degree
+0.06 Random
+0.01 TriangleClosureDegree
+```
+
+This is the maximum likelihood mixture from the model components tested, but not necessarily a good model. How do we evaluate
+the performance of this model? See the next section for this. 
 
 ### 'Cloning' a network's operation model
 
