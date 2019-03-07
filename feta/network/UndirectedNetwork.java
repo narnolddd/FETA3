@@ -24,6 +24,7 @@ public class UndirectedNetwork extends Network {
     public int maxDeg_;
     private double assort_;
     private double density_;
+    private int[] triCount_;
     private BufferedWriter br_;
 
     public UndirectedNetwork() {
@@ -36,6 +37,7 @@ public class UndirectedNetwork extends Network {
         meanDegSq_=0.0;
         maxDeg_=0;
         assort_=0;
+        triCount_= new int[maxNodeNumber];
     }
 
     /** Adds undirected link to data structures */
@@ -62,6 +64,29 @@ public class UndirectedNetwork extends Network {
         reduceDegDist(getDegree(src)-1);
         incrementDegDist(getDegree(dst));
         reduceDegDist(getDegree(dst)-1);
+        if(trackCluster_) {
+            closeTriangle(src, dst);
+        }
+    }
+
+    /** Updates node triangle counts if a new link closes a triangle */
+    public void closeTriangle(int src, int dst) {
+        int newTri = 0;
+
+        for (int n1neighbour : neighbours_.get(src)) {
+            if (n1neighbour == dst)
+                continue;
+            for (int n2neighbour: neighbours_.get(dst)) {
+                if (n1neighbour == n2neighbour) {
+                    newTri++;
+                    triCount_[n1neighbour]++;
+                }
+            }
+        }
+        if (newTri>0) {
+            triCount_[src]+=newTri;
+            triCount_[dst]+=newTri;
+        }
     }
 
     public boolean isLink(int a, int b) {
@@ -124,8 +149,11 @@ public class UndirectedNetwork extends Network {
     public void addNode(int nodeno) {
         if (nodeno>= maxNodeNumber) {
             int[] newDegrees_= new int[2*maxNodeNumber];
+            int[] newTriCount_ = new int[2*maxNodeNumber];
             System.arraycopy(degrees_,0,newDegrees_,0,maxNodeNumber);
+            System.arraycopy(triCount_,0,newTriCount_,0,maxNodeNumber);
             degrees_=newDegrees_;
+            triCount_=newTriCount_;
             maxNodeNumber*=2;
         }
         neighbours_.put(nodeno, new ArrayList<Integer>());
@@ -190,7 +218,7 @@ public class UndirectedNetwork extends Network {
         if (getDegree(node) == 0 || getDegree(node) == 1) {
             return 0.0;
         }
-        double actualTriangles = triangleCount(node);
+        double actualTriangles = triCount_[node];
         double possibleTriangles = 0.5 * getDegree(node) * (getDegree(node) - 1);
         return actualTriangles/possibleTriangles;
     }

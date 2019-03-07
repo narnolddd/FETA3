@@ -4,6 +4,7 @@ import feta.actions.stoppingconditions.StoppingCondition;
 import org.json.simple.JSONObject;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,13 +26,16 @@ public class Measure extends SimpleAction {
     public void execute() {
         setUpMeasureWriter(measureName_);
         network_.setUpDegDistWriters(measureName_);
+        network_.trackCluster_=true;
         long time = startTime_;
         network_.buildUpTo(time);
         try {
             while (!stoppingConditionsExceeded_(network_) && network_.linksToBuild_.size() > 0) {
                 network_.buildUpTo(time);
                 network_.calcMeasurements();
-                bw_.write(network_.measureToString()+"\n");
+                String measurements = network_.measureToString()+"\n";
+                //System.out.println(measurements);
+                bw_.write(measurements);
                 if (printDegVector_) {
                     System.out.println(network_.degreeVectorToString());
                 }
@@ -44,12 +48,13 @@ public class Measure extends SimpleAction {
             System.out.println("Problem writing measurements to: "+measureName_);
             e.printStackTrace();
         }
-
     }
 
     public void setUpMeasureWriter(String fname) {
+        File file= new File(fname);
+        FileWriter fw = null;
         try{
-            FileWriter fw = new FileWriter(fname);
+            fw = new FileWriter(file);
             bw_= new BufferedWriter(fw);
         } catch (IOException e) {
             e.printStackTrace();

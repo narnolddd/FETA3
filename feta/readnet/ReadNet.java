@@ -40,8 +40,8 @@ public abstract class ReadNet {
                 // aint got time for loops
                 if (link.sourceNode_.equals(link.destNode_))
                     continue;
-               if (removeDuplicates_ && links_.contains(link))
-                    continue;
+//               if (removeDuplicates_ && links_.contains(link))
+//                    continue;
                 links_.add(link);
             }
         } catch (FileNotFoundException e) {

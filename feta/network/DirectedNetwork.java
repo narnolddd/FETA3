@@ -17,6 +17,7 @@ public class DirectedNetwork extends Network {
     private int[] outDegreeDist_;
     private int inDegArraySize_ = 1000;
     private int outDegArraySize_ = 1000;
+    private int maxNodeNo_=1000;
 
     /** Doubles relating to measurements */
     private double avgInDeg_;

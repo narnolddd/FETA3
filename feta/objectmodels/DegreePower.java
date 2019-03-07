@@ -27,7 +27,7 @@ public class DegreePower extends ObjectModelComponent {
         double degSum = 0.0;
         for (int i = 0; i < network.noNodes_; i++) {
             if (useInDegree_) {
-                degSum+= Math.pow(network.getInDegree(i),power_);
+                degSum+= Math.pow(network.getInDegree(i)+1,power_);
             } else {
                 degSum+= Math.pow(network.getOutDegree(i),power_);
             }
@@ -35,10 +35,10 @@ public class DegreePower extends ObjectModelComponent {
 
         for (int j = 0; j < removed.length; j++) {
             if (removed[j]>0 && useInDegree_) {
-                degSum -= Math.pow(network.getInDegree(removed[j]),power_);
+                degSum -= Math.pow(network.getInDegree(removed[j])+1,power_);
             }
             if (removed[j]>0 && !useInDegree_) {
-                degSum-= Math.pow(network.getOutDegree(removed[j]), power_);
+                degSum-= Math.pow(network.getOutDegree(removed[j])+1, power_);
             }
         }
         normalisationConstant_=degSum;
@@ -54,8 +54,8 @@ public class DegreePower extends ObjectModelComponent {
         if (normalisationConstant_==0.0)
             return 0.0;
         if (useInDegree_)
-            return Math.pow(net.getInDegree(node),power_)/normalisationConstant_;
-        return Math.pow(net.getOutDegree(node),power_)/normalisationConstant_;
+            return Math.pow(net.getInDegree(node)+1,power_)/normalisationConstant_;
+        return Math.pow(net.getOutDegree(node)+1,power_)/normalisationConstant_;
     }
 
     public void parseJSON(JSONObject params) {

@@ -29,7 +29,7 @@ public class DegreeModelComponent extends ObjectModelComponent{
                 degSum+= network.getOutDegree(removed[i]);
             }
         }
-        normalisationConstant_= network.noLinks_-degSum;
+        normalisationConstant_= network.noLinks_ + network.noNodes_ -degSum;
     }
 
     public double calcProbability(UndirectedNetwork net, int node) {
@@ -44,8 +44,8 @@ public class DegreeModelComponent extends ObjectModelComponent{
             return 0.0;
         }
         if (useInDegree_) {
-            return net.getInDegree(node)/normalisationConstant_;
-        } else return net.getOutDegree(node)/normalisationConstant_;
+            return (net.getInDegree(node))/normalisationConstant_;
+        } else return (net.getOutDegree(node))/normalisationConstant_;
     }
 
     public void parseJSON(JSONObject params) {

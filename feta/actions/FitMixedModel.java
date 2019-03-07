@@ -148,8 +148,10 @@ public class FitMixedModel extends SimpleAction {
                     nodeprob+=node[i]*weights[i];
                 }
                 if (nodeprob <= 0) {
-                    System.err.println("Node returned zero probability");
-                    System.exit(0);
+                    //System.err.println("Node returned zero probability");
+                    logSum = 0;
+                    logRand = 0;
+                    break;
                 }
                 logSum+= Math.log(nodeprob) - Math.log(1 - probUsed);
                 logRand+=Math.log(1.0/network_.noNodes_) - Math.log(1 - randUsed);
