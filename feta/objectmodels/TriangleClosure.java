@@ -23,6 +23,13 @@ public class TriangleClosure extends ObjectModelComponent {
         for (int node: removed) {
             neighbourhood_.remove(node);
         }
+
+//        String neighbourString="";
+//        for (int node: neighbourhood_){
+//            neighbourString+=node+" ";
+//        }
+//        System.out.println(neighbourString);
+
         normalisationConstant_=neighbourhood_.size();
     }
 
@@ -53,7 +60,6 @@ public class TriangleClosure extends ObjectModelComponent {
     }
 
     public double calcProbability(UndirectedNetwork net, int node) {
-        //System.out.println(normalisationConstant_);
         if (normalisationConstant_==0.0) {
             return 1.0/net.noNodes_;
         } else {

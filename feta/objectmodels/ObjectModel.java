@@ -98,6 +98,10 @@ public class ObjectModel {
             int chosenNode = nodeSampleWithoutReplacement(net, removedFromSample);
             chosenNodes[i]=chosenNode;
             removedFromSample[i]=chosenNode;
+            net.recentlyPickedNodes_.add(chosenNode);
+            if (net.recentlyPickedNodes_.size()>net.numRecents_){
+                net.recentlyPickedNodes_.remove(0);
+            }
         }
         return chosenNodes;
     }

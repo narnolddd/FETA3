@@ -131,12 +131,27 @@ public class Star extends Operation {
 
     public ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm) {
         ArrayList<double[]> probs = new ArrayList<>();
-        for (String leaf: leafNodeNames_) {
+        for (int i =0; i<leafNodeNames_.length; i++) {
+            int[] chosen = new int[i];
+            for (int j = 0; j < i; j++) {
+                if (!net.newNode(leafNodeNames_[j])) {
+                    chosen[j] = net.nodeNameToNo(leafNodeNames_[j]);
+                } else {
+                    chosen[j] = -1;
+                }
+            }
+            obm.normaliseAll(net,chosen);
+            String leaf = leafNodeNames_[i];
             if (!net.newNode(leaf)) {
                 int node = net.nodeNameToNo(leaf);
                 double[] nodeprobs = obm.getComponentProbabilities(net, node);
                 probs.add(nodeprobs);
+                net.recentlyPickedNodes_.add(node);
+                if (net.recentlyPickedNodes_.size()>net.numRecents_) {
+                    net.recentlyPickedNodes_.remove(0);
+                }
             }
+
             else continue;
         }
         return probs;

@@ -25,6 +25,10 @@ public class UndirectedNetwork extends Network {
     private double assort_;
     private double density_;
     private int[] triCount_;
+    private int totTri_;
+    private int singletons_;
+    private int doubletons_;
+    private double cutOff_;
     private BufferedWriter br_;
 
     public UndirectedNetwork() {
@@ -78,6 +82,8 @@ public class UndirectedNetwork extends Network {
                 continue;
             for (int n2neighbour: neighbours_.get(dst)) {
                 if (n1neighbour == n2neighbour) {
+                    // delet this pls
+                    // System.out.println(degrees_[src]+" "+degrees_[dst]);
                     newTri++;
                     triCount_[n1neighbour]++;
                 }
@@ -87,6 +93,7 @@ public class UndirectedNetwork extends Network {
             triCount_[src]+=newTri;
             triCount_[dst]+=newTri;
         }
+        totTri_+=newTri;
     }
 
     public boolean isLink(int a, int b) {
@@ -239,6 +246,9 @@ public class UndirectedNetwork extends Network {
         averageCluster_ = getAverageCluster();
         assort_=getAssortativity();
         density_=getDensity();
+        cutOff_ = Math.sqrt(avgDeg_ * noNodes_);
+        singletons_=degreeDist_[1];
+        doubletons_=degreeDist_[2];
     }
 
     /** Degree-degree assortativity */
@@ -266,7 +276,7 @@ public class UndirectedNetwork extends Network {
     }
 
     public String measureToString() {
-        return latestTime_+" "+noNodes_+" "+noLinks_+" "+avgDeg_+" "+density_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_+" "+assort_;
+        return latestTime_+" "+noNodes_+" "+noLinks_+" "+avgDeg_+" "+density_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_+" "+assort_+" "+cutOff_+" "+singletons_+" "+doubletons_+" "+totTri_;
     }
 
     public String degreeVectorToString() {
