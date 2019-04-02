@@ -53,7 +53,7 @@ public class Likelihood extends SimpleAction {
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
             for (Operation op: newOps) {
-                objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
+                //objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
                 like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_));
                 noChoices+=op.noChoices_;
                 op.build(network_);
@@ -67,5 +67,6 @@ public class Likelihood extends SimpleAction {
 
         double c0 = Math.exp(like/noChoices);
         System.out.println(c0);
+        System.out.println(noChoices);
     }
 }

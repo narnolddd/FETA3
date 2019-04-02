@@ -10,6 +10,7 @@ import feta.operations.Star;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ParseNetUndirected extends ParseNet {
@@ -31,7 +32,7 @@ public class ParseNetUndirected extends ParseNet {
         } else {
             Link l = links.get(0);
             Set<String> intersect_ = new HashSet<String>();
-            Set<String> leaves_= new HashSet<String>();
+            Set<String> leaves_= new LinkedHashSet<String>();
             intersect_.add(l.sourceNode_);
             leaves_.add(l.destNode_);
             leaves_.add(l.sourceNode_);

@@ -100,7 +100,7 @@ public class FitMixedModel extends SimpleAction {
 
                 ArrayList<double[]> componentProbabilities = op.getComponentProbabilities(network_,objectModel_.objectModelAtTime(op.time_));
                 updateLikelihoods(componentProbabilities);
-                noChoices+=componentProbabilities.size();
+                noChoices+=op.noChoices_;
                 op.build(network_);
             }
             ArrayList<Link> newLinks = new ArrayList<Link>();
@@ -125,6 +125,7 @@ public class FitMixedModel extends SimpleAction {
         System.out.println("Max likelihood : "+maxLike);
         for (int l=0; l < bestConfig_.length; l++){
             System.out.println(bestConfig_[l]+" "+objectModel_.objectModelAtTime(start).components_.get(l));
+            // System.out.println(noChoices);
         }
 
     }
@@ -148,7 +149,7 @@ public class FitMixedModel extends SimpleAction {
                     nodeprob+=node[i]*weights[i];
                 }
                 if (nodeprob <= 0) {
-                    //System.err.println("Node returned zero probability");
+                    //System.out.println("Node returned zero probability");
                     logSum = 0;
                     logRand = 0;
                     break;

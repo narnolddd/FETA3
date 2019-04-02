@@ -23,6 +23,11 @@ public class Clone extends OperationModel {
         try {
             br_ = new BufferedReader(new FileReader(file));
             String line;
+            long time = 0;
+            while (time < startTime_) {
+                String l = br_.readLine();
+                time = Long.parseLong(l.split(" ")[0].trim());
+            }
             while ((line = br_.readLine()) != null) {
                 line = line.trim();
                 parseLine(line);

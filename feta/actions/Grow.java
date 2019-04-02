@@ -4,6 +4,7 @@ import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.Link;
 import feta.objectmodels.FullObjectModel;
+import feta.operations.Clone;
 import feta.operations.OperationModel;
 import feta.writenet.WriteNet;
 import feta.writenet.WriteNetNN;
@@ -53,6 +54,7 @@ public class Grow extends SimpleAction {
             }
             op.fill(network_,objectModel_.objectModelAtTime(op.time_));
             time = op.time_;
+            //System.out.println(time);
             time+=interval_;
             network_.buildUpTo(Long.MAX_VALUE);
         }
