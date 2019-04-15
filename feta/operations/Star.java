@@ -66,7 +66,9 @@ public class Star extends Operation {
             chosen_[0]=centreNode_;
             existingLeaves=om.getNodesWithoutReplacement(net, noExisting_, chosen_);
         } else {
-            existingLeaves=om.getNodesWithoutReplacement(net, noExisting_, new int[0]);
+            int [] chosen_ = new int[1];
+            chosen_[0]=centreNode_;
+            existingLeaves=om.getNodesWithoutReplacement(net, noExisting_, chosen_);
         }
         // Add new nodes
         int noNew_ = leafNodes_.length - noExisting_;
@@ -108,7 +110,6 @@ public class Star extends Operation {
     public double calcLogLike(Network net, ObjectModel obm) {
         double logSum = 0.0;
         double logRand = 0.0;
-        double probUsed = 0.0;
         double randUsed = 0.0;
         for (int i =0; i<leafNodeNames_.length; i++) {
             int[] chosen = new int[i];
@@ -129,10 +130,9 @@ public class Star extends Operation {
                     continue;
                 }
                 // Log Likelihood is calculated without replacement
-                logSum+= Math.log(prob) - Math.log(1 - probUsed);
+                logSum+= Math.log(prob);
                 logRand+=Math.log(1.0/net.noNodes_) - Math.log(1 - randUsed);
                 randUsed+= 1.0/net.noNodes_;
-                probUsed+= prob;
             }
             else continue;
         }

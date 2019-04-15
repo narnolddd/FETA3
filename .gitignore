@@ -25,3 +25,7 @@ tutorial/plots/*.eps
 
 # datasets
 data/language_net.dat
+
+# compiled jar file causing conflicts
+feta3-1.0.0.jar
+

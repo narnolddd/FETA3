@@ -55,6 +55,7 @@ public class Likelihood extends SimpleAction {
             for (Operation op: newOps) {
                 //objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
                 like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_));
+                //System.out.println(like);
                 noChoices+=op.noChoices_;
                 op.build(network_);
             }

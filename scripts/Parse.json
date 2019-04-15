@@ -1,16 +1,16 @@
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
   },
   "Action": {
     "ParseTest": {
-      "Start": 100,
-      "Interval":10,
-      "MaxNodes": 10000,
-      "FileName": "experiments/citationstest.feta"
+      "Start": 710640000,
+      "Interval":100000,
+      "MaxNodes": 34401,
+      "FileName": "experiments/citations/CitationsNewOpModel.feta"
     }
   }
 }
