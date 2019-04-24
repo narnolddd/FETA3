@@ -2,6 +2,7 @@ package feta.operations;
 
 import feta.network.Link;
 import feta.network.Network;
+import feta.network.UndirectedNetwork;
 import feta.objectmodels.ObjectModel;
 
 import java.util.ArrayList;
@@ -61,9 +62,12 @@ public class Star extends Operation {
 
     public void pickLeafNodes_(Network net, ObjectModel om) {
         int[] existingLeaves= new int[this.noExisting_];
-        if (internal_) {
-            int [] chosen_ = new int[1];
+        if (internal_ && net.getClass()==UndirectedNetwork.class) {
+            int [] chosen_ = new int[1+((UndirectedNetwork) net).degrees_[centreNode_]];
             chosen_[0]=centreNode_;
+            for (int n = 0; n < ((UndirectedNetwork) net).neighbours_.get(centreNode_).size(); n++) {
+                chosen_[n+1] = ((UndirectedNetwork) net).neighbours_.get(centreNode_).get(n);
+            }
             existingLeaves=om.getNodesWithoutReplacement(net, noExisting_, chosen_);
         } else {
             int [] chosen_ = new int[1];

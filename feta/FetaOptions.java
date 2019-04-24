@@ -19,6 +19,7 @@ public class FetaOptions {
     public String outputType_="NNT";
     public String inSep_ = "\\s+";
     public String outSep_= " ";
+    public int noRecents_=10;
 
     /** Type of action. Everything else related to the action will be parsed in the relevant action class */
     JSONObject actionOps_;
@@ -72,7 +73,6 @@ public class FetaOptions {
             df.remove("GraphInputFile");
         }
 
-
         String ofile = (String) df.get("GraphOutputFile");
         if (ofile != null) {
             netOutputFile_=ofile;
@@ -107,6 +107,12 @@ public class FetaOptions {
         if (dir != null) {
             directedInput_=dir;
             df.remove("Directed");
+        }
+
+        Long noRecents = (Long) df.get("NoRecents");
+        if (noRecents != null) {
+            noRecents_= Math.toIntExact(noRecents);
+            df.remove("NoRecents");
         }
 
         if (df.keySet().size() != 0) {

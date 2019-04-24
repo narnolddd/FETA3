@@ -84,6 +84,7 @@ public class ParseNetUndirected extends ParseNet {
             if (!net.newNode(l.destNode_)) {
                 op.noExisting_++;
             }
+            net.addNodeToList(l.sourceNode_);
             return op;
         } else if (net.newNode(l.destNode_)) {
             Star op = new Star(1,false);
@@ -91,6 +92,7 @@ public class ParseNetUndirected extends ParseNet {
             op.centreNodeName_=l.destNode_;
             op.leafNodeNames_[0]=l.sourceNode_;
             op.time_=l.time_;
+            net.addNodeToList(l.destNode_);
             return op;
         } else {
             Star op = new Star(1, true);

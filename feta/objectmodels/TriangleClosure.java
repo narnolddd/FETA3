@@ -10,6 +10,7 @@ import java.util.Set;
 public class TriangleClosure extends ObjectModelComponent {
 
     public Set<Integer> neighbourhood_;
+    private boolean firstTime_= true;
 
     public void calcNormalisation(UndirectedNetwork network, int [] removed) {
         Set<Integer> recents = new HashSet<Integer>(network.recentlyPickedNodes_);

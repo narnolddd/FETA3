@@ -51,6 +51,7 @@ public class FetaModel {
         if (options_.directedInput_) {
             network_= new DirectedNetwork();
         } else network_= new UndirectedNetwork();
+        network_.numRecents_=options_.noRecents_;
     }
 
     /** Reads from a string the relevant action type */
