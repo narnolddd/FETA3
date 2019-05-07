@@ -56,6 +56,7 @@ public class Star extends Operation {
         }
         else {
             centreNodeName_ = net.generateNodeName();
+            centreNode_=net.noNodes_;
             net.addNodeToList(centreNodeName_);
         }
     }

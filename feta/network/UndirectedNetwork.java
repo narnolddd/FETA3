@@ -48,6 +48,7 @@ public class UndirectedNetwork extends Network {
     public void addLink(int src, int dst) {
         if (!allowDuplicates_){
             if (isLink(src,dst))
+                System.out.println("Duplicate Link");
                     return;
         }
         neighbours_.get(src).add(dst);

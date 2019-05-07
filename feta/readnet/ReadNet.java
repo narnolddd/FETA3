@@ -38,8 +38,10 @@ public abstract class ReadNet {
                     continue;
                 Link link = parseLine(line, linkno);
                 // aint got time for loops
-                if (link.sourceNode_.equals(link.destNode_))
+                if (link.sourceNode_.equals(link.destNode_)) {
+                    System.out.println("Self Loop at time "+link.time_+"!");
                     continue;
+                }
 //               if (removeDuplicates_ && links_.contains(link))
 //                    continue;
                 links_.add(link);

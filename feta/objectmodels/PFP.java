@@ -1,0 +1,76 @@
+package feta.objectmodels;
+
+import feta.network.DirectedNetwork;
+import feta.network.UndirectedNetwork;
+import org.json.simple.JSONObject;
+
+public class PFP extends ObjectModelComponent{
+
+    public double delta_=0.048;
+    public boolean useInDegree_=true;
+
+    public void calcNormalisation(UndirectedNetwork network, int [] removed) {
+        double degSum = 0.0;
+        for (int i = 0; i < network.noNodes_; i++) {
+            degSum += Math.pow(network.getDegree(i), 1 + delta_ * Math.log10(network.getDegree(i)));
+        }
+
+        for (int j = 0; j < removed.length; j++) {
+            if (removed[j]>0) {
+                degSum -= Math.pow(network.getDegree(removed[j]), 1 + delta_ * Math.log10(network.getDegree(removed[j])));
+            }
+        }
+        normalisationConstant_=degSum;
+    }
+
+    public void calcNormalisation(DirectedNetwork network, int [] removed) {
+        double degSum = 0.0;
+        for (int i = 0; i < network.noNodes_; i++) {
+            if (useInDegree_) {
+                degSum+= Math.pow(network.getInDegree(i)+1, 1 + delta_*Math.log10(network.getInDegree(i)+1));
+            } else {
+                degSum+= Math.pow(network.getOutDegree(i), 1 + delta_*Math.log10(network.getOutDegree(i)+1));
+            }
+        }
+
+        for (int j = 0; j < removed.length; j++) {
+            if (removed[j]>0 && useInDegree_) {
+                degSum -= Math.pow(network.getInDegree(removed[j])+1, 1 + delta_*Math.log10(network.getInDegree(removed[j])+1));
+            }
+            if (removed[j]>0 && !useInDegree_) {
+                degSum-= Math.pow(network.getOutDegree(removed[j])+1, 1 + delta_*Math.log10(network.getOutDegree(removed[j])+1));
+            }
+        }
+        normalisationConstant_=degSum;
+    }
+
+    public double calcProbability(UndirectedNetwork net, int node) {
+        if (normalisationConstant_==0.0)
+            return 0.0;
+        return Math.pow(net.getDegree(node), 1 + delta_*Math.log10(net.getDegree(node)))/normalisationConstant_;
+    }
+
+    public double calcProbability(DirectedNetwork net, int node) {
+        if (normalisationConstant_==0.0)
+            return 0.0;
+        if (useInDegree_)
+            return Math.pow(net.getInDegree(node)+1, 1 + delta_*Math.log10(net.getInDegree(node)+1))/normalisationConstant_;
+        return Math.pow(net.getOutDegree(node)+1, 1 + delta_*Math.log10(net.getInDegree(node)+1))/normalisationConstant_;
+    }
+
+    public void parseJSON(JSONObject params) {
+        Boolean useInDeg = (Boolean) params.get("UseInDegree");
+        if (useInDeg!= null) {
+            useInDegree_=useInDeg;
+        }
+        Double delta = (Double) params.get("Delta");
+        if (delta!=null) {
+            delta_=delta;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "PFP "+delta_;
+    }
+}
