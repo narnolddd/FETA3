@@ -209,7 +209,7 @@ which will generate some .eps files in the plots folder. Compare with the plots 
 
 We can also look at the degree distribution at different time-slices. You should notice in the tutorial folder three files all something 
 like `CitationsTSDeg.dat` which are the degree distributions recorded at the specified time intervals. Let's plot the distributions at 
-the last timeslot by running:
+the last timeslot by running:g
 
 ```bash
 gnuplot tutorial/CitationsDegDist.gnu
@@ -266,6 +266,9 @@ attractive. Has parameter `AgeingExponent` controlling the effect of node's age 
 values of alpha lead to oldest nodes being most attractive, vice versa for negative values.
 * `DegreePower` [Krapivsky, Redner, Leyvraz](https://arxiv.org/abs/cond-mat/0005139) - nonlinear preferential attachment to node degree.
 Parameter `Power` specifying the degree power.
+* `TriangleClosure` - aims to close triangles by nodes picking at random from the neighbourhood of the last chosen node.
+* `TriangleClosureDegree` - same as previous, but weighted towards higher degree nodes in this neighbourhood
+* `TriangleClosureInverseDegree` - weighted towards lower degree nodes
 
 In addition, the modelling framework allows for flexibility in two ways:
 
@@ -531,7 +534,9 @@ java -jar feta3-1.0.0.jar tutorial/CloneOperationModel.json
 ```
 
 You'll find a file in the `data` folder called `citations.feta` which contains the extracted *Operation Model* for the 
-network up to 1000 nodes.
+network up to 10000 nodes. An example line in the file is
+
+``
 
 Having this, we may grow a network using this operation model, and whatever object model we like. Run:
 
@@ -542,10 +547,4 @@ java -jar feta3-1.0.0.jar tutorial/GrowExample2.json
 for a network grown in this way, but with object model half BA, half random attachment.
 
 ## Future development
-
-I intend to improve the codebase over time in the following ways:
-
-* Speedup of likelihood calculation, which is currently not optimised
-* Inclusion of models with higher triadic closure element
-
 

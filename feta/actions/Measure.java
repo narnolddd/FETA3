@@ -33,7 +33,7 @@ public class Measure extends SimpleAction {
             while (!stoppingConditionsExceeded_(network_) && network_.linksToBuild_.size() > 0) {
                 network_.buildUpTo(time);
                 network_.calcMeasurements();
-                String measurements = network_.measureToString()+"\n";
+                String measurements = time+" "+network_.measureToString()+"\n";
                 //System.out.println(measurements);
                 bw_.write(measurements);
                 if (printDegVector_) {
