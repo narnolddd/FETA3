@@ -1,15 +1,15 @@
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "Directed": true
   },
   "Action": {
     "Measure": {
-      "Start": 10,
-      "Interval":100,
-      "MaxNodes": 10000,
-      "FileName": "tutorial/CitationsTSDirected.dat"
+      "Start": 706492800,
+      "Interval":604800,
+      "MaxNodes": 34343,
+      "FileName":"tutorial/CitationsTSDirected.dat"
     }
   }
 }

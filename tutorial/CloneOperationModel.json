@@ -7,10 +7,10 @@
   },
   "Action": {
     "ParseTest": {
-      "Start": 710640000,
+      "Start": 706492800,
       "Interval":100000,
-      "MaxNodes": 34401,
-      "FileName": "experiments/citations/CitationsNewOpModel.feta"
+      "MaxNodes": 34343,
+      "FileName": "tutorial/CitationsOpModel.feta"
     }
   }
 }

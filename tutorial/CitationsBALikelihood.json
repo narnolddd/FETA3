@@ -1,21 +1,21 @@
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false
   },
   "Action": {
     "Likelihood": {
-      "Start": 1,
+      "Start": 706492800,
       "Interval": 1,
       "MaxNodes": 10000
     }
   },
   "ObjectModel": [
     {
-      "Start": 1,
-      "End": 20000,
+      "Start": 706492800,
+      "End": 1006492800,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",

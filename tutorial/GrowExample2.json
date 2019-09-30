@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "seed_graphs/clique-5.dat",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "GraphOutputFile":"tutorial/GrowExample2.dat",
@@ -8,23 +8,27 @@
   },
   "Action": {
     "Grow": {
-      "Start": 1,
-      "Interval": 1,
-      "MaxNodes": 1000
+      "Start": 706492800,
+      "Interval": 1000,
+      "MaxNodes": 34343
     }
   },
   "ObjectModel": [
     {
-      "Start": 1,
-      "End": 1000,
+      "Start": 706492800,
+      "End": 1006492800,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",
-          "Weight": 0.5
+          "Weight": 0.46
         },
         {
           "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Weight":0.5
+          "Weight":0.14
+        },
+        {
+          "ComponentName": "feta.objectmodels.TriangleClosureDegree",
+          "Weight":0.4
         }
       ]
     }
@@ -32,6 +36,7 @@
   "OperationModel":
   {
     "Name": "feta.operations.Clone",
-    "FileName": "data/citations.feta"
+    "FileName": "tutorial/CitationsOpModel.feta",
+    "Start": 706492800
   }
 }

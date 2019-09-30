@@ -1,0 +1,15 @@
+{
+  "Data": {
+    "GraphInputFile": "tutorial/GrowExample2.dat",
+    "GraphInputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "Measure": {
+      "Start": 706492800,
+      "Interval":604800,
+      "MaxNodes": 34343,
+      "FileName":"tutorial/CitationsTSArtificial.dat"
+    }
+  }
+}

@@ -12,8 +12,14 @@ public class Email extends OperationModel {
     public Operation nextOperation() {
         double r = Math.random();
         if (r<propInternal_) {
-            return new Star(noRecipients_,true);
-        } else return new Star(noRecipients_,false);
+            Star intStar = new Star(noRecipients_,true);
+            intStar.noExisting_=noRecipients_;
+            return intStar;
+        } else {
+            Star extStar = new Star(noRecipients_,false);
+            extStar.noExisting_=noRecipients_;
+            return extStar;
+        }
     }
 
     @Override

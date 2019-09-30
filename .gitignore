@@ -10,6 +10,7 @@ META-INF
 *.log
 *.gz
 *.tex
+feta_documentation.pdf
 
 # compiled class files
 *.class
@@ -25,7 +26,8 @@ tutorial/plots/*.eps
 
 # datasets
 data/language_net.dat
+data/cit-HepPh.txt
+data/citations.feta
 
 # compiled jar file causing conflicts
 feta3-1.0.0.jar
-

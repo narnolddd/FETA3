@@ -1,22 +1,22 @@
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false
   },
   "Action": {
     "FitMixedModel": {
-      "Start": 100,
-      "Interval": 10,
+      "Start": 706492800,
+      "Interval": 60400,
       "MaxNodes": 10000,
       "Granularity": 100
     }
   },
   "ObjectModel": [
     {
-      "Start": 10,
-      "End": 100000,
+      "Start": 706492800,
+      "End": 1006492800,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",

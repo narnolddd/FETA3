@@ -27,6 +27,13 @@ based on [FETA2](https://github.com/richardclegg/FETA2) by [Richard Clegg](https
 If you have questions, comments, ideas or are having bugs, please don't hesitate to get in touch. Drop me an email at
 n.a.arnold@qmul.ac.uk
 
+## Citation
+
+Please cite as:
+
+Naomi A. Arnold, Raul J. Mondragon, Richard G. Clegg. (2019). Changing the tune: mixtures of network models that vary in time.
+arXiv:xxxx.XXXX
+
 # Building and running
 
 ## Requirements
@@ -45,7 +52,7 @@ First clone the repository, either manually or using the command:
 git clone https://github.com/narnolddd/FETA3.git
 ```
 
-For everything else, let's now jump into the `FETA3` folder if you haven't already:
+For everything else, jump into the `FETA3` folder if you haven't already:
 
 ```bash
 cd FETA3
@@ -73,24 +80,24 @@ The single argument `scripts/[some-script-name].json` is a JSON config file tell
 
 # Examples
 
-## Obtaining time series of network measurements
+## Obtaining time series of network quantities
 
 Let's do an example of obtaining a time series of measurements from a timestamped network dataset. In the `data` folder there's a file 'cit-HepPh-ordered.txt'
-which is a timestamped citation network dataset from ArXiV high energy physics, available from [SNAP](https://snap.stanford.edu/data/). We will 
+which is a timestamped citation network dataset from ArXiV high energy physics phenomenology, available from [SNAP](https://snap.stanford.edu/data/). We will 
 use the script `MeasureCitations.json` in the `tutorial` folder, which looks like:
 
 ```JSON
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "Directed": false
   },
   "Action": {
     "Measure": {
-      "Start": 10,
-      "Interval":100,
-      "MaxNodes": 10000,
+      "Start": 706492800,
+      "Interval":604800,
+      "MaxNodes": 34343,
       "FileName":"tutorial/CitationsTS.dat"
     }
   }
@@ -107,12 +114,13 @@ which look like `NODE-1 NODE-2 TIMESTAMP`, "NN" for `NODE-1 NODE-2`. In the latt
 
 The `Action` tag tells FETA what to do with the inputted file; in this case we want to take measurements of it. We can specify:
 
-* `Start` - time at which FETA will start taking measurements.
+* `Start` - time at which FETA will start taking measurements. This takes integers/longs. In this case, the timestamp type is a UNIX timestamp.
 
-* `Interval` - time between measurements
+* `Interval` - time between measurements. In this case, we specify weekly measurements
 
 * Stopping condition. This can either be a latest time `MaxTime`, maximum number of nodes `MaxNodes` or links `MaxLinks`. This specifies
-how long the measurements should take place for - in this example the measurements will finish when the network size has reached 10000 nodes.
+how long the measurements should take place for - in this example the measurements will finish when the network size has reached 34343 nodes,
+the complete size of this network dataset.
 
 * `FileName` - where to write the measurements to. This will also generate one, or two files (depending on whether or not the network
 is directed) to store the degree distribution at different snapshots.
@@ -129,21 +137,16 @@ You should now have the file `CitationsTS.dat` in the `tutorial` folder. The col
 number of links, average degree, density (number of links/number of possible links), maximum degree, average clustering coeff,
 mean squared degree, degree assortativity.
 
-To see what these time series look like, you can use your favourite plotting device. Mine happens to be [gnuplot](http://www.gnuplot.info/)
-which is reasonably quick to download and usable from the terminal. If you have gnuplot installed, I have written a script for plotting these 
-measurements you've just calculated - run the command:
+To see what these time series look like, you can use your favourite plotting device. Mine happens to be pyplot. I have written 
+a script for plotting these measurements you've just calculated - run the command:
 
 ```bash
-gnuplot tutorial/CitationsTS.gnu
+python3 CitationsTS.py
 ```
 
-and there should now be some .eps plots in your `tutorial/plots` folder which should contain some looking something like this:
+and there should now be an .eps plot in your `tutorial/plots` folder which should look like this:
 
-![maxdeg](README_pics/cit_maxdeg.png) 
-![meandegsq](README_pics/cit_meandegsq.png)
-
-![cluster](README_pics/cit_cluster.png)
-![assort](README_pics/cit_assort.png)
+![undirected](tutorial/plots/CitationsTS.eps)
 
 
 Whilst these plots are informative, note that we have treated the citation network edgelist as undirected, whereas since citations are always 
@@ -155,20 +158,19 @@ We're going to run the same command as before, but with the file `tutorial/Measu
 ```JSON
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "Directed": true
   },
   "Action": {
     "Measure": {
-      "Start": 10,
-      "Interval":100,
-      "MaxNodes": 10000,
-      "FileName": "tutorial/CitationsTSDirected.dat"
+      "Start": 706492800,
+      "Interval":604800,
+      "MaxNodes": 34343,
+      "FileName":"tutorial/CitationsTSDirected.dat"
     }
   }
 }
-
 ```
 
 This is identical to the previous file `tutorial/MeasureCitations.json` apart from the `Directed` tag being changed from
@@ -176,7 +178,7 @@ This is identical to the previous file `tutorial/MeasureCitations.json` apart fr
 
 Let's run the command 
 
-```$xslt
+```bash
 java -jar feta3-1.0.0.jar tutorial/MeasureCitationsDirected.json
 ```
 
@@ -187,37 +189,25 @@ much sense now. With this in mind, the columns are ordered as: timestamp, number
 out-degree (both identical), maximum in-degree, maximum out-degree, mean squared in-degree, mean squared out-degree, and four measures of degree assortativity
 (in-in, in-out, out-in, out-out).
 
-Again, if you have gnuplot, run:
+Again, to generate some plots, run:
 
-```$xslt
-gnuplot tutorial/CitationsTSDirected.gnu
+```bash
+python3 CitationsTSDirected.py
 ```
 
 which will generate some .eps files in the plots folder. Compare with the plots generated when we treated the network as undirected.
 
-![maxindeg](README_pics/cit_maxdeg_in.png) 
-![maxoutdeg](README_pics/cit_maxdeg_out.png)
+![directed](tutorial/plots/CitationsTSDirected.eps)
 
-![meanindegsq](README_pics/cit_meandegsq_in.png)
-![meanoutdegsq](README_pics/cit_meandegsq_out.png)
-
-![assortii](README_pics/cit_assort_inin.png)
-![assortio](README_pics/cit_assort_inout.png)
-
-![assortoi](README_pics/cit_assort_outin.png)
-![assortoo](README_pics/cit_assort_outout.png)
-
-We can also look at the degree distribution at different time-slices. You should notice in the tutorial folder three files all something 
-like `CitationsTSDeg.dat` which are the degree distributions recorded at the specified time intervals. Let's plot the distributions at 
-the last timeslot by running:g
+Just for fun, we can plot the in/out/total degree distribution too. Run:
 
 ```bash
-gnuplot tutorial/CitationsDegDist.gnu
+python3 CitationsTSDegDist.py
 ```
 
-and we should get something in the plots folder like:
+giving the following plot:
 
-![degdist](README_pics/CitationsTSDeg.png)
+![degdist](tutorial/plots/CitationDegDist.eps)
 
 ## Working with evolving network models
 
@@ -265,8 +255,8 @@ attractive. Has parameter `AgeingExponent` controlling the effect of node's age 
 * `RankPreferentialAttachment` ([Fortunato, Flammini, Menczer](https://arxiv.org/abs/cond-mat/0602081)) - with parameter `Alpha`. Positive
 values of alpha lead to oldest nodes being most attractive, vice versa for negative values.
 * `DegreePower` [Krapivsky, Redner, Leyvraz](https://arxiv.org/abs/cond-mat/0005139) - nonlinear preferential attachment to node degree.
-Parameter `Power` specifying the degree power.
-* `TriangleClosure` - aims to close triangles by nodes picking at random from the neighbourhood of the last chosen node.
+Parameter `Power` species the degree power.
+* `TriangleClosure` - aims to close triangles by nodes picking at random from the neighbourhood of the last l chosen nodes.
 * `TriangleClosureDegree` - same as previous, but weighted towards higher degree nodes in this neighbourhood
 * `TriangleClosureInverseDegree` - weighted towards lower degree nodes
 
@@ -371,16 +361,12 @@ java -jar feta3-1.0.0.jar tutorial/MeasureArtificial.json
 and finally get some measurements using:
 
 ```bash
-gnuplot tutorial/ArtificialTS.gnu
+python3 tutorial/ArtificialTS.gnu
 ```
 
 (You should get something like the below in the `tutorial/plots` folder)
 
-![maxdeg](README_pics/artificial_maxdeg.png)
-![meandegsq](README_pics/artificial_meandegsq.png)
-
-![cluster](README_pics/artificial_cluster.png)
-![assort](README_pics/artificial_assort.png)
+![artificial1](tutorial/plots/ArtificialTS.eps)
 
 
 #### Subtleties
@@ -408,22 +394,22 @@ Let's look in closer detail at the JSON file:
 ```JSON
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false
   },
   "Action": {
     "Likelihood": {
-      "Start": 1,
+      "Start": 706492800,
       "Interval": 1,
       "MaxNodes": 10000
     }
   },
   "ObjectModel": [
     {
-      "Start": 1,
-      "End": 20000,
+      "Start": 706492800,
+      "End": 1006492800,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",
@@ -449,23 +435,23 @@ the citations network dataset - see the file `tutorial/CitationsFitMixed.json`:
 
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false
   },
   "Action": {
     "FitMixedModel": {
-      "Start": 100,
-      "Interval": 10,
+      "Start": 706492800,
+      "Interval": 60400,
       "MaxNodes": 10000,
       "Granularity": 100
     }
   },
   "ObjectModel": [
     {
-      "Start": 10,
-      "End": 100000,
+      "Start": 706492800,
+      "End": 1006492800,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",
@@ -501,14 +487,14 @@ java -jar feta3-1.0.0.jar tutorial/CitationsFitMixed.json
 should yield the response after a couple of minutes:
 
 ```
-Max likelihood : 1.5415581814313457
-0.93 Degree
-0.06 Random
-0.01 TriangleClosureDegree
+Max likelihood : 3.1579848759775535
+0.46 Degree
+0.14 Random
+0.4 TriangleClosureDegree
 ```
 
 This is the maximum likelihood mixture from the model components tested, but not necessarily a good model. How do we evaluate
-the performance of this model? See the next section for this. 
+the performance of this model?  
 
 ### 'Cloning' a network's operation model
 
@@ -533,18 +519,70 @@ Let's do an example with the citation network. Run
 java -jar feta3-1.0.0.jar tutorial/CloneOperationModel.json
 ```
 
-You'll find a file in the `data` folder called `citations.feta` which contains the extracted *Operation Model* for the 
-network up to 10000 nodes. An example line in the file is
+You'll find a file in the `tutorial` folder called `CitationsOpModel.feta` which contains the extracted *Operation Model* for the 
+network up to 34343 nodes. An example line in the file is
 
-``
+```
+706924800 STAR 9205238 LEAVES 203224 212068 212391 302149 302275 EXTERNAL 0
+```
 
-Having this, we may grow a network using this operation model, and whatever object model we like. Run:
+meaning, at time `706924800` the network grew by a new node (`EXTERNAL`) with id `9205238` joining connecting to 5 existing 
+nodes, with ids given by the numbers following `LEAVES`, and 0 new nodes.
+
+Having this, we may grow a network using this operation model, and whatever object model we like. Let's use the best-fitting
+model we found in the last section:
 
 ```bash
 java -jar feta3-1.0.0.jar tutorial/GrowExample2.json
 ```
 
-for a network grown in this way, but with object model half BA, half random attachment.
+for a network grown in this way, but with object model as in the previous section, where we have put in the weights corresponding
+to those found having the highest likelihood:
 
-## Future development
+```json
+{
+  "Data": {
+    "GraphInputFile": "data/cit-HepPh-new.txt",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "GraphOutputFile":"tutorial/GrowExample2.dat",
+    "Directed": false
+  },
+  "Action": {
+    "Grow": {
+      "Start": 706492800,
+      "Interval": 1000,
+      "MaxNodes": 34343
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 706492800,
+      "End": 1006492800,
+      "Components": [
+        {
+          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "Weight": 0.46
+        },
+        {
+          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "Weight":0.14
+        },
+        {
+          "ComponentName": "feta.objectmodels.TriangleClosureDegree",
+          "Weight":0.4
+        }
+      ]
+    }
+  ],
+  "OperationModel":
+  {
+    "Name": "feta.operations.Clone",
+    "FileName": "tutorial/CitationsOpModel.feta",
+    "Start": 706492800
+  }
+}
+```
+
+As before, we can obtain measurements on quantities of interest using a file `tutorial/MeasureCitationsArtificial.json`
 
