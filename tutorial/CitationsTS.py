@@ -54,5 +54,5 @@ for row in range(2):
 
 ax[-1, -1].axis('off')
 plt.tight_layout()
-fig.savefig("tutorial/plots/CitationsTS.eps")
+fig.savefig("tutorial/plots/CitationsTS.png")
 plt.show()

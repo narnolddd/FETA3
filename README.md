@@ -146,7 +146,7 @@ python3 CitationsTS.py
 
 and there should now be an .eps plot in your `tutorial/plots` folder which should look like this:
 
-![undirected](tutorial/plots/CitationsTS.eps)
+![undirected](tutorial/plots/CitationsTS.png)
 
 
 Whilst these plots are informative, note that we have treated the citation network edgelist as undirected, whereas since citations are always 
@@ -197,7 +197,7 @@ python3 CitationsTSDirected.py
 
 which will generate some .eps files in the plots folder. Compare with the plots generated when we treated the network as undirected.
 
-![directed](tutorial/plots/CitationsTSDirected.eps)
+![directed](tutorial/plots/CitationsTSDirected.png)
 
 Just for fun, we can plot the in/out/total degree distribution too. Run:
 
@@ -207,7 +207,7 @@ python3 CitationsTSDegDist.py
 
 giving the following plot:
 
-![degdist](tutorial/plots/CitationDegDist.eps)
+![degdist](tutorial/plots/CitationDegDist.png)
 
 ## Working with evolving network models
 
@@ -366,7 +366,7 @@ python3 tutorial/ArtificialTS.gnu
 
 (You should get something like the below in the `tutorial/plots` folder)
 
-![artificial1](tutorial/plots/ArtificialTS.eps)
+![artificial1](tutorial/plots/ArtificialTS.png)
 
 
 #### Subtleties

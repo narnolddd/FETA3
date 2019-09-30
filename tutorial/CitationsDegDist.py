@@ -32,5 +32,5 @@ plt.ylabel('$P(X>k)$')
 plt.legend(loc='lower left')
 plt.tight_layout()
 
-plt.savefig('tutorial/plots/CitationDegDist.eps')
+plt.savefig('tutorial/plots/CitationDegDist.png')
 plt.show()

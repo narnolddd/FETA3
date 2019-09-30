@@ -55,5 +55,5 @@ for row in range(2):
 
 
 plt.tight_layout()
-fig.savefig("tutorial/plots/CitationsTSDirected.eps")
+fig.savefig("tutorial/plots/CitationsTSDirected.png")
 plt.show()
