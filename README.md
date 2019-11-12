@@ -141,7 +141,7 @@ To see what these time series look like, you can use your favourite plotting dev
 a script for plotting these measurements you've just calculated - run the command:
 
 ```bash
-python3 CitationsTS.py
+python3 tutorial/CitationsTS.py
 ```
 
 and there should now be an .eps plot in your `tutorial/plots` folder which should look like this:
@@ -192,7 +192,7 @@ out-degree (both identical), maximum in-degree, maximum out-degree, mean squared
 Again, to generate some plots, run:
 
 ```bash
-python3 CitationsTSDirected.py
+python3 tutorial/CitationsTSDirected.py
 ```
 
 which will generate some .eps files in the plots folder. Compare with the plots generated when we treated the network as undirected.
@@ -202,7 +202,7 @@ which will generate some .eps files in the plots folder. Compare with the plots 
 Just for fun, we can plot the in/out/total degree distribution too. Run:
 
 ```bash
-python3 CitationsTSDegDist.py
+python3 tutorial/CitationsDegDist.py
 ```
 
 giving the following plot:
@@ -282,7 +282,7 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
 
 {
   "Data": {
-    "GraphInputFile": "seed_graphs/clique-5.dat",
+    "GraphInputFile": "seed_graphs/loop-5.dat",
     "GraphOutputFile": "tutorial/GrowExample1.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
@@ -340,9 +340,10 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
     "PropInternal":0.2
   }
 }
+
 ```
 
-The tag `GraphInputFile` now points to the seed graph with which we want to start - here a file with edgelist comprising a clique of
+The tag `GraphInputFile` now points to the seed graph with which we want to start - here a file with edgelist comprising a loop of
 5 nodes.
 
 Run the command 
@@ -361,7 +362,7 @@ java -jar feta3-1.0.0.jar tutorial/MeasureArtificial.json
 and finally get some measurements using:
 
 ```bash
-python3 tutorial/ArtificialTS.gnu
+python3 tutorial/ArtificialTS.py
 ```
 
 (You should get something like the below in the `tutorial/plots` folder)
