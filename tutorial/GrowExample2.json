@@ -16,7 +16,7 @@
   "ObjectModel": [
     {
       "Start": 706492800,
-      "End": 1006492800,
+      "End": 1025956000,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",
