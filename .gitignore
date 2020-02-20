@@ -30,4 +30,4 @@ data/cit-HepPh.txt
 data/citations.feta
 
 # compiled jar file causing conflicts
-feta3-1.0.0.jar
+*.jar
