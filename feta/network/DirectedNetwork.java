@@ -135,6 +135,7 @@ public class DirectedNetwork extends Network {
             int[] newDegDist = new int[inDegArraySize_*2];
             System.arraycopy(inDegreeDist_, 0, newDegDist, 0, inDegArraySize_);
             Arrays.fill(newDegDist, inDegArraySize_, inDegArraySize_*2, 0);
+            inDegreeDist_=newDegDist;
             inDegArraySize_*=2;
             incrementInDegDist(degree);
         }
@@ -150,6 +151,7 @@ public class DirectedNetwork extends Network {
             int[] newDegDist = new int[outDegArraySize_*2];
             System.arraycopy(outDegreeDist_, 0, newDegDist, 0, outDegArraySize_);
             Arrays.fill(newDegDist, outDegArraySize_, outDegArraySize_*2, 0);
+            outDegreeDist_=newDegDist;
             outDegArraySize_*=2;
             incrementOutDegDist(degree);
         }
