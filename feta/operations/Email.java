@@ -2,6 +2,7 @@ package feta.operations;
 
 import org.json.simple.JSONObject;
 
+
 public class Email extends OperationModel {
 
     /** Network grows by internal and external stars */
@@ -11,6 +12,7 @@ public class Email extends OperationModel {
 
     public Operation nextOperation() {
         double r = Math.random();
+        //System.err.println("No Recipients "+noRecipients_);
         if (r<propInternal_) {
             Star intStar = new Star(noRecipients_,true);
             intStar.noExisting_=noRecipients_;
@@ -31,11 +33,12 @@ public class Email extends OperationModel {
             }
             propInternal_=p;
         }
-        Long noRecip = (Long) params.get("NoRecipients");
+        Long noRecip = (Long)params.get("NoRecipients");
         if (noRecip!= null) {
             if (noRecip <= 0) {
                 throw new IllegalArgumentException("Number of recipients must be strictly positive");
             }
+            noRecipients_ = noRecip.intValue();
         }
     }
 }
