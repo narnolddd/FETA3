@@ -3,7 +3,8 @@
     "GraphInputFile": "seed_graphs/clique-5.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
-    "GraphOutputFile": "output/netmobility/RandomMobility.dat",
+    "GraphOutputFile": "output/dpTest.dat",
+    "NoRecents": 5,
     "Directed": false
   },
   "Action": {
@@ -16,17 +17,18 @@
   "ObjectModel": [
     {
       "Start": 1,
-      "End": 10000,
+      "End": 100000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Weight": 1.0
+          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "Weight": 1.0,
+          "Power": 2.0
         }
       ]
     }],
     "OperationModel":
       {
         "Name": "feta.operations.PreferentialAttachment",
-        "NoRecipients": 3
+        "InitialDegree": 3
       }
 }
