@@ -55,6 +55,7 @@ public class Likelihood extends SimpleAction {
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
             for (Operation op: newOps) {
+                System.out.println(op);
                 //objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
                 like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_));
                 noChoices += op.noChoices_;
@@ -64,7 +65,8 @@ public class Likelihood extends SimpleAction {
             }
             ArrayList<Link> newLinks = new ArrayList<Link>();
             for (int i = lset.size(); i < links.size(); i++){
-                newLinks.add(links.get(i));
+                Link l = links.get(i);
+                newLinks.add(l);
             }
             network_.linksToBuild_=newLinks;
         }

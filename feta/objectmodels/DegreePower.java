@@ -16,7 +16,7 @@ public class DegreePower extends ObjectModelComponent {
         }
 
         for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>0) {
+            if (removed[j]>=0) {
                 degSum -= Math.pow(network.getDegree(removed[j]),power_);
             }
         }
