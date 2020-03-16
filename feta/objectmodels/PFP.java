@@ -16,7 +16,7 @@ public class PFP extends ObjectModelComponent{
         }
 
         for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>0) {
+            if (removed[j]>=0) {
                 degSum -= Math.pow(network.getDegree(removed[j]), 1 + delta_ * Math.log10(network.getDegree(removed[j])));
             }
         }
@@ -34,10 +34,10 @@ public class PFP extends ObjectModelComponent{
         }
 
         for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>0 && useInDegree_) {
+            if (removed[j]>=0 && useInDegree_) {
                 degSum -= Math.pow(network.getInDegree(removed[j])+1, 1 + delta_*Math.log10(network.getInDegree(removed[j])+1));
             }
-            if (removed[j]>0 && !useInDegree_) {
+            if (removed[j]>=0 && !useInDegree_) {
                 degSum-= Math.pow(network.getOutDegree(removed[j])+1, 1 + delta_*Math.log10(network.getOutDegree(removed[j])+1));
             }
         }

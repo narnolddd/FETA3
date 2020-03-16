@@ -135,6 +135,7 @@ public class Star extends Operation {
                     continue;
                 }
                 // Log Likelihood is calculated without replacement
+                // System.out.println(leafNodeNames_[i]+" "+prob);
                 logSum+= Math.log(prob);
                 logRand+=Math.log(1.0/net.noNodes_) - Math.log(1 - randUsed);
                 randUsed+= 1.0/net.noNodes_;

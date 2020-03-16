@@ -43,7 +43,7 @@ public class Likelihood extends SimpleAction {
     }
 
     public void getLogLike(long start, long end) {
-        System.out.println("StartTime   EndTime    C0");
+        //System.out.println("StartTime   EndTime    C0");
         network_.buildUpTo(start);
         double like = 0.0;
         double c0  = 0.0;
@@ -55,12 +55,12 @@ public class Likelihood extends SimpleAction {
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
             for (Operation op: newOps) {
-                System.out.println(op);
+                //System.out.println(op);
                 //objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
                 like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_));
                 noChoices += op.noChoices_;
                 c0 = Math.exp(like/noChoices);
-                System.out.println(start+" "+op.time_+" "+c0);
+                //System.out.println(start+" "+op.time_+" "+c0);
                 op.build(network_);
             }
             ArrayList<Link> newLinks = new ArrayList<Link>();
@@ -71,7 +71,7 @@ public class Likelihood extends SimpleAction {
             network_.linksToBuild_=newLinks;
         }
 
-        //c0 = Math.exp(like/noChoices);
-        //System.out.println(c0);
+        c0 = Math.exp(like/noChoices);
+        System.out.println(c0);
     }
 }

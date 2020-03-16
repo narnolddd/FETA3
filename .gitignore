@@ -31,3 +31,8 @@ data/citations.feta
 
 # compiled jar file causing conflicts
 *.jar
+
+# testing files
+testprob.py
+DPLikelihoodTest.json
+

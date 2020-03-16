@@ -54,7 +54,7 @@ for line in lines:
     n1, n2, time = line.split()
     time= int(time)
     if time > currTime:
-        if time > 60:
+        if time > 10:
             break
         if (time > 2):
             choices= unwindSet(edgeset)
@@ -63,8 +63,8 @@ for line in lines:
             totRealProb+= realProb
             noChoices+= nc
             print(randProb,realProb,totRandProb,totRealProb, np.exp((totRealProb-totRandProb)/noChoices),noChoices)
-        for (n1,n2) in edgeset:
-            G.add_edge(n1,n2)
+        for (src,dst) in edgeset:
+            G.add_edge(src,dst)
             #print("G now",n1,n2,list(G.nodes(data=True)))
         edgeset=[]
         currTime= time

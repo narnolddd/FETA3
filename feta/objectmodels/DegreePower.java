@@ -34,10 +34,10 @@ public class DegreePower extends ObjectModelComponent {
         }
 
         for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>0 && useInDegree_) {
+            if (removed[j]>=0 && useInDegree_) {
                 degSum -= Math.pow(network.getInDegree(removed[j])+1,power_);
             }
-            if (removed[j]>0 && !useInDegree_) {
+            if (removed[j]>=0 && !useInDegree_) {
                 degSum-= Math.pow(network.getOutDegree(removed[j])+1, power_);
             }
         }
