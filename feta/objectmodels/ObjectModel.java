@@ -73,6 +73,12 @@ public class ObjectModel {
         normaliseAll(net, new int[0]);
     }
 
+    public void updateAll(Network net, int [] removed) {
+        for (ObjectModelComponent omc: components_) {
+            omc.updateNormalisation(net, removed);
+        }
+    }
+
     /** Performs check that normalisation is correct */
     public void checkNorm(Network net) {
         double sum = 0.0;

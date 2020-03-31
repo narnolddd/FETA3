@@ -1,26 +1,29 @@
 {
   "Data": {
-    "GraphInputFile": "output/dpTest.dat",
+    "GraphInputFile": "output/baTest.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false
   },
   "Action": {
     "Likelihood": {
-      "Start": 1,
-      "Interval": 1,
-      "MaxTime": 1000
+      "Start": 10,
+      "Interval": 10,
+      "MaxNodes": 1000
     }
   },
   "ObjectModel": [
     {
-      "Start": 1,
+      "Start": 10,
       "End": 100000,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Power": 2.0,
-          "Weight": 1.0
+          "Weight": 0.66
+        },
+        {
+          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "Weight": 0.34
         }
       ]
     }

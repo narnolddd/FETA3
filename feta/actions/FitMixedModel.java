@@ -1,23 +1,24 @@
 package feta.actions;
 
+/** Feta packages */
 import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
 import feta.network.Link;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
-import feta.objectmodels.ObjectModel;
 import feta.operations.Operation;
 import feta.parsenet.ParseNet;
 import feta.parsenet.ParseNetDirected;
 import feta.parsenet.ParseNetUndirected;
-import org.json.simple.JSONObject;
 
-import java.lang.reflect.Array;
+/** Utils */
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.json.simple.JSONObject;
 
 /** Finds best model mixture - hopefully will be better than calculating likelihood many times */
 
@@ -32,6 +33,8 @@ public class FitMixedModel extends SimpleAction {
     public ParseNet parser_;
     public int noComponents_;
     public long startTime_=10;
+    public ArrayList<int[]> permList;
+    private boolean orderedData_ = false;
 
     public FitMixedModel(FetaOptions options){
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -39,7 +42,8 @@ public class FitMixedModel extends SimpleAction {
         objectModel_= new FullObjectModel(options_.fullObjectModel_);
     }
 
-    public List<int[]> generatePartitions(int n, int k) {
+    /** Method that generates all possible configurations of model mixture */
+    public static List<int[]> generatePartitions(int n, int k) {
         List<int[]> parts = new ArrayList<>();
         if (k == 1) {
             parts.add(new int[] {n});
@@ -132,6 +136,55 @@ public class FitMixedModel extends SimpleAction {
 
     // Updates the likelihood vector of different object model weight parametrisations
     public void updateLikelihoods(ArrayList<double[]> nodeCompProbs) {
+
+        if (orderedData_){
+            updateLikelihoodsOrdered(nodeCompProbs);
+            return;
+        }
+
+        int noChoices = nodeCompProbs.size();
+
+        if (noChoices < 5) {
+            permList = new ArrayList<int[]>();
+            int[] choices = new int[noChoices];
+            for (int j = 0; j < noChoices; j++) {
+                choices[j] = j;
+            }
+            generatePerms(0, choices);
+        } else {
+            permList = generateRandomShuffles(noChoices, 50);
+        }
+
+        for (int [] partition: likelihoods_.keySet()) {
+            double[] weights = partitionToWeight_.get(partition);
+            double probSum = 0.0;
+            double like;
+            for (int [] perm : permList) {
+                double probProd = 1.0;
+                double probUsed = 0.0;
+                for (int i = 0; i < noChoices; i++) {
+                    double [] node = nodeCompProbs.get(perm[i]);
+                    double nodeprob = 0.0;
+                    for (int j = 0; j < node.length; j++) {
+                        nodeprob+=node[j]*weights[j];
+                    }
+                    probProd *= (network_.noNodes_ - i);
+                    probProd *= nodeprob/(1- probUsed);
+                    probUsed += nodeprob;
+                }
+                probSum += probProd;
+            }
+            like = Math.log(probSum) - Math.log(permList.size());
+            likelihoods_.put(partition,likelihoods_.get(partition) + like);
+        }
+        return;
+    }
+
+    public void updateLikelihoodsNew(Operation op) {
+
+    }
+
+    public void updateLikelihoodsOrdered(ArrayList<double[]> nodeCompProbs) {
         for (int[] partition: likelihoods_.keySet()) {
             double[] weights = partitionToWeight_.get(partition);
 
@@ -139,7 +192,7 @@ public class FitMixedModel extends SimpleAction {
             double logRand = 0.0;
             double probUsed = 0.0;
             double randUsed = 0.0;
-            double like = 0.0;
+            double like;
 
             for (double[] node : nodeCompProbs) {
 
@@ -150,8 +203,8 @@ public class FitMixedModel extends SimpleAction {
                 }
                 if (nodeprob <= 0) {
                     //System.out.println("Node returned zero probability");
-                    logSum = 0;
-                    logRand = 0;
+                    logSum = 0.0;
+                    logRand = 0.0;
                     break;
                 }
                 logSum+= Math.log(nodeprob) - Math.log(1 - probUsed);
@@ -166,11 +219,53 @@ public class FitMixedModel extends SimpleAction {
         }
     }
 
+    /** Helper method for generating all permutations of an integer array */
+    public void generatePerms(int start, int[] input) {
+        if (start == input.length) {
+            permList.add(input.clone());
+            return;
+        }
+        for (int i = start; i < input.length; i++) {
+            int temp = input[i];
+            input[i] = input[start];
+            input[start] = temp;
+
+            generatePerms(start+1,input);
+
+            int temp2 = input[i];
+            input[i] = input[start];
+            input[start] = temp2;
+        }
+    }
+
+    public static ArrayList <int[]> generateRandomShuffles(int n, int number) {
+        ArrayList shuffles = new ArrayList();
+        for (int i = 0; i < number; i++) {
+            int [] initial_array = new int[n];
+            for (int j = 0; j < n; j++) {
+                initial_array[j]=j;
+            }
+            // Perform Knuth Shuffles on choices to sample permutations
+            for (int ind1 = 0; ind1 < n-2; ind1++) {
+                int ind2 = ThreadLocalRandom.current().nextInt(ind1, n);
+                int val1 = initial_array[ind1];
+                int val2 = initial_array[ind2];
+                initial_array[ind1] = val2;
+                initial_array[ind2] = val1;
+            }
+            shuffles.add(initial_array);
+        }
+        return shuffles;
+    }
+
     public void parseActionOptions(JSONObject obj) {
         long granuLong = (Long) obj.get("Granularity");
         granularity_=Math.toIntExact(granuLong);
         Long start = (Long) obj.get("Start");
         if (start != null)
             startTime_=start;
+        Boolean ordereddata = (Boolean) obj.get("OrderedData");
+        if (ordereddata != null)
+            orderedData_=ordereddata;
     }
 }

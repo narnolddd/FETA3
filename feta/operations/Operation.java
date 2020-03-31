@@ -3,7 +3,9 @@ package feta.operations;
 import feta.network.Network;
 import feta.objectmodels.ObjectModel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Operation implements Comparable<Operation> {
 
@@ -23,11 +25,33 @@ public abstract class Operation implements Comparable<Operation> {
         return 0;
     }
 
+    public static ArrayList <int[]> generateRandomShuffles(int n, int number) {
+        ArrayList shuffles = new ArrayList();
+        for (int i = 0; i < number; i++) {
+            int [] initial_array = new int[n];
+            for (int j = 0; j < n; j++) {
+                initial_array[j]=j;
+            }
+            // Perform Knuth Shuffles on choices to sample permutations
+            for (int ind1 = 0; ind1 < n-2; ind1++) {
+                int ind2 = ThreadLocalRandom.current().nextInt(ind1, n);
+                int val1 = initial_array[ind1];
+                int val2 = initial_array[ind2];
+                initial_array[ind1] = val2;
+                initial_array[ind2] = val1;
+            }
+            shuffles.add(initial_array);
+        }
+        return shuffles;
+    }
+
+    ArrayList<int[]> Perms = new ArrayList();
+
     public abstract void build(Network net);
 
     public abstract void fill(Network net, ObjectModel om);
 
-    public abstract double calcLogLike(Network net, ObjectModel obm);
+    public abstract double calcLogLike(Network net, ObjectModel obm, boolean ordered);
 
     public abstract ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm);
 

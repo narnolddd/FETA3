@@ -21,6 +21,7 @@ public class Likelihood extends SimpleAction {
     public FetaOptions options_;
     public FullObjectModel objectModel_;
     public ParseNet parser_;
+    private boolean orderedData_;
 
 
     public Likelihood(FetaOptions options){
@@ -33,6 +34,9 @@ public class Likelihood extends SimpleAction {
         Long start = (Long) obj.get("Start");
         if (start != null)
             startTime_=start;
+        Boolean ordereddata = (Boolean) obj.get("OrderedData");
+        if (ordereddata != null)
+            orderedData_=ordereddata;
     }
 
     public void execute() {
@@ -46,7 +50,7 @@ public class Likelihood extends SimpleAction {
         //System.out.println("StartTime   EndTime    C0");
         network_.buildUpTo(start);
         double like = 0.0;
-        double c0  = 0.0;
+        double c0;
         int noChoices = 0;
         while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
             if (network_.latestTime_ > end)
@@ -57,7 +61,7 @@ public class Likelihood extends SimpleAction {
             for (Operation op: newOps) {
                 //System.out.println(op);
                 //objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
-                like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_));
+                like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_), orderedData_);
                 noChoices += op.noChoices_;
                 c0 = Math.exp(like/noChoices);
                 //System.out.println(start+" "+op.time_+" "+c0);
@@ -73,5 +77,6 @@ public class Likelihood extends SimpleAction {
 
         c0 = Math.exp(like/noChoices);
         System.out.println(c0);
+        System.out.println(noChoices);
     }
 }

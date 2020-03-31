@@ -32,6 +32,7 @@ public class TriangleClosure extends ObjectModelComponent {
 //        System.out.println(neighbourString);
 
         normalisationConstant_=neighbourhood_.size();
+        tempConstant_=normalisationConstant_;
     }
 
     public void calcNormalisation(DirectedNetwork net, int[] removed) {
