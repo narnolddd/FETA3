@@ -7,6 +7,7 @@ import feta.objectmodels.ObjectModel;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /** Class represents growth of network by a star. NB a single link may be considered a star with one leaf */
@@ -22,6 +23,7 @@ public class Star extends Operation {
     public int[] leafNodes_;
     public boolean internal_;
     public int internalId_;
+    public ArrayList recents_;
     private ArrayList<int[]> permList;
 
     public Star(int noLeaves, boolean internal_){
@@ -52,6 +54,8 @@ public class Star extends Operation {
         }
         net.latestTime_=time_;
     }
+
+    /** Functions related to growing a network */
 
     public void pickCentreNode_(Network net, ObjectModel om) {
         if (internal_) {
@@ -102,56 +106,10 @@ public class Star extends Operation {
         }
     }
 
-    public String toString() {
-        String str = time_+" STAR "+centreNodeName_+" LEAVES ";
-        for (String leaf: leafNodeNames_) {
-            str+=leaf+" ";
-        }
-        if (internal_){
-            str+="INTERNAL";
-        } else {
-            str+="EXTERNAL";
-        }
-        str+=" "+noExisting_;
-        return str;
-    }
-
-//    public double calcLogLike(Network net, ObjectModel obm) {
-//        double logSum = 0.0;
-//        double logRand = 0.0;
-//        double randUsed = 0.0;
-//        double probUsed = 0.0;
-//        obm.normaliseAll(net,new int[0]);
-//        for (int i =0; i<leafNodeNames_.length; i++) {
-//            int[] chosen = new int[i];
-//            for (int j = 0; j < i; j++) {
-//                if (!net.newNode(leafNodeNames_[j])) {
-//                    chosen[j] = net.nodeNameToNo(leafNodeNames_[j]);
-//                } else {
-//                    chosen[j] = -1;
-//                }
-//            }
-//            String leaf = leafNodeNames_[i];
-//            if (!net.newNode(leafNodeNames_[i])) {
-//                int node = net.nodeNameToNo(leaf);
-//                double prob = obm.calcProbability(net,node);
-//                if (prob <= 0) {
-//                    //System.out.println("Node with probability zero");
-//                    continue;
-//                }
-//                // Log Likelihood is calculated without replacement
-//                // System.out.println(leafNodeNames_[i]+" "+prob);
-//                logSum+= Math.log(prob) - Math.log(1 - probUsed);
-//                logRand+=Math.log(1.0/net.noNodes_) - Math.log(1 - randUsed);
-//                randUsed+= 1.0/net.noNodes_;
-//                probUsed+= prob;
-//            }
-//            else continue;
-//        }
-//        return logSum - logRand;
-//    }
+    /** Different routines for calculating the loglikelihood based on how big the star is and whether data is ordered or not */
 
     public double calcLogLike(Network net, ObjectModel obm, boolean ordered) {
+        recents_ = net.recentlyPickedNodes_;
 
         if (ordered) {
             return calcLogLikeOrdered(net,obm);
@@ -163,6 +121,13 @@ public class Star extends Operation {
                 noChoices_++;
             }
         }
+        // If number of chosen nodes is small enough, we can get the exact expression without sampling
+        obm.normaliseAll(net);
+        if (noChoices_ < 5) {
+            return calcLogLikeSmall(net, obm);
+        }
+
+        // If it's a bigger number of nodes, try approximate by sampling different orders
         int[] choices = new int[noChoices_];
         int ind = 0;
         for (String node: leafNodeNames_) {
@@ -171,12 +136,6 @@ public class Star extends Operation {
                 ind++;
             }
         }
-        // If number of chosen nodes is small enough, we can get the exact expression without sampling
-        obm.normaliseAll(net);
-        if (noChoices_ < 5) {
-            return calcLogLikeSmall(net, obm);
-        }
-        // If it's a bigger number of nodes, try approximate by sampling different orders
         double probSum = 0.0;
         double oldLogLike = 0.0;
         int noSamples = 10;
@@ -184,20 +143,27 @@ public class Star extends Operation {
         while (true) {
             permList = generateRandomShuffles(noChoices_, noSamples);
             for (int[] p : permList) {
-                int[] perm = new int[noChoices_+internalId_];
-                System.arraycopy(p,0,perm,internalId_,noChoices_);
+                net.recentlyPickedNodes_=recents_;
+                int[] nodes = new int[noChoices_+internalId_];
                 if (internal_) {
-                    perm[0]=net.nodeNameToNo(centreNodeName_);
+                    nodes[0]=net.nodeNameToNo(centreNodeName_);
+                }
+                for (int j = 0; j<noChoices_; j++) {
+                    nodes[internalId_+j]=choices[p[j]];
                 }
                 double probProd = 1.0;
                 for (int i = 0; i < noChoices_+internalId_; i++) {
                     int[] removed = new int[i];
                     for (int j = 0; j<i; j++) {
-                        removed[j]=perm[j];
+                        removed[j]=nodes[j];
                     }
                     obm.updateAll(net,removed);
-                    int node = perm[i];
+                    int node = nodes[i];
                     double prob = obm.calcProbability(net, choices[node]);
+                    net.recentlyPickedNodes_.add(node);
+                    if (net.recentlyPickedNodes_.size()>net.numRecents_) {
+                        net.recentlyPickedNodes_.remove(0);
+                    }
                     probProd *= (net.noNodes_ - i);
                     probProd *= prob;
                 }
@@ -215,6 +181,55 @@ public class Star extends Operation {
             noSamples *= 2;
             totalSamples += noSamples;
         }
+    }
+
+    public double calcLogLikeSmall(Network net, ObjectModel obm) {
+        double probSum = 0.0;
+        int[] choices = new int[noChoices_];
+        int ind = 0;
+        for (String node: leafNodeNames_) {
+            if (!net.newNode(node)) {
+                choices[ind]=net.nodeNameToNo(node);
+                ind++;
+            }
+        }
+        permList = new ArrayList<int[]>();
+        generatePerms(0,choices);
+
+        int noPerms = permList.size();
+        for (int[] p : permList) {
+            net.recentlyPickedNodes_=recents_;
+
+            // Taking into account here the choice of the centre *IF* the star is an internal one.
+            int[] perm = new int[noChoices_+internalId_];
+            System.arraycopy(p,0,perm,internalId_,noChoices_);
+            if (internal_) {
+                perm[0]=net.nodeNameToNo(centreNodeName_);
+            }
+
+            double probProd = 1.0;
+            String str = "";
+            for (int i = 0; i < noChoices_+internalId_; i++) {
+                int[] removed = new int[i];
+                for (int j = 0; j<i; j++) {
+                    removed[j]=perm[j];
+                }
+                obm.updateAll(net,removed);
+                int node = perm[i];
+                str+=node+" ";
+                double prob = obm.calcProbability(net,node);
+                probProd *= (net.noNodes_ - i);
+                probProd *= prob;
+                net.recentlyPickedNodes_.add(node);
+                if (net.recentlyPickedNodes_.size()>net.numRecents_) {
+                    net.recentlyPickedNodes_.remove(0);
+                }
+            }
+            //System.out.println(str);
+            probSum += probProd;
+        }
+        noChoices_+=internalId_;
+        return Math.log(probSum) - Math.log(noPerms);
     }
 
     public double calcLogLikeOrdered(Network net, ObjectModel obm) {
@@ -235,19 +250,19 @@ public class Star extends Operation {
             }
         }
         obm.normaliseAll(net,new int[0]);
-        int[] choices_ = new int[noChoices_+internalId_];
-        System.arraycopy(choices,0,choices_,internalId_,noChoices_);
+        int[] nodes = new int[noChoices_+internalId_];
+        System.arraycopy(choices,0,nodes,internalId_,noChoices_);
         if (internal_) {
-            choices_[0]=net.nodeNameToNo(centreNodeName_);
+            nodes[0]=net.nodeNameToNo(centreNodeName_);
         }
 
         for (int i =0; i<noChoices_+internalId_; i++) {
             int[] removed = new int[i];
             for (int j = 0; j < i; j++) {
-                removed[j]=choices_[j];
+                removed[j]=nodes[j];
             }
             obm.updateAll(net,removed);
-            int node = choices_[i];
+            int node = nodes[i];
             double prob = obm.calcProbability(net, choices[node]);
             probProd *= (net.noNodes_ - i);
             probProd *= prob;
@@ -257,64 +272,125 @@ public class Star extends Operation {
         return logLike;
     }
 
-    public double calcLogLikeSmall(Network net, ObjectModel obm) {
-        double probSum = 0.0;
+
+    public ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm) {
+        noChoices_=0;
+        for (String node: leafNodeNames_) {
+            if (!net.newNode(node)) {
+                noChoices_++;
+            }
+        }
+        noChoices_+=internalId_;
+
         int[] choices = new int[noChoices_];
         int ind = 0;
+        if (internal_) {
+            choices[0]=net.nodeNameToNo(centreNodeName_);
+            ind++;
+        }
         for (String node: leafNodeNames_) {
             if (!net.newNode(node)) {
                 choices[ind]=net.nodeNameToNo(node);
                 ind++;
             }
         }
-        permList = new ArrayList<int[]>();
-        generatePerms(0,choices);
 
-        int noPerms = permList.size();
-        for (int[] p : permList) {
-
-            // Taking into account here the choice of the centre *IF* the star is an internal one.
-            int[] perm = new int[noChoices_+internalId_];
-            System.arraycopy(p,0,perm,internalId_,noChoices_);
-            if (internal_) {
-                perm[0]=net.nodeNameToNo(centreNodeName_);
-            }
-
-            double probProd = 1.0;
-            for (int i = 0; i < noChoices_+internalId_; i++) {
-                int[] removed = new int[i];
-                for (int j = 0; j<i; j++) {
-                    removed[j]=perm[j];
-                }
-                obm.updateAll(net,removed);
-                int node = perm[i];
-                double prob = obm.calcProbability(net,node);
-                probProd *= (net.noNodes_ - i);
-                probProd *= prob;
-            }
-            probSum += probProd;
-        }
-        noChoices_+=internalId_;
-        return Math.log(probSum) - Math.log(noPerms);
-    }
-
-    public ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm) {
         ArrayList<double[]> probs = new ArrayList<>();
         obm.normaliseAll(net,new int[0]);
-        for (int i =0; i<leafNodeNames_.length; i++) {
-            String leaf = leafNodeNames_[i];
-            if (!net.newNode(leaf)) {
-                int node = net.nodeNameToNo(leaf);
-                double[] nodeprobs = obm.getComponentProbabilities(net, node);
-                probs.add(nodeprobs);
-                net.recentlyPickedNodes_.add(node);
-                if (net.recentlyPickedNodes_.size()>net.numRecents_) {
-                    net.recentlyPickedNodes_.remove(0);
-                }
+
+        for (int i = 0; i < noChoices_; i++) {
+            int[] removed = new int[i];
+            for (int j = 0; j<i; j++) {
+                removed[j]=choices[j];
             }
-            else continue;
+            obm.updateAll(net, removed);
+            int node = choices[i];
+            double [] nodeprobs = obm.getComponentProbabilities(net, node);
+            probs.add(nodeprobs);
+            net.recentlyPickedNodes_.add(node);
+            if (net.recentlyPickedNodes_.size()>net.numRecents_) {
+                net.recentlyPickedNodes_.remove(0);
+            }
         }
         return probs;
+    }
+
+    public HashMap<int[], Double> updateLikelihoods(HashMap<int[],Double> likelihoods_, HashMap<int[], double[]> partitionToWeight_,
+                                  Network net, ObjectModel obm) {
+        noChoices_=0;
+        for (String node: leafNodeNames_) {
+            if (!net.newNode(node)) {
+                noChoices_++;
+            }
+        }
+        if (noChoices_ < 5) {
+            permList = new ArrayList<int[]>();
+            int[] indices = new int[noChoices_];
+            for (int j = 0; j < noChoices_; j++) {
+                indices[j] = j;
+            }
+            generatePerms(0, indices);
+        } else {
+            permList = generateRandomShuffles(noChoices_, 50);
+        }
+
+        recents_ = net.recentlyPickedNodes_;
+        int[] choices = new int[noChoices_+internalId_];
+        int ind = 0;
+        if (internal_) {
+            choices[0]=net.nodeNameToNo(centreNodeName_);
+            ind++;
+        }
+        for (String node: leafNodeNames_) {
+            if (!net.newNode(node)) {
+                choices[ind]=net.nodeNameToNo(node);
+                ind++;
+            }
+        }
+
+        obm.normaliseAll(net);
+
+        for (int [] partition: likelihoods_.keySet()) {
+            double[] weights = partitionToWeight_.get(partition);
+            double probSum = 0.0;
+            double like;
+            for (int [] p : permList) {
+                net.recentlyPickedNodes_=recents_;
+                // Taking into account here the choice of the centre *IF* the star is an internal one.
+                int[] nodes = new int[noChoices_+internalId_];
+                if (internal_) {
+                    nodes[0]=net.nodeNameToNo(centreNodeName_);
+                }
+                for (int j = 0; j<noChoices_; j++) {
+                    nodes[internalId_+j]=choices[p[j]];
+                }
+                double probProd = 1.0;
+                for (int i = 0; i < noChoices_+internalId_; i++) {
+                    int[] removed = new int[i];
+                    for (int j = 0; j<i; j++) {
+                        removed[j]=nodes[j];
+                    }
+                    obm.updateAll(net,removed);
+                    int node = nodes[i];
+                    double [] nodeprobs = obm.getComponentProbabilities(net, node);
+                    double prob = 0.0;
+                    for (int j = 0; j < nodeprobs.length; j++){
+                        prob+=nodeprobs[j]*weights[j];
+                    }
+                    net.recentlyPickedNodes_.add(node);
+                    if (net.recentlyPickedNodes_.size()>net.numRecents_) {
+                        net.recentlyPickedNodes_.remove(0);
+                    }
+                    probProd *= (net.noNodes_ - i);
+                    probProd *= prob;
+                }
+                probSum += probProd;
+            }
+            like = Math.log(probSum) - Math.log(permList.size());
+            likelihoods_.put(partition,likelihoods_.get(partition) + like);
+        }
+        noChoices_+=internalId_;
+        return likelihoods_;
     }
 
 
@@ -343,5 +419,19 @@ public class Star extends Operation {
             input[i] = input[start];
             input[start] = temp2;
         }
+    }
+
+    public String toString() {
+        String str = time_+" STAR "+centreNodeName_+" LEAVES ";
+        for (String leaf: leafNodeNames_) {
+            str+=leaf+" ";
+        }
+        if (internal_){
+            str+="INTERNAL";
+        } else {
+            str+="EXTERNAL";
+        }
+        str+=" "+noExisting_;
+        return str;
     }
 }

@@ -4,13 +4,13 @@
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
     "Directed": false,
-    "NoRecents": 5
+    "NoRecents": 1
   },
   "Action": {
     "FitMixedModel": {
       "Start": 10,
       "Interval": 10,
-      "MaxNodes": 1000,
+      "MaxNodes": 10000,
       "Granularity": 100,
       "OrderedData": false
     }
@@ -21,13 +21,13 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Weight": 1.0
-        },
-        {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",
           "Weight": 1.0
         },
+        {
+          "ComponentName": "feta.objectmodels.TriangleClosure",
+          "Weight": 1.0
+        }
       ]
     }
   ],

@@ -5,9 +5,12 @@ import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
 import feta.network.Link;
+import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
+import feta.objectmodels.ObjectModel;
 import feta.operations.Operation;
+import feta.operations.Star;
 import feta.parsenet.ParseNet;
 import feta.parsenet.ParseNetDirected;
 import feta.parsenet.ParseNetUndirected;
@@ -100,10 +103,8 @@ public class FitMixedModel extends SimpleAction {
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
             for (Operation op: newOps) {
                 objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
-                // like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_));
-
-                ArrayList<double[]> componentProbabilities = op.getComponentProbabilities(network_,objectModel_.objectModelAtTime(op.time_));
-                updateLikelihoods(componentProbabilities);
+                //ArrayList<double[]> componentProbabilities = op.getComponentProbabilities(network_,objectModel_.objectModelAtTime(op.time_));
+                likelihoods_ = op.updateLikelihoods(likelihoods_,partitionToWeight_,network_,objectModel_.objectModelAtTime(op.time_));
                 noChoices+=op.noChoices_;
                 op.build(network_);
             }
@@ -129,58 +130,8 @@ public class FitMixedModel extends SimpleAction {
         System.out.println("Max likelihood : "+maxLike);
         for (int l=0; l < bestConfig_.length; l++){
             System.out.println(bestConfig_[l]+" "+objectModel_.objectModelAtTime(start).components_.get(l));
-            // System.out.println(noChoices);
+            //System.out.println(noChoices);
         }
-
-    }
-
-    // Updates the likelihood vector of different object model weight parametrisations
-    public void updateLikelihoods(ArrayList<double[]> nodeCompProbs) {
-
-        if (orderedData_){
-            updateLikelihoodsOrdered(nodeCompProbs);
-            return;
-        }
-
-        int noChoices = nodeCompProbs.size();
-
-        if (noChoices < 5) {
-            permList = new ArrayList<int[]>();
-            int[] choices = new int[noChoices];
-            for (int j = 0; j < noChoices; j++) {
-                choices[j] = j;
-            }
-            generatePerms(0, choices);
-        } else {
-            permList = generateRandomShuffles(noChoices, 50);
-        }
-
-        for (int [] partition: likelihoods_.keySet()) {
-            double[] weights = partitionToWeight_.get(partition);
-            double probSum = 0.0;
-            double like;
-            for (int [] perm : permList) {
-                double probProd = 1.0;
-                double probUsed = 0.0;
-                for (int i = 0; i < noChoices; i++) {
-                    double [] node = nodeCompProbs.get(perm[i]);
-                    double nodeprob = 0.0;
-                    for (int j = 0; j < node.length; j++) {
-                        nodeprob+=node[j]*weights[j];
-                    }
-                    probProd *= (network_.noNodes_ - i);
-                    probProd *= nodeprob/(1- probUsed);
-                    probUsed += nodeprob;
-                }
-                probSum += probProd;
-            }
-            like = Math.log(probSum) - Math.log(permList.size());
-            likelihoods_.put(partition,likelihoods_.get(partition) + like);
-        }
-        return;
-    }
-
-    public void updateLikelihoodsNew(Operation op) {
 
     }
 

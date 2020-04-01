@@ -5,6 +5,7 @@ import feta.objectmodels.ObjectModel;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Operation implements Comparable<Operation> {
@@ -45,8 +46,6 @@ public abstract class Operation implements Comparable<Operation> {
         return shuffles;
     }
 
-    ArrayList<int[]> Perms = new ArrayList();
-
     public abstract void build(Network net);
 
     public abstract void fill(Network net, ObjectModel om);
@@ -56,4 +55,7 @@ public abstract class Operation implements Comparable<Operation> {
     public abstract ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm);
 
     public abstract void printMeanLike(double meanLike, ObjectModel om, Network network);
+
+    public abstract HashMap<int[], Double> updateLikelihoods(HashMap<int[],Double> likelihoods_, HashMap<int[], double[]> partitionToWeight_,
+                                  Network net, ObjectModel obm);
 }
