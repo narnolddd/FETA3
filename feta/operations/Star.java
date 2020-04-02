@@ -23,7 +23,7 @@ public class Star extends Operation {
     public int[] leafNodes_;
     public boolean internal_;
     public int internalId_;
-    public ArrayList recents_;
+    public ArrayList<Integer> recents_;
     private ArrayList<int[]> permList;
 
     public Star(int noLeaves, boolean internal_){
@@ -315,7 +315,7 @@ public class Star extends Operation {
         return probs;
     }
 
-    public HashMap<int[], Double> updateLikelihoods(HashMap<int[],Double> likelihoods_, HashMap<int[], double[]> partitionToWeight_,
+    public void updateLikelihoods(HashMap<double[],Double> likelihoods_,
                                   Network net, ObjectModel obm) {
         noChoices_=0;
         for (String node: leafNodeNames_) {
@@ -350,8 +350,7 @@ public class Star extends Operation {
 
         obm.normaliseAll(net);
 
-        for (int [] partition: likelihoods_.keySet()) {
-            double[] weights = partitionToWeight_.get(partition);
+        for (double [] partition: likelihoods_.keySet()) {
             double probSum = 0.0;
             double like;
             for (int [] p : permList) {
@@ -375,7 +374,7 @@ public class Star extends Operation {
                     double [] nodeprobs = obm.getComponentProbabilities(net, node);
                     double prob = 0.0;
                     for (int j = 0; j < nodeprobs.length; j++){
-                        prob+=nodeprobs[j]*weights[j];
+                        prob+=nodeprobs[j]*partition[j];
                     }
                     net.recentlyPickedNodes_.add(node);
                     if (net.recentlyPickedNodes_.size()>net.numRecents_) {
@@ -390,7 +389,6 @@ public class Star extends Operation {
             likelihoods_.put(partition,likelihoods_.get(partition) + like);
         }
         noChoices_+=internalId_;
-        return likelihoods_;
     }
 
 

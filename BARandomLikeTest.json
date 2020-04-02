@@ -25,7 +25,7 @@
           "Weight": 1.0
         },
         {
-          "ComponentName": "feta.objectmodels.TriangleClosure",
+          "ComponentName": "feta.objectmodels.RandomAttachment",
           "Weight": 1.0
         }
       ]

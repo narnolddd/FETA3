@@ -31,7 +31,7 @@ public class FitMixedModel extends SimpleAction {
     public FullObjectModel objectModel_;
     public int granularity_;
     public List<int[]> configs_;
-    public HashMap<int[],Double> likelihoods_;
+    public HashMap<double[],Double> likelihoods_;
     public HashMap<int[], double[]> partitionToWeight_;
     public ParseNet parser_;
     public int noComponents_;
@@ -79,22 +79,21 @@ public class FitMixedModel extends SimpleAction {
     public void getLikelihoods(long start, long end) {
         noComponents_ = objectModel_.objectModelAtTime(start).components_.size();
         configs_=generatePartitions(granularity_,noComponents_);
-        partitionToWeight_=new HashMap<int[], double[]>();
-        likelihoods_= new HashMap<>();
+        likelihoods_= new HashMap<double[],Double>();
 
         // Get partition to weights vector ready & likelihood
         for (int[] config: configs_) {
-            likelihoods_.put(config,0.0);
+            
             double[] weights = new double[config.length];
             for (int i=0; i < config.length; i++) {
                 weights[i] = (double)config[i]/granularity_;
             }
-            partitionToWeight_.put(config,weights);
+            likelihoods_.put(weights,0.0);
         }
 
         network_.buildUpTo(start);
         int noChoices = 0;
-        HashMap<int[], Double> c0Values_ = new HashMap<>();
+        HashMap<double[], Double> c0Values_ = new HashMap<>();
         while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
             if (network_.latestTime_ > end)
                 break;
@@ -104,7 +103,7 @@ public class FitMixedModel extends SimpleAction {
             for (Operation op: newOps) {
                 objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
                 //ArrayList<double[]> componentProbabilities = op.getComponentProbabilities(network_,objectModel_.objectModelAtTime(op.time_));
-                likelihoods_ = op.updateLikelihoods(likelihoods_,partitionToWeight_,network_,objectModel_.objectModelAtTime(op.time_));
+                op.updateLikelihoods(likelihoods_,network_,objectModel_.objectModelAtTime(op.time_));
                 noChoices+=op.noChoices_;
                 op.build(network_);
             }
@@ -117,17 +116,20 @@ public class FitMixedModel extends SimpleAction {
 
         // Turn everything into a C0 value
         double maxLike=0.0;
+        double bestRaw=0.0;
         double[] bestConfig_ = new double[noComponents_];
-        for (int[] partition: likelihoods_.keySet()) {
-            double c0 = Math.exp(likelihoods_.get(partition)/noChoices);
+        for (double[] partition: likelihoods_.keySet()) {
+            double like= likelihoods_.get(partition);
+            double c0 = Math.exp(like/noChoices);
             c0Values_.put(partition,c0);
             if (c0> maxLike) {
                 maxLike=c0;
-                bestConfig_=partitionToWeight_.get(partition);
+                bestRaw= like;
+                bestConfig_=partition;
             }
         }
 
-        System.out.println("Max likelihood : "+maxLike);
+        System.out.println("Max c0 : "+maxLike+" max like "+bestRaw);
         for (int l=0; l < bestConfig_.length; l++){
             System.out.println(bestConfig_[l]+" "+objectModel_.objectModelAtTime(start).components_.get(l));
             //System.out.println(noChoices);
@@ -136,9 +138,7 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public void updateLikelihoodsOrdered(ArrayList<double[]> nodeCompProbs) {
-        for (int[] partition: likelihoods_.keySet()) {
-            double[] weights = partitionToWeight_.get(partition);
-
+        for (double[] weights: likelihoods_.keySet()) {
             double logSum = 0.0;
             double logRand = 0.0;
             double probUsed = 0.0;
@@ -166,7 +166,7 @@ public class FitMixedModel extends SimpleAction {
             }
             like = logSum - logRand;
 
-            likelihoods_.put(partition, likelihoods_.get(partition) + like);
+            likelihoods_.put(weights, likelihoods_.get(weights) + like);
         }
     }
 

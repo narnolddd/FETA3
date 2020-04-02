@@ -76,7 +76,7 @@ public class Likelihood extends SimpleAction {
         }
 
         c0 = Math.exp(like/noChoices);
-        System.out.println(c0);
+        System.out.println("c0 "+c0 + " raw "+ like);
         //System.out.println(noChoices);
     }
 }

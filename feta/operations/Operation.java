@@ -56,6 +56,5 @@ public abstract class Operation implements Comparable<Operation> {
 
     public abstract void printMeanLike(double meanLike, ObjectModel om, Network network);
 
-    public abstract HashMap<int[], Double> updateLikelihoods(HashMap<int[],Double> likelihoods_, HashMap<int[], double[]> partitionToWeight_,
-                                  Network net, ObjectModel obm);
+    public abstract void updateLikelihoods(HashMap<double[],Double> likelihoods_, Network net, ObjectModel obm);
 }
