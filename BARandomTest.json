@@ -11,28 +11,28 @@
     "Grow": {
       "Start": 1,
       "Interval": 1,
-      "MaxNodes": 10000
+      "MaxNodes": 1000
     }
   },
   "ObjectModel": [
     {
       "Start": 1,
-      "End": 100000,
+      "End": 10000,
       "Components": [
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",
           "Weight": 0.3
         },
         {
-          "ComponentName": "feta.objectmodels.TriangleClosure",
+          "ComponentName": "feta.objectmodels.RandomAttachment",
           "Weight": 0.7
         }
       ]
     }],
   "OperationModel":
   {
-    "Name": "feta.operations.PreferentialAttachment",
+    "Name": "feta.operations.Email",
     "NoRecipients": 3,
-    "PropInternal": 0.2
+    "PropInternal": 0.1
   }
 }

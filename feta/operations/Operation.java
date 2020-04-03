@@ -15,6 +15,7 @@ public abstract class Operation implements Comparable<Operation> {
     public long time_;
     // How many of the leaf nodes are already existing in the network?
     public int noExisting_;
+    private ArrayList<int[]> permList;
 
     public int compareTo(Operation o2) {
         if (time_ < o2.time_) {
@@ -46,6 +47,24 @@ public abstract class Operation implements Comparable<Operation> {
         return shuffles;
     }
 
+    public void generatePerms(int start, int[] input) {
+        if (start == input.length) {
+            permList.add(input.clone());
+            return;
+        }
+        for (int i = start; i < input.length; i++) {
+            int temp = input[i];
+            input[i] = input[start];
+            input[start] = temp;
+
+            generatePerms(start+1,input);
+
+            int temp2 = input[i];
+            input[i] = input[start];
+            input[start] = temp2;
+        }
+    }
+
     public abstract void build(Network net);
 
     public abstract void fill(Network net, ObjectModel om);
@@ -57,5 +76,4 @@ public abstract class Operation implements Comparable<Operation> {
     public abstract void printMeanLike(double meanLike, ObjectModel om, Network network);
 
     public abstract HashMap<int[], Double> updateLikelihoods(HashMap<int[],Double> likelihoods_, HashMap<int[], double[]> partitionToWeight_,
-                                  Network net, ObjectModel obm);
-}
+                                  Network net, ObjectModel obm);}

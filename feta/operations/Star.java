@@ -108,26 +108,13 @@ public class Star extends Operation {
 
     /** Different routines for calculating the loglikelihood based on how big the star is and whether data is ordered or not */
 
-    public double calcLogLike(Network net, ObjectModel obm, boolean ordered) {
-        recents_ = net.recentlyPickedNodes_;
-
-        if (ordered) {
-            return calcLogLikeOrdered(net,obm);
-        }
-
+    public int[] getChoices(Network net) {
         noChoices_=0;
         for (String node: leafNodeNames_) {
             if (!net.newNode(node)) {
                 noChoices_++;
             }
         }
-        // If number of chosen nodes is small enough, we can get the exact expression without sampling
-        obm.normaliseAll(net);
-        if (noChoices_ < 5) {
-            return calcLogLikeSmall(net, obm);
-        }
-
-        // If it's a bigger number of nodes, try approximate by sampling different orders
         int[] choices = new int[noChoices_];
         int ind = 0;
         for (String node: leafNodeNames_) {
@@ -136,6 +123,23 @@ public class Star extends Operation {
                 ind++;
             }
         }
+        return choices;
+    }
+
+    public double calcLogLike(Network net, ObjectModel obm, boolean ordered) {
+        recents_ = net.recentlyPickedNodes_;
+        int [] choices = getChoices(net);
+
+        if (ordered) {
+            return calcLogLikeOrdered(net,obm);
+        }
+
+        // If number of chosen nodes is small enough, we can get the exact expression without sampling
+        obm.normaliseAll(net);
+        if (noChoices_ < 5) {
+            return calcLogLikeSmall(net, obm);
+        }
+
         double probSum = 0.0;
         double oldLogLike = 0.0;
         int noSamples = 10;
@@ -235,20 +239,8 @@ public class Star extends Operation {
     public double calcLogLikeOrdered(Network net, ObjectModel obm) {
         noChoices_=0;
         double probProd = 1.0;
+        int[] choices = getChoices(net);
 
-        for (String node: leafNodeNames_) {
-            if (!net.newNode(node)) {
-                noChoices_++;
-            }
-        }
-        int[] choices = new int[noChoices_];
-        int ind = 0;
-        for (String node: leafNodeNames_) {
-            if (!net.newNode(node)) {
-                choices[ind]=net.nodeNameToNo(node);
-                ind++;
-            }
-        }
         obm.normaliseAll(net,new int[0]);
         int[] nodes = new int[noChoices_+internalId_];
         System.arraycopy(choices,0,nodes,internalId_,noChoices_);
@@ -400,24 +392,6 @@ public class Star extends Operation {
             double prob = om.calcProbability(network,node);
             double normLike = prob/meanLike;
             System.out.println(time_+" "+normLike);
-        }
-    }
-
-    public void generatePerms(int start, int[] input) {
-        if (start == input.length) {
-            permList.add(input.clone());
-            return;
-        }
-        for (int i = start; i < input.length; i++) {
-            int temp = input[i];
-            input[i] = input[start];
-            input[start] = temp;
-
-            generatePerms(start+1,input);
-
-            int temp2 = input[i];
-            input[i] = input[start];
-            input[start] = temp2;
         }
     }
 

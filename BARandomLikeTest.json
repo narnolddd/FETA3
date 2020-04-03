@@ -10,7 +10,7 @@
     "FitMixedModel": {
       "Start": 10,
       "Interval": 10,
-      "MaxNodes": 10000,
+      "MaxNodes": 1000,
       "Granularity": 100,
       "OrderedData": false
     }
@@ -25,7 +25,7 @@
           "Weight": 1.0
         },
         {
-          "ComponentName": "feta.objectmodels.TriangleClosure",
+          "ComponentName": "feta.objectmodels.RandomAttachment",
           "Weight": 1.0
         }
       ]

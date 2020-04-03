@@ -10,7 +10,7 @@
     "Likelihood": {
       "Start": 10,
       "Interval": 10,
-      "MaxNodes": 10000
+      "MaxNodes": 1000
     }
   },
   "ObjectModel": [
@@ -19,12 +19,12 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.TriangleClosure",
-          "Weight": 0.8
+          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "Weight": 0.72
         },
         {
           "ComponentName": "feta.objectmodels.DegreeModelComponent",
-          "Weight": 0.2
+          "Weight": 0.28
         }
       ]
     }
