@@ -34,6 +34,9 @@ public abstract class Network {
     public int numRecents_=15;
     public boolean trackCluster_;
 
+    /** For minimising measurement calculation */
+    public boolean changed_;
+
     /** List of links read from the network edgelist file */
     public ArrayList <Link> linksToBuild_;
     public ArrayList <Link> linksBuilt_;
@@ -63,6 +66,11 @@ public abstract class Network {
         for (i=0; i < linksToBuild_.size(); i++) {
             Link link = linksToBuild_.get(i);
             if (link.time_ > time){
+                if (i>0) {
+                    changed_=true;
+                } else {
+                    changed_=false;
+                }
                 remaining_=linksToBuild_;
                 for (int j=0; j < i; j++) {
                     remaining_.remove(0);
@@ -77,12 +85,9 @@ public abstract class Network {
             if (newNode(dst)) {
                 addNodeToList(dst);
             }
-            addLink(src,dst);
 
-            recentlyPickedNodes_.add(nodeNameToNo(dst));
-            if (recentlyPickedNodes_.size()>numRecents_){
-                recentlyPickedNodes_.remove(0);
-            }
+            addLink(src,dst);
+            updateRecents(nodeNameToNo(dst));
 
             noLinks_++;
             latestTime_=link.time_;
@@ -122,6 +127,28 @@ public abstract class Network {
     public void getLinksFromFile() {
         networkReader_.readNetwork();
         linksToBuild_=networkReader_.links_;
+    }
+
+    /** Update tracker of recently picked nodes */
+    public void updateRecents(int node) {
+        recentlyPickedNodes_.add(node);
+        if (recentlyPickedNodes_.size()>numRecents_){
+            recentlyPickedNodes_.remove(0);
+        }
+    }
+
+    public void updateRecents(int[] nodes) {
+        for (int node: nodes) {
+            updateRecents(node);
+        }
+    }
+
+    public int[] getRecentlyPickedNodes() {
+        int [] recents = new int[numRecents_];
+        for (int i=0; i < numRecents_; i++) {
+            recents[i]=recentlyPickedNodes_.get(i);
+        }
+        return recents;
     }
 
     /** Makes buffered writers for writing degree distribution */

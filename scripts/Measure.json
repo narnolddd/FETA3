@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "output/Citations_Copy_Graph.dat",
+    "GraphInputFile": "output/baTest.dat",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
@@ -9,9 +9,11 @@
     "Measure": {
       "Start": 10,
       "Interval":10,
-      "MaxNodes": 10000,
+      "MaxNodes": 1000,
+      "Statistics": ["NoNodes", "NoLinks" "MeanSquaredDegree", "Assortativity"],
       "PrintDegVector": false,
-      "FileName": "experiments/Citations_Copy_Undir_Measurements.dat"
+      "PrintHeader": true
+      "FileName": "output/test.dat"
     }
   }
 }

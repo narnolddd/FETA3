@@ -70,7 +70,7 @@ public class Star extends Operation {
     }
 
     public void pickLeafNodes_(Network net, ObjectModel om) {
-        int[] existingLeaves= new int[this.noExisting_];
+        int[] existingLeaves;
         if (internal_ && net.getClass()==UndirectedNetwork.class) {
             int [] chosen_ = new int[1+((UndirectedNetwork) net).degrees_[centreNode_]];
             chosen_[0]=centreNode_;

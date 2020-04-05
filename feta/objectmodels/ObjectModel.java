@@ -35,7 +35,6 @@ public class ObjectModel {
             }
             sum+= weights_[i];
         }
-
         if (sum == 0.0) {
             throw new IllegalArgumentException("No object model weights specified");
         }
@@ -135,6 +134,10 @@ public class ObjectModel {
                 nodeList.remove(alreadyChosenNodes[k]);
                 numAlreadyChosen++;
             }
+        }
+
+        if (nodeList.isEmpty()) {
+            return -1;
         }
 
         // This part does the sampling.

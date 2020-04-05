@@ -33,6 +33,6 @@
   {
     "Name": "feta.operations.Email",
     "NoRecipients": 3,
-    "PropInternal": 0.1
+    "PropInternal": 0.3
   }
 }
