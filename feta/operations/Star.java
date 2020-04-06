@@ -393,6 +393,24 @@ public class Star extends Operation {
         }
     }
 
+    public void generatePerms(int start, int[] input) {
+        if (start == input.length) {
+            permList.add(input.clone());
+            return;
+        }
+        for (int i = start; i < input.length; i++) {
+            int temp = input[i];
+            input[i] = input[start];
+            input[start] = temp;
+
+            generatePerms(start+1,input);
+
+            int temp2 = input[i];
+            input[i] = input[start];
+            input[start] = temp2;
+        }
+    }
+
     public String toString() {
         String str = time_+" STAR "+centreNodeName_+" LEAVES ";
         for (String leaf: leafNodeNames_) {

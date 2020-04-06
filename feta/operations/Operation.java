@@ -47,23 +47,6 @@ public abstract class Operation implements Comparable<Operation> {
         return shuffles;
     }
 
-    public void generatePerms(int start, int[] input) {
-        if (start == input.length) {
-            permList.add(input.clone());
-            return;
-        }
-        for (int i = start; i < input.length; i++) {
-            int temp = input[i];
-            input[i] = input[start];
-            input[start] = temp;
-
-            generatePerms(start+1,input);
-
-            int temp2 = input[i];
-            input[i] = input[start];
-            input[start] = temp2;
-        }
-    }
 
     public abstract void build(Network net);
 
