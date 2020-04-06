@@ -55,7 +55,7 @@ public class Measure extends SimpleAction {
                     update();
                 }
                 String measurements = time+" "+getLine();
-                network_.calcMeasurements();
+                //network_.calcMeasurements();
                 //System.out.println(measurements);
                 bw_.write(measurements);
                 if (printDegVector_) {

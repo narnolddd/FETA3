@@ -202,7 +202,6 @@ public abstract class Network {
     }
 
     /** Get measurements */
-    public abstract void calcMeasurements();
     public abstract String degreeVectorToString();
 
     /** Prints measurements to line */

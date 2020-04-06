@@ -10,9 +10,9 @@
       "Start": 10,
       "Interval":10,
       "MaxNodes": 1000,
-      "Statistics": ["NoNodes", "NoLinks" "MeanSquaredDegree", "Assortativity"],
+      "Statistics": ["NoNodes", "NoLinks", "MeanSquaredDegree", "Assortativity", "Clustering"],
       "PrintDegVector": false,
-      "PrintHeader": true
+      "PrintHeader": true,
       "FileName": "output/test.dat"
     }
   }

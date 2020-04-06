@@ -28,8 +28,8 @@ public class DirectedNetwork extends Network {
     private double InOutAssort_;
     private double OutInAssort_;
     private double OutOutAssort_;
-    private int maxInDeg_;
-    private int maxOutDeg_;
+    public int maxInDeg_;
+    public int maxOutDeg_;
     private BufferedWriter brIn_=null;
     private BufferedWriter brOut_=null;
 
@@ -168,154 +168,7 @@ public class DirectedNetwork extends Network {
 
 
     public void removeLinks(String nodename) {
-        // Work in progress. Probably a terrible idea to implement.
-    }
-
-    public double getAverageInDegree(){
-        double avgInDeg = (double)noLinks_/noNodes_;
-        return avgInDeg;
-    }
-
-    public double getAverageOutDegree(){
-        return getAverageInDegree();
-    }
-
-    public double getMeanInDegSq() {
-        double sum = 0.0;
-        for (int i = 0; i < noNodes_; i++) {
-            double inDeg = getInDegree(i);
-            sum += inDeg*inDeg;
-        }
-        if (noNodes_> 0) {
-            return sum/noNodes_;
-        }
-        return 0.0;
-    }
-
-    public double getMeanOutDegSq() {
-        double sum = 0.0;
-        for (int i = 0; i < noNodes_; i++) {
-            double outDeg = getOutDegree(i);
-            sum += outDeg*outDeg;
-        }
-        if (noNodes_> 0) {
-            return sum/noNodes_;
-        }
-        return 0.0;
-    }
-
-    public double getInAssort() {
-        double assSum = 0.0;
-        double assProd = 0.0;
-        double assSq = 0.0;
-
-        for (int i = 0; i < noNodes_; i++) {
-            ArrayList<Integer> links = inLinks_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
-                if (l < i)
-                    continue;
-                int srcDeg = getInDegree(i);
-                int dstDeg = getInDegree(l);
-                assSum += 0.5 * (1.0/noLinks_) * (srcDeg + dstDeg);
-                assProd += srcDeg * dstDeg;
-                assSq += 0.5 * (1.0/noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
-            }
-        }
-        double assNum = (1.0/noLinks_) * assProd - assSum * assSum;
-        double assDom = assSq - assSum * assSum;
-        return assNum/assDom;
-    }
-
-    public double getOutAssort() {
-        double assSum = 0.0;
-        double assProd = 0.0;
-        double assSq = 0.0;
-
-        for (int i = 0; i < noNodes_; i++) {
-            ArrayList<Integer> links = outLinks_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
-                if (l < i)
-                    continue;
-                int srcDeg = getOutDegree(i);
-                int dstDeg = getOutDegree(l);
-                assSum += 0.5 * (1.0/noLinks_) * (srcDeg + dstDeg);
-                assProd += srcDeg * dstDeg;
-                assSq += 0.5 * (1.0/noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
-            }
-        }
-        double assNum = (1.0/noLinks_) * assProd - assSum * assSum;
-        double assDom = assSq - assSum * assSum;
-        return assNum/assDom;
-    }
-
-    public void getAssort() {
-        double assSumInIn = 0.0;
-        double assSumInOut = 0.0;
-        double assSumOutIn = 0.0;
-        double assSumOutOut = 0.0;
-
-        double assProdInIn = 0.0;
-        double assProdInOut = 0.0;
-        double assProdOutIn = 0.0;
-        double assProdOutOut = 0.0;
-
-        double degSqIn = 0.0;
-        double degSqOut = 0.0;
-
-        for (int i = 0; i < noNodes_; i++) {
-            int srcDegIn = getInDegree(i);
-            int srcDegOut = getOutDegree(i);
-
-            degSqIn+= (1.0/noLinks_)*srcDegIn * srcDegIn;
-            degSqOut+= (1.0/noLinks_)*srcDegOut * srcDegOut;
-
-            ArrayList<Integer> links = outLinks_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
-                if (l < i)
-                    continue;
-                int dstDegIn = getInDegree(l);
-                int dstDegOut = getOutDegree(l);
-
-                assSumInIn += (1.0/noNodes_) * (srcDegIn + dstDegIn);
-                assSumInOut += (1.0/noNodes_) * (srcDegIn + dstDegOut);
-                assSumOutIn += (1.0/noNodes_) * (srcDegOut + dstDegIn);
-                assSumOutOut += (1.0/noNodes_) * (srcDegOut + dstDegOut);
-
-                assProdInIn += (1.0/noLinks_) * srcDegIn*dstDegIn;
-                assProdInOut += (1.0/noLinks_)* srcDegIn*dstDegOut;
-                assProdOutIn += (1.0/noLinks_) * srcDegOut*dstDegIn;
-                assProdOutOut += (1.0/noLinks_)* srcDegOut*dstDegOut;
-            }
-        }
-
-        double numInIn = assProdInIn - assSumInIn + (1.0/noNodes_)*(noLinks_/noNodes_);
-        double numInOut = assProdInOut - assSumInOut + (1.0/noNodes_)*(noLinks_/noNodes_);
-        double numOutIn = assProdOutIn - assSumOutIn + (1.0/noNodes_)*(noLinks_/noNodes_);
-        double numOutOut = assProdOutOut - assSumOutOut + (1.0/noNodes_)*(noLinks_/noNodes_);
-
-        double sigmaIn = Math.sqrt(degSqIn - noLinks_/noNodes_);
-        double sigmaOut = Math.sqrt(degSqOut - noLinks_/noNodes_);
-
-        double denInIn = sigmaIn*sigmaIn;
-        double denInOut = sigmaIn*sigmaOut;
-        double denOutOut = sigmaOut*sigmaOut;
-
-        InInAssort_= numInIn/denInIn;
-        InOutAssort_= numInOut/denInOut;
-        OutInAssort_= numOutIn/denInOut;
-        OutOutAssort_= numOutOut/denOutOut;
-
-    }
-
-    public void calcMeasurements() {
-        avgInDeg_= getAverageInDegree();
-        avgOutDeg_= getAverageOutDegree();
-        meanInDegSq_= getMeanInDegSq();
-        meanOutDegSq_= getMeanOutDegSq();
-        getAssort();
+        // Removes all links from or to a node. WHY WOULD YOU DO THIS???
     }
 
     public String measureToString() {
