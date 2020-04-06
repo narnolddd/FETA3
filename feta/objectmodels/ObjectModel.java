@@ -98,7 +98,7 @@ public class ObjectModel {
         for (int j = 0; j<sampleSize; j++) {
             chosenNodes[j] = -1;
         }
-        int [] removedFromSample= concatenate(chosenNodes,alreadyChosen);
+        int [] removedFromSample= concatenate(alreadyChosen,chosenNodes);
         for (int i = 0; i < sampleSize; i++) {
             int chosenNode = nodeSampleWithoutReplacement(net, removedFromSample);
             chosenNodes[i]=chosenNode;
@@ -122,6 +122,7 @@ public class ObjectModel {
 
     public int nodeSampleWithoutReplacement(Network net, int[] alreadyChosenNodes) {
         ArrayList<Integer> nodeList = new ArrayList<Integer>();
+        int [] chosen = removeNegativeNumbers(alreadyChosenNodes);
         for (int j = 0; j < net.noNodes_; j++) {
             nodeList.add(j);
         }
@@ -141,8 +142,8 @@ public class ObjectModel {
         }
 
         // This part does the sampling.
-
-        normaliseAll(net, alreadyChosenNodes);
+        //printArr(chosen);
+        normaliseAll(net, chosen);
         double r = Math.random();
         double weightSoFar = 0.0;
         int l;
@@ -220,6 +221,25 @@ public class ObjectModel {
         var_-= mean_*mean_;
         sd_=Math.sqrt(var_);
         return new double[]{mean_,sd_};
+    }
+
+    public static int[] removeNegativeNumbers(int[] num) {
+        int[] output = new int[num.length];
+        int k = 0;
+        for(int i = 0; i < num.length; i++) {
+            if(num[i] >= 0) {
+                output[k++] = num[i];
+            }
+        }
+        return Arrays.copyOfRange(output, 0, k);
+    }
+
+    public static void printArr(int [] arr) {
+        String str = "";
+        for (int i: arr) {
+            str+=i+" ";
+        }
+        System.out.println(str);
     }
 
 }
