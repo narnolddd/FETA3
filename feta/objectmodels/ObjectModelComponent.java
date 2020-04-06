@@ -19,7 +19,7 @@ public abstract class ObjectModelComponent {
         } else return calcProbability((DirectedNetwork) net, node);
     }
 
-    public final void calcNormalisation(Network network, int [] removed) {
+    public void calcNormalisation(Network network, int [] removed) {
         if (network.getClass() == UndirectedNetwork.class) {
             calcNormalisation((UndirectedNetwork) network, removed);
         } else calcNormalisation((DirectedNetwork) network, removed);
