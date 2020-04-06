@@ -190,7 +190,7 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public static ArrayList <int[]> generateRandomShuffles(int n, int number) {
-        ArrayList shuffles = new ArrayList();
+        ArrayList <int []> shuffles = new  ArrayList<int []>();
         for (int i = 0; i < number; i++) {
             int [] initial_array = new int[n];
             for (int j = 0; j < n; j++) {

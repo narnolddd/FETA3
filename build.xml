@@ -24,9 +24,11 @@
     <target name="build" depends="init">
         <echo message="------ Compiling application"/>
         <mkdir dir="${classes}"/>
+        
         <javac debug="on" srcdir="${sources}"  includeantruntime="false">
             <include name="feta/**" />
             <classpath refid="feta.classpath"/>
+            <compilerarg value="-Xlint:unchecked" />
         </javac>
 
     </target>
