@@ -327,12 +327,8 @@ public class Star extends Operation {
         }
 
         recents_ = net.recentlyPickedNodes_;
-        int[] choices = new int[noChoices_+internalId_];
+        int[] choices = new int[noChoices_];
         int ind = 0;
-        if (internal_) {
-            choices[0]=net.nodeNameToNo(centreNodeName_);
-            ind++;
-        }
         for (String node: leafNodeNames_) {
             if (!net.newNode(node)) {
                 choices[ind]=net.nodeNameToNo(node);
@@ -367,10 +363,6 @@ public class Star extends Operation {
                     double prob = 0.0;
                     for (int j = 0; j < nodeprobs.length; j++){
                         prob+=nodeprobs[j]*partition[j];
-                    }
-                    net.recentlyPickedNodes_.add(node);
-                    if (net.recentlyPickedNodes_.size()>net.numRecents_) {
-                        net.recentlyPickedNodes_.remove(0);
                     }
                     probProd *= (net.noNodes_ - i);
                     probProd *= prob;
