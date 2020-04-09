@@ -60,4 +60,3 @@ public abstract class Operation implements Comparable<Operation> {
 
     public abstract void updateLikelihoods(HashMap<double[],Double> likelihoods_, Network net, ObjectModel obm);
 }
-
