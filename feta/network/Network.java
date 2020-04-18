@@ -3,8 +3,7 @@ package feta.network;
 import feta.readnet.ReadNet;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 /** Class representing state of a network - abstract to cover both directed and undirected graphs. */
 
@@ -175,6 +174,17 @@ public abstract class Network {
             return false;
         }
         return isLink(nodeNumbers_.get(a), nodeNumbers_.get(b));
+    }
+
+    /** Returns the nodes that a node "points to" */
+    public abstract int[] getOutLinks(int node);
+
+    public HashSet<Integer> getNeighbourhood(int[] nodes) {
+        HashSet<Integer> neighbourhood= new HashSet<>();
+        for (int node : nodes) {
+            neighbourhood.addAll((Set) Arrays.asList(getOutLinks(node)));
+        }
+        return neighbourhood;
     }
 
     /** Remove hanging edges for safe deletion of a node from data structures. IMPLEMENT AT YOUR PERIL */

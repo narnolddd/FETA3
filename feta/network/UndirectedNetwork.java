@@ -1,10 +1,13 @@
 package feta.network;
 
+import feta.Methods;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.TreeMap;
 
 
@@ -102,6 +105,11 @@ public class UndirectedNetwork extends Network {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int[] getOutLinks(int node) {
+        return Methods.toIntArray( (Set) neighbours_.get(node));
     }
 
     public void setUpDegDistWriters(String fname) {

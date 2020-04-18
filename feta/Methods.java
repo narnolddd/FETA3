@@ -1,14 +1,83 @@
 package feta;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Methods {
 
-    public static int[] concatenate(int[] a1, int[] a2) {
-        int len1 = a1.length;
-        int len2 = a2.length;
+    public static int[] concatenate(int[] first, int[] second) {
+        int[] both = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, both, first.length, second.length);
+        return both;
+    }
 
-        int[] a3 = new int[len1+len2];
-        System.arraycopy(a1,0,a3,0,len1);
-        System.arraycopy(a2,0,a3,len1,len2);
-        return a3;
+    public static int[] removeNegativeNumbers(int[] num) {
+        int[] output = new int[num.length];
+        int k = 0;
+        for(int i = 0; i < num.length; i++) {
+            if(num[i] >= 0) {
+                output[k++] = num[i];
+            }
+        }
+        return Arrays.copyOfRange(output, 0, k);
+    }
+
+    /** Generates all permutations of an array and returns them in an arraylist */
+    public static ArrayList<int[]> generatePerms(int start, int[] input, ArrayList<int[]> permList) {
+        if (start == input.length) {
+            permList.add(input.clone());
+            return permList;
+        }
+        for (int i = start; i < input.length; i++) {
+            int temp = input[i];
+            input[i] = input[start];
+            input[start] = temp;
+
+            generatePerms(start+1,input, permList);
+
+            int temp2 = input[i];
+            input[i] = input[start];
+            input[start] = temp2;
+        }
+        return permList;
+    }
+
+    /** Samples from different possible permutations of an array */
+    public static ArrayList<int[]> generateRandomShuffles(int [] arr, int sampleSize) {
+        int n = arr.length;
+        ArrayList <int []>shuffles = new ArrayList<int []>();
+        for (int i = 0; i < sampleSize; i++) {
+            int[] initial_array=arr.clone();
+            // Perform Knuth Shuffles on choices to sample permutations
+            for (int ind1 = 0; ind1 < n-2; ind1++) {
+                int ind2 = ThreadLocalRandom.current().nextInt(ind1, n);
+                int val1 = initial_array[ind1];
+                int val2 = initial_array[ind2];
+                initial_array[ind1] = val2;
+                initial_array[ind2] = val1;
+            }
+            shuffles.add(initial_array);
+        }
+        return shuffles;
+    }
+
+    public static int[] toIntArray(Set<Integer> set) {
+        int[] intArray = new int[set.size()];
+        int ind = 0;
+        for (Integer i:set) {
+            intArray[ind]= i;
+            ind++;
+        }
+        return intArray;
+    }
+
+    public static void printArr(int [] arr) {
+        String str = "";
+        for (int i: arr) {
+            str+=i+" ";
+        }
+        System.out.println(str);
     }
 }

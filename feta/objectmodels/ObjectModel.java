@@ -132,7 +132,7 @@ public class ObjectModel {
         int numAlreadyChosen = 0;
         for (int k = alreadyChosenNodes.length - 1; k>=0; k--) {
             if (alreadyChosenNodes[k]>=0) {
-                nodeList.remove(alreadyChosenNodes[k]);
+                nodeList.remove((Integer) alreadyChosenNodes[k]);
                 numAlreadyChosen++;
             }
         }
@@ -232,14 +232,6 @@ public class ObjectModel {
             }
         }
         return Arrays.copyOfRange(output, 0, k);
-    }
-
-    public static void printArr(int [] arr) {
-        String str = "";
-        for (int i: arr) {
-            str+=i+" ";
-        }
-        System.out.println(str);
     }
 
 }

@@ -24,13 +24,6 @@ public class FullObjectModel {
         lastTime_=times_.get(times_.size()-1).end_;
     }
 
-    /** Maps a node and network object to a probability of choosing node */
-    public double calcProbability(Network net, int node, long time){
-        ObjectModel om = objectModelAtTime(time);
-
-        return 0.0;
-    }
-
     /** Checks object models given are valid */
     public void checkValid() {
         if (times_.size() == 0 || objectModels_.size() == 0) {

@@ -32,17 +32,17 @@ public class ParseNetUndirected extends ParseNet {
         } else {
             Link l = links.get(0);
             Set<String> intersect_ = new HashSet<String>();
-            Set<String> leaves_= new LinkedHashSet<String>();
+            Set<String> leaves= new LinkedHashSet<String>();
             intersect_.add(l.sourceNode_);
-            leaves_.add(l.destNode_);
-            leaves_.add(l.sourceNode_);
+            leaves.add(l.destNode_);
+            leaves.add(l.sourceNode_);
             intersect_.add(l.destNode_);
             for (int j=1; j < links.size(); j++) {
                 Set<String> newLink = new HashSet<String>();
                 newLink.add(links.get(j).sourceNode_);
                 newLink.add(links.get(j).destNode_);
                 intersect_.retainAll(newLink);
-                leaves_.addAll(newLink);
+                leaves.addAll(newLink);
             }
             if (intersect_.size()==0){
                 System.out.println("Processing events as links for this time "+links.get(0).time_);
@@ -51,26 +51,26 @@ public class ParseNetUndirected extends ParseNet {
                 }
                 return newOps;
             }
-            leaves_.removeAll(intersect_);
+            leaves.removeAll(intersect_);
             String sourceNode= intersect_.iterator().next();
-            Star op_;
+            Star op;
             if (net.newNode(sourceNode)) {
-                op_ = new Star(leaves_.size(), false);
+                op = new Star(leaves.size(), false);
             } else {
-                op_= new Star(leaves_.size(), true);
+                op= new Star(leaves.size(), true);
             }
 
             int ct = 0;
-            for (String leaf: leaves_) {
+            for (String leaf: leaves) {
                 if (!net.newNode(leaf)) {
-                    op_.noExisting_++;
+                    op.noExisting_++;
                 }
-                op_.leafNodeNames_[ct] = leaf;
+                op.leafNodeNames_[ct] = leaf;
                 ct++;
             }
-            op_.centreNodeName_=sourceNode;
-            op_.time_=links.get(0).time_;
-            newOps.add(op_);
+            op.centreNodeName_=sourceNode;
+            op.time_=links.get(0).time_;
+            newOps.add(op);
         }
         return newOps;
     }
