@@ -208,7 +208,9 @@ public abstract class Network {
 
     /** Generates a node name for a node generated from a network model */
     public String generateNodeName() {
-        return artificialNodeName+noNodes_;
+        String name = artificialNodeName+noNodes_;
+        addNodeToList(name);
+        return name;
     }
 
     /** Get measurements */

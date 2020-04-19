@@ -8,6 +8,7 @@ import feta.network.Link;
 import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
+import feta.objectmodels.MixedModel;
 import feta.objectmodels.ObjectModel;
 import feta.operations.Operation;
 import feta.operations.Star;
@@ -31,8 +32,7 @@ public class FitMixedModel extends SimpleAction {
     public FullObjectModel objectModel_;
     public int granularity_;
     public List<int[]> configs_;
-    public HashMap<double[],Double> likelihoods_;
-    public HashMap<int[], double[]> partitionToWeight_;
+    public HashMap<MixedModel,Double> likelihoods_;
     public ParseNet parser_;
     public int noComponents_;
     public long startTime_=10;
@@ -46,7 +46,7 @@ public class FitMixedModel extends SimpleAction {
     }
 
     /** Method that generates all possible configurations of model mixture */
-    public static List<int[]> generatePartitions(int n, int k) {
+    private static List<int[]> generatePartitions(int n, int k) {
         List<int[]> parts = new ArrayList<>();
         if (k == 1) {
             parts.add(new int[] {n});
@@ -65,6 +65,19 @@ public class FitMixedModel extends SimpleAction {
         return newParts;
     }
 
+    private void generateModels(MixedModel obm) {
+        for (int[] config: configs_) {
+
+            double[] weights = new double[config.length];
+            for (int i=0; i < config.length; i++) {
+                weights[i] = (double)config[i]/granularity_;
+            }
+            MixedModel mm = obm.copy();
+            mm.setWeights(weights);
+            likelihoods_.put(mm,0.0);
+        }
+    }
+
     public void execute(){
         if (!options_.directedInput_) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
@@ -77,23 +90,16 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public void getLikelihoods(long start, long end) {
-        noComponents_ = objectModel_.objectModelAtTime(start).components_.size();
+        MixedModel obm = objectModel_.objectModelAtTime(start);
+        noComponents_ = obm.components_.size();
         configs_=generatePartitions(granularity_,noComponents_);
-        likelihoods_= new HashMap<double[],Double>();
+        likelihoods_= new HashMap<MixedModel,Double>();
 
-        // Get partition to weights vector ready & likelihood
-        for (int[] config: configs_) {
-            
-            double[] weights = new double[config.length];
-            for (int i=0; i < config.length; i++) {
-                weights[i] = (double)config[i]/granularity_;
-            }
-            likelihoods_.put(weights,0.0);
-        }
+        generateModels(obm);
 
         network_.buildUpTo(start);
         int noChoices = 0;
-        HashMap<double[], Double> c0Values_ = new HashMap<>();
+        HashMap<MixedModel, Double> c0Values_ = new HashMap<>();
         while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
             if (network_.latestTime_ > end)
                 break;
@@ -101,11 +107,12 @@ public class FitMixedModel extends SimpleAction {
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
             for (Operation op: newOps) {
-                objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
+                long time = op.getTime();
+                obm.calcNormalisation(network_);
                 //ArrayList<double[]> componentProbabilities = op.getComponentProbabilities(network_,objectModel_.objectModelAtTime(op.time_));
-                op.updateLikelihoods(likelihoods_,network_,objectModel_.objectModelAtTime(op.time_));
-                noChoices+=op.noChoices_;
-                op.build(network_);
+                updateLikelihoods(op);
+                noChoices+=op.getNoChoices();
+                network_.buildUpTo(time);
             }
             ArrayList<Link> newLinks = new ArrayList<Link>();
             for (int i = lset.size(); i < links.size(); i++){
@@ -117,96 +124,27 @@ public class FitMixedModel extends SimpleAction {
         // Turn everything into a C0 value
         double maxLike=0.0;
         double bestRaw=0.0;
-        double[] bestConfig_ = new double[noComponents_];
-        for (double[] partition: likelihoods_.keySet()) {
-            double like= likelihoods_.get(partition);
+        MixedModel bestConfig_ = new MixedModel();
+        for (MixedModel mm: likelihoods_.keySet()) {
+            double like= likelihoods_.get(mm);
             double c0 = Math.exp(like/noChoices);
-            c0Values_.put(partition,c0);
+            c0Values_.put(mm,c0);
             if (c0> maxLike) {
                 maxLike=c0;
                 bestRaw= like;
-                bestConfig_=partition;
+                bestConfig_=mm;
             }
         }
 
         System.out.println("Max c0 : "+maxLike+" max like "+bestRaw);
-        for (int l=0; l < bestConfig_.length; l++){
-            System.out.println(bestConfig_[l]+" "+objectModel_.objectModelAtTime(start).components_.get(l));
-            //System.out.println(noChoices);
-        }
+        System.out.println(bestConfig_);
 
     }
 
-    public void updateLikelihoodsOrdered(ArrayList<double[]> nodeCompProbs) {
-        for (double[] weights: likelihoods_.keySet()) {
-            double logSum = 0.0;
-            double logRand = 0.0;
-            double probUsed = 0.0;
-            double randUsed = 0.0;
-            double like;
-
-            for (double[] node : nodeCompProbs) {
-
-                // calc prob of choosing node with this weighting
-                double nodeprob = 0.0;
-                for (int i = 0; i < node.length; i++) {
-                    nodeprob+=node[i]*weights[i];
-                }
-                if (nodeprob <= 0) {
-                    //System.out.println("Node returned zero probability");
-                    logSum = 0.0;
-                    logRand = 0.0;
-                    break;
-                }
-                logSum+= Math.log(nodeprob) - Math.log(1 - probUsed);
-                logRand+=Math.log(1.0/network_.noNodes_) - Math.log(1 - randUsed);
-                randUsed+= 1.0/network_.noNodes_;
-                probUsed+= nodeprob;
-
-            }
-            like = logSum - logRand;
-
-            likelihoods_.put(weights, likelihoods_.get(weights) + like);
+    public void updateLikelihoods(Operation op) {
+        for (MixedModel mm: likelihoods_.keySet()) {
+            likelihoods_.put(mm,op.calcLogLike(mm,network_,orderedData_));
         }
-    }
-
-    /** Helper method for generating all permutations of an integer array */
-    public void generatePerms(int start, int[] input) {
-        if (start == input.length) {
-            permList.add(input.clone());
-            return;
-        }
-        for (int i = start; i < input.length; i++) {
-            int temp = input[i];
-            input[i] = input[start];
-            input[start] = temp;
-
-            generatePerms(start+1,input);
-
-            int temp2 = input[i];
-            input[i] = input[start];
-            input[start] = temp2;
-        }
-    }
-
-    public static ArrayList <int[]> generateRandomShuffles(int n, int number) {
-        ArrayList <int []> shuffles = new  ArrayList<int []>();
-        for (int i = 0; i < number; i++) {
-            int [] initial_array = new int[n];
-            for (int j = 0; j < n; j++) {
-                initial_array[j]=j;
-            }
-            // Perform Knuth Shuffles on choices to sample permutations
-            for (int ind1 = 0; ind1 < n-2; ind1++) {
-                int ind2 = ThreadLocalRandom.current().nextInt(ind1, n);
-                int val1 = initial_array[ind1];
-                int val2 = initial_array[ind2];
-                initial_array[ind1] = val2;
-                initial_array[ind2] = val1;
-            }
-            shuffles.add(initial_array);
-        }
-        return shuffles;
     }
 
     public void parseActionOptions(JSONObject obj) {

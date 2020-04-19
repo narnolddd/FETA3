@@ -40,21 +40,21 @@ public class Clone extends OperationModel {
     }
 
     public void parseLine(String line) {
-        Operation op_;
         String [] parts = line.split(" ");
         Long time = Long.parseLong(parts[0]);
         String type_ = parts[1];
         if (type_.equals("STAR")) {
+            Star op_;
             int noLeaves_ = parts.length - 6;
-            int noExisting_ = Integer.parseInt(parts[parts.length - 1]);
+            int noExisting = Integer.parseInt(parts[parts.length - 1]);
             String internal = parts[parts.length-2];
             if (internal.equals("INTERNAL")) {
                 op_= new Star(noLeaves_,true);
             } else {
                 op_= new Star(noLeaves_, false);
             }
-            op_.time_=time;
-            op_.noExisting_=noExisting_;
+            op_.setTime(time);
+            op_.setNoExisting(noExisting);
             operations_.add(op_);
         }
     }

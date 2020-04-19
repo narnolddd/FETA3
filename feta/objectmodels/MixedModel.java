@@ -12,8 +12,10 @@ import java.util.Arrays;
 
 public class MixedModel {
 
-    private ArrayList<ObjectModelComponent> components_;
+    public ArrayList<ObjectModelComponent> components_;
     private double[] weights_;
+
+    public MixedModel() {components_=new ArrayList<ObjectModelComponent>();}
 
     /** Checks object model prescribed is valid */
     public void checkValid(){
@@ -176,6 +178,36 @@ public class MixedModel {
             components_.add(omc);
             weights_[i]=weight;
         }
+    }
+
+    public boolean equals(MixedModel obm) {
+        if (components_.size()!= obm.components_.size()) {
+            return false;
+        }
+        for (int i = 0; i < components_.size(); i++) {
+            if (weights_[i]!=obm.weights_[i] || components_.get(i).toString() != obm.components_.get(i).toString()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int hashCode() {
+        return weights_.hashCode();
+    }
+
+    public String toString() {
+        String str="";
+        for (int i = 0; i < components_.size(); i++) {
+            str+=weights_[i]+" "+components_.get(i)+"\n";
+        }
+        return str;
+    }
+
+    public MixedModel copy() {
+        MixedModel obm = new MixedModel();
+        obm.components_=components_;
+        return obm;
     }
 
     /** For assigning weights at runtime */

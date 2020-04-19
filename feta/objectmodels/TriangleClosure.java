@@ -81,6 +81,6 @@ public class TriangleClosure extends ObjectModelComponent {
 
     @Override
     public String toString() {
-        return "TriangleClosure";
+        return "TriangleClosure "+depth_;
     }
 }

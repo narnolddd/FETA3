@@ -1,5 +1,6 @@
 package feta.parsenet;
 
+import feta.Methods;
 import feta.actions.Likelihood;
 import feta.network.Link;
 import feta.network.Network;
@@ -60,48 +61,19 @@ public class ParseNetUndirected extends ParseNet {
                 op= new Star(leaves.size(), true);
             }
 
-            int ct = 0;
+            int noExisting = 0;
             for (String leaf: leaves) {
                 if (!net.newNode(leaf)) {
-                    op.noExisting_++;
+                    noExisting++;
                 }
-                op.leafNodeNames_[ct] = leaf;
-                ct++;
             }
-            op.centreNodeName_=sourceNode;
-            op.time_=links.get(0).time_;
+            op.setNoExisting(noExisting);
+            op.setLeaves(Methods.toStringArray(leaves));
+            op.setCentreNode(sourceNode);
+            op.setTime(links.get(0).time_);
             newOps.add(op);
         }
         return newOps;
-    }
-
-    public Operation processAsLink(Link l, Network net) {
-        if (net.newNode(l.sourceNode_)) {
-            Star op = new Star(1,false);
-            op.centreNodeName_=l.sourceNode_;
-            op.leafNodeNames_[0]=l.destNode_;
-            op.time_=l.time_;
-            if (!net.newNode(l.destNode_)) {
-                op.noExisting_++;
-            }
-            net.addNodeToList(l.sourceNode_);
-            return op;
-        } else if (net.newNode(l.destNode_)) {
-            Star op = new Star(1,false);
-            op.noExisting_++;
-            op.centreNodeName_=l.destNode_;
-            op.leafNodeNames_[0]=l.sourceNode_;
-            op.time_=l.time_;
-            net.addNodeToList(l.destNode_);
-            return op;
-        } else {
-            Star op = new Star(1, true);
-            op.noExisting_++;
-            op.centreNodeName_=l.sourceNode_;
-            op.leafNodeNames_[0]=l.destNode_;
-            op.time_=l.time_;
-            return op;
-        }
     }
 
 }

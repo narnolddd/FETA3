@@ -4,7 +4,9 @@ import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.Link;
 import feta.objectmodels.FullObjectModel;
+import feta.objectmodels.MixedModel;
 import feta.operations.Clone;
+import feta.operations.Operation;
 import feta.operations.OperationModel;
 import feta.writenet.WriteNet;
 import feta.writenet.WriteNetNN;
@@ -45,15 +47,17 @@ public class Grow extends SimpleAction {
             if (time > 50) {
                 checkModel=false;
             }
-            feta.operations.Operation op = operationModel_.nextOperation();
-            if (op.time_ == 0) {
-                op.time_=time;
+            Operation op = operationModel_.nextOperation();
+            if (op.getTime() == 0) {
+                op.setTime(time);
             }
+
+            MixedModel obm = objectModel_.objectModelAtTime(op.getTime());
             if (checkModel) {
-                objectModel_.objectModelAtTime(op.time_).checkNorm(network_);
+                obm.checkNorm(network_);
             }
-            op.fill(network_,objectModel_.objectModelAtTime(op.time_));
-            time = op.time_;
+            op.chooseNodes(network_,obm);
+            time = op.getTime();
             //System.out.println(time);
             time+=interval_;
             network_.buildUpTo(Long.MAX_VALUE);

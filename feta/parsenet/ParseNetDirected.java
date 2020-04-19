@@ -25,14 +25,14 @@ public class ParseNetDirected extends ParseNet{
         } else {
             Link l = links.get(0);
             Set<String> intersect_ = new HashSet<String>();
-            Set<String> leaves_= new HashSet<String>();
+            Set<String> leaves= new HashSet<String>();
             intersect_.add(l.sourceNode_);
-            leaves_.add(l.destNode_);
+            leaves.add(l.destNode_);
             for (int j=1; j < links.size(); j++) {
                 Set<String> src = new HashSet<String>();
                 src.add(links.get(j).sourceNode_);;
                 intersect_.retainAll(src);
-                leaves_.add(links.get(j).destNode_);
+                leaves.add(links.get(j).destNode_);
             }
             if (intersect_.size()==0){
                 System.out.println("Processing events as links for this time "+links.get(0).time_);
@@ -41,51 +41,29 @@ public class ParseNetDirected extends ParseNet{
                 }
                 return newOps;
             }
-            leaves_.removeAll(intersect_);
+            leaves.removeAll(intersect_);
             String sourceNode= intersect_.iterator().next();
-            Star op_;
+            Star op;
             if (net.newNode(sourceNode)) {
-                op_ = new Star(leaves_.size(), false);
+                op = new Star(leaves.size(), false);
             } else {
-                op_= new Star(leaves_.size(), true);
+                op= new Star(leaves.size(), true);
             }
 
-            int ct = 0;
-            for (String leaf: leaves_) {
+            int noExisting = 0;
+            for (String leaf: leaves) {
                 if (!net.newNode(leaf)) {
-                    op_.noExisting_++;
+                    noExisting++;
                 }
-                op_.leafNodeNames_[ct] = leaf;
-                ct++;
             }
-            op_.centreNodeName_=sourceNode;
-            op_.time_=links.get(0).time_;
-            newOps.add(op_);
-            operations_.add(op_);
+            op.setNoExisting(noExisting);
+            op.setCentreNode(sourceNode);
+            op.setTime(links.get(0).time_);
+            newOps.add(op);
+            operations_.add(op);
         }
         return newOps;
     }
 
-    public Operation processAsLink(Link l, Network net) {
-        if (net.newNode(l.sourceNode_)) {
-            Star op = new Star(1,false);
-            op.centreNodeName_=l.sourceNode_;
-            op.leafNodeNames_[0]=l.destNode_;
-            op.time_=l.time_;
-            return op;
-        } else if (net.newNode(l.destNode_)) {
-            Star op = new Star(1,false);
-            op.centreNodeName_=l.destNode_;
-            op.leafNodeNames_[0]=l.sourceNode_;
-            op.time_=l.time_;
-            return op;
-        } else {
-            Star op = new Star(1, true);
-            op.centreNodeName_=l.sourceNode_;
-            op.leafNodeNames_[0]=l.destNode_;
-            op.time_=l.time_;
-            return op;
-        }
-    }
 
 }

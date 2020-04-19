@@ -3,6 +3,7 @@ package feta.parsenet;
 import feta.network.Link;
 import feta.network.Network;
 import feta.operations.Operation;
+import feta.operations.Star;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -60,6 +61,32 @@ public abstract class ParseNet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Operation processAsLink(Link l, Network net) {
+        Star op;
+        if (net.newNode(l.sourceNode_)) {
+            op = new Star(1,false);
+            op.setCentreNode(l.sourceNode_);
+            op.setLeaves(new String[] {l.destNode_});
+            if (!net.newNode(l.destNode_)) {
+                op.setNoExisting(op.getNoExisting()+1);
+            }
+            net.addNodeToList(l.sourceNode_);
+        } else if (net.newNode(l.destNode_)) {
+            op = new Star(1,false);
+            op.setNoExisting(op.getNoExisting()+1);
+            op.setCentreNode(l.destNode_);
+            op.setLeaves(new String[] {l.sourceNode_});
+            net.addNodeToList(l.destNode_);
+        } else {
+            op = new Star(1, true);
+            op.setNoExisting(op.getNoExisting()+1);
+            op.setCentreNode(l.sourceNode_);
+            op.setLeaves(new String[] {l.destNode_});
+        }
+        op.setTime(l.time_);
+        return op;
     }
 
 

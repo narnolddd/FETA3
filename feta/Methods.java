@@ -73,6 +73,16 @@ public class Methods {
         return intArray;
     }
 
+    public static String[] toStringArray(Set<String> set) {
+        String[] strArray = new String[set.size()];
+        int ind = 0;
+        for (String str: set) {
+            strArray[ind]=str;
+            ind++;
+        }
+        return strArray;
+    }
+
     public static void printArr(int [] arr) {
         String str = "";
         for (int i: arr) {

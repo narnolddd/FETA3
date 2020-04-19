@@ -23,4 +23,8 @@ public class DirectedLink extends Link implements Comparable<DirectedLink> {
             return 1;
         return 0;
     }
+
+    public Link reverse() {
+        return new DirectedLink(destNode_, sourceNode_, time_);
+    }
 }

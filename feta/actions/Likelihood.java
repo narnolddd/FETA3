@@ -6,6 +6,7 @@ import feta.network.DirectedNetwork;
 import feta.network.Link;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
+import feta.objectmodels.MixedModel;
 import feta.operations.Operation;
 import feta.parsenet.ParseNet;
 import feta.parsenet.ParseNetDirected;
@@ -21,7 +22,7 @@ public class Likelihood extends SimpleAction {
     public FetaOptions options_;
     public FullObjectModel objectModel_;
     public ParseNet parser_;
-    private boolean orderedData_;
+    private boolean orderedData_; // default false
 
 
     public Likelihood(FetaOptions options){
@@ -34,9 +35,9 @@ public class Likelihood extends SimpleAction {
         Long start = (Long) obj.get("Start");
         if (start != null)
             startTime_=start;
-        Boolean ordereddata = (Boolean) obj.get("OrderedData");
-        if (ordereddata != null)
-            orderedData_=ordereddata;
+        Boolean orderedData = (Boolean) obj.get("OrderedData");
+        if (orderedData != null)
+            orderedData_=orderedData;
     }
 
     public void execute() {
@@ -59,11 +60,11 @@ public class Likelihood extends SimpleAction {
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
             for (Operation op: newOps) {
-                //System.out.println(op);
-                //objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
-                like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_), orderedData_);
-                noChoices += op.noChoices_;
-                op.build(network_);
+                long time = op.getTime();
+                MixedModel obm = objectModel_.objectModelAtTime(time);
+                like += op.calcLogLike(obm,network_, orderedData_);
+                noChoices += op.getNoChoices();
+                network_.buildUpTo(time);
             }
             ArrayList<Link> newLinks = new ArrayList<Link>();
             for (int i = lset.size(); i < links.size(); i++){
