@@ -20,19 +20,18 @@
       "End": 10000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "DegreeModelComponent",
           "Weight": 0.3
         },
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "ComponentName": "RandomAttachment",
           "Weight": 0.7
         }
       ]
     }],
   "OperationModel":
   {
-    "Name": "feta.operations.Email",
-    "NoRecipients": 3,
-    "PropInternal": 0.3
+    "Name": "PreferentialAttachment",
+    "InitialDegree": 3,
   }
 }

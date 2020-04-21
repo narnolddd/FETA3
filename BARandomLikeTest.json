@@ -10,7 +10,7 @@
     "FitMixedModel": {
       "Start": 10,
       "Interval": 10,
-      "MaxNodes": 1000,
+      "MaxNodes": 50,
       "Granularity": 100,
       "OrderedData": false
     }
@@ -21,11 +21,11 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "DegreeModelComponent",
           "Weight": 1.0
         },
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "ComponentName": "RandomAttachment",
           "Weight": 1.0
         }
       ]
@@ -33,7 +33,7 @@
   ],
   "OperationModel":
   {
-    "Name": "feta.operations.Email",
+    "Name": "Email",
     "NoRecipients": 3
   }
 }

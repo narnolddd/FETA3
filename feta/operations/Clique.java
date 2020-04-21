@@ -1,6 +1,7 @@
 package feta.operations;
 
 import feta.network.Network;
+import feta.objectmodels.MixedModel;
 import feta.objectmodels.ObjectModel;
 
 import java.util.ArrayList;
@@ -13,18 +14,18 @@ public class Clique extends Operation {
         members_= new String[cliqueSize_];
     }
 
-    public void build(Network net) {
-        System.err.println("You haven't written this part yet!");
+    @Override
+    public void bufferLinks(Network net) {
+
     }
 
-    public void fill(Network net, ObjectModel om) {};
+    @Override
+    public void chooseNodes(Network net, MixedModel obm) {
 
-    public double calcLogLike(Network net, ObjectModel obm, boolean ordered) {return 0.0;}
-
-    public ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm) {
-        return new ArrayList<double[]>();
     }
-    public void updateLikelihoods(HashMap<double[],Double> likelihoods_, Network net, ObjectModel obm) {};
-    
-    public void printMeanLike(double meanLike, ObjectModel om, Network network){}
+
+    @Override
+    public void setNodeChoices(boolean orderedData) {
+
+    }
 }

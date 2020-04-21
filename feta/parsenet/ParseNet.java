@@ -86,6 +86,7 @@ public abstract class ParseNet {
             op.setLeaves(new String[] {l.destNode_});
         }
         op.setTime(l.time_);
+        op.namesToNodes(net);
         return op;
     }
 

@@ -14,6 +14,7 @@ public class MixedModel {
 
     public ArrayList<ObjectModelComponent> components_;
     private double[] weights_;
+    private boolean checkWeights_;
 
     public MixedModel() {components_=new ArrayList<ObjectModelComponent>();}
 
@@ -42,6 +43,9 @@ public class MixedModel {
 
     /** For calculating the normalisation constant for the first time */
     public void calcNormalisation(Network net, int [] alreadySampled) {
+        for (ObjectModelComponent omc : components_) {
+            omc.calcNormalisation(net, alreadySampled);
+        }
     }
 
     public void calcNormalisation(Network net) {
@@ -140,6 +144,7 @@ public class MixedModel {
         }
         if (Math.abs(sum - 1.0) > 0.0005) {
             System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);
+            System.exit(-1);
         }
     }
 
@@ -159,7 +164,8 @@ public class MixedModel {
                 Constructor<?> c = component.getConstructor();
                 omc = (ObjectModelComponent)c.newInstance();
             } catch (ClassNotFoundException e){
-                System.err.println("Object Model Component ");
+                System.err.println("Object Model Component "+omcClass+" not found.");
+                System.exit(-1);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (InstantiationException e) {
@@ -180,10 +186,9 @@ public class MixedModel {
         }
     }
 
-    public boolean equals(MixedModel obm) {
-        if (components_.size()!= obm.components_.size()) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        MixedModel obm = (MixedModel) o;
         for (int i = 0; i < components_.size(); i++) {
             if (weights_[i]!=obm.weights_[i] || components_.get(i).toString() != obm.components_.get(i).toString()) {
                 return false;

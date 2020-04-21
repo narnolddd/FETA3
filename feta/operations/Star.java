@@ -37,7 +37,9 @@ public class Star extends Operation{
 
     public void setNodeChoices(boolean orderedData) {
         nodeChoices_= new ArrayList<int[]>();
-        nodeChoices_.add(new int[] {centreNode_});
+        if (internal_) {
+            nodeChoices_.add(new int[] {centreNode_});
+        }
         if (orderedData) {
             for (int node: leafNodes_) {
                 nodeChoices_.add(new int[] {node});
@@ -45,6 +47,7 @@ public class Star extends Operation{
         } else {
             nodeChoices_.add(leafNodes_);
         }
+        filterNodeChoices();
     }
 
     public void setCentreNode(String centre) {
@@ -70,7 +73,7 @@ public class Star extends Operation{
         }
         else {
             centreNodeName_ = net.generateNodeName();
-            centreNode_=net.noNodes_;
+            centreNode_=net.nodeNameToNo(centreNodeName_);
         }
     }
 
@@ -78,7 +81,7 @@ public class Star extends Operation{
         int[] internalLeaves;
         if (internal_) {
             int [] chosen_ = new int[1+net.getOutLinks(centreNode_).length];
-            chosen_[0]=centreNode_;
+            chosen_[0] = centreNode_;
             for (int n = 0; n < net.getOutLinks(centreNode_).length; n++) {
                 chosen_[n+1] = net.getOutLinks(centreNode_)[n];
             }
@@ -89,19 +92,38 @@ public class Star extends Operation{
             internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
         }
         // Add new nodes
-        int noNew = leafNodes_.length - noExisting_;
+        int noNew = noLeaves_ - noExisting_;
         int[] newLeaves= new int[noNew];
         for (int i = 0; i < noNew; i++) {
             String newName = net.generateNodeName();
             newLeaves[i]=net.nodeNameToNo(newName);
         }
         leafNodes_= Methods.concatenate(internalLeaves,newLeaves);
-        leafNodesToNames(net);
+        nodesToNames(net);
     }
 
-    public void leafNodesToNames(Network net) {
+    public void nodesToNames(Network net) {
+        leafNodeNames_= new String[leafNodes_.length];
+        for (int i = 0; i < leafNodes_.length; i++) {
+            leafNodeNames_[i] = net.nodeNoToName(leafNodes_[i]);
+        }
+    }
+
+    public void namesToNodes(Network net) {
+        if (!net.newNode(centreNodeName_)) {
+            centreNode_=net.nodeNameToNo(centreNodeName_);
+        } else {
+            centreNode_=-1;
+        }
+        leafNodes_= new int[noLeaves_];
         for (int i = 0; i < noLeaves_; i++) {
-            leafNodeNames_[i]=net.nodeNoToName(leafNodes_[i]);
+            String node = leafNodeNames_[i];
+            if (net.newNode(node)) {
+                leafNodes_[i] = -1;
+            }
+            else {
+                leafNodes_[i] = net.nodeNameToNo(leafNodeNames_[i]);
+            }
         }
     }
 
@@ -111,11 +133,11 @@ public class Star extends Operation{
             str+=leaf+" ";
         }
         if (internal_){
-            str+="INTERNAL";
+            str += "INTERNAL";
         } else {
-            str+="EXTERNAL";
+            str += "EXTERNAL";
         }
-        str+=" "+noExisting_;
+        str += " " + noExisting_;
         return str;
     }
 }

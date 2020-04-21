@@ -70,6 +70,7 @@ public class ParseNetUndirected extends ParseNet {
             op.setNoExisting(noExisting);
             op.setLeaves(Methods.toStringArray(leaves));
             op.setCentreNode(sourceNode);
+            op.namesToNodes(net);
             op.setTime(links.get(0).time_);
             newOps.add(op);
         }

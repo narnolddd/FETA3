@@ -57,8 +57,8 @@ public class Grow extends SimpleAction {
                 obm.checkNorm(network_);
             }
             op.chooseNodes(network_,obm);
+            op.bufferLinks(network_);
             time = op.getTime();
-            //System.out.println(time);
             time+=interval_;
             network_.buildUpTo(Long.MAX_VALUE);
         }
@@ -90,7 +90,7 @@ public class Grow extends SimpleAction {
     public void parseOperationModel() {
         /** Gets object model element class from string. Bit of a mouthful */
         OperationModel om = null;
-        String omcClass = (String) operationModelJSON_.get("Name");
+        String omcClass = (String) "feta.operations."+operationModelJSON_.get("Name");
         Class <?extends OperationModel> component = null;
 
         try {

@@ -36,8 +36,6 @@ public abstract class Operation {
 
     /** Gets loglikelihood (start to finish) */
     public double calcLogLike(MixedModel obm, Network net, boolean orderedData) {
-        setNodeChoices(orderedData);
-        filterNodeChoices();
         ArrayList<int[]> nodeOrders = generateOrdersFromOperation();
         return logLikeFromList(nodeOrders,obm,net);
     }
@@ -46,19 +44,15 @@ public abstract class Operation {
      * have been chosen. These can be added up to get likelihoods for unordered sets of nodes */
     private double likelihoodRatioOrderedSet(Network net, MixedModel obm, int[] nodeSet, int[] alreadyChosen){
         obm.updateNormalisation(net, alreadyChosen);
-        if (nodeSet.length == 1) {
-            return obm.calcProbability(net,nodeSet[0]) * (net.noNodes_ - alreadyChosen.length);
+        double prob = 1.0;
+        for (int i = 0; i < nodeSet.length; i++) {
+            int node = nodeSet[i];
+            obm.updateNormalisation(net,alreadyChosen);
+            prob *= obm.calcProbability(net, node);
+            prob *= (net.noNodes_-alreadyChosen.length);
+            alreadyChosen = Methods.concatenate(alreadyChosen, new int[] {node});
         }
-        else {
-            int node = nodeSet[0];
-            int [] newNodeSet = new int[nodeSet.length - 1];
-            System.arraycopy(nodeSet, 1, newNodeSet,0, newNodeSet.length);
-            int [] newAlreadyChosen = new int[alreadyChosen.length + 1];
-            System.arraycopy(alreadyChosen,0,newAlreadyChosen,0,alreadyChosen.length);
-            newAlreadyChosen[alreadyChosen.length]=node;
-            double prob = obm.calcProbability(net,node) * (net.noNodes_-alreadyChosen.length);
-            return prob * likelihoodRatioOrderedSet(net,obm,newNodeSet,newAlreadyChosen);
-        }
+        return prob;
     }
 
     /** Gets Likelihood of operation from possible node orders */
@@ -94,6 +88,7 @@ public abstract class Operation {
     /** Generates all possible choice sequences of nodes from choice arraylist */
     private static ArrayList<int[]> generatePossibleSequences(ArrayList<ArrayList<int[]>> listOfLists) {
         ArrayList<int[]> finalList = new ArrayList<int[]>();
+        finalList.add(new int[0]);
         for (int i = 0; i< listOfLists.size(); i++) {
             finalList = combineOrders(finalList, listOfLists.get(i));
         }

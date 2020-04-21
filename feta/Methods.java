@@ -63,7 +63,7 @@ public class Methods {
         return shuffles;
     }
 
-    public static int[] toIntArray(Set<Integer> set) {
+    public static int[] toIntArray(ArrayList<Integer> set) {
         int[] intArray = new int[set.size()];
         int ind = 0;
         for (Integer i:set) {

@@ -10,7 +10,7 @@
     "Likelihood": {
       "Start": 10,
       "Interval": 10,
-      "MaxNodes": 1000
+      "MaxNodes": 50
     }
   },
   "ObjectModel": [
@@ -19,19 +19,19 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Weight": 0.69
+          "ComponentName": "RandomAttachment",
+          "Weight": 0.71
         },
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
-          "Weight": 0.31
+          "ComponentName": "DegreeModelComponent",
+          "Weight": 0.29
         }
       ]
     }
   ],
   "OperationModel":
   {
-    "Name": "feta.operations.Email",
+    "Name": "Email",
     "NoRecipients": 3
   }
 }

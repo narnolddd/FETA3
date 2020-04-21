@@ -179,14 +179,6 @@ public abstract class Network {
     /** Returns the nodes that a node "points to" */
     public abstract int[] getOutLinks(int node);
 
-    public HashSet<Integer> getNeighbourhood(int[] nodes) {
-        HashSet<Integer> neighbourhood= new HashSet<>();
-        for (int node : nodes) {
-            neighbourhood.addAll((Set) Arrays.asList(getOutLinks(node)));
-        }
-        return neighbourhood;
-    }
-
     /** Remove hanging edges for safe deletion of a node from data structures. IMPLEMENT AT YOUR PERIL */
     public abstract void removeLinks(String nodeName);
 
@@ -215,9 +207,6 @@ public abstract class Network {
 
     /** Get measurements */
     public abstract String degreeVectorToString();
-
-    /** Prints measurements to line */
-    public abstract String measureToString();
 
     /** Growth */
     public abstract void addNewLink(String src, String dst, long time);

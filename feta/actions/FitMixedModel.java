@@ -33,6 +33,7 @@ public class FitMixedModel extends SimpleAction {
     public int granularity_;
     public List<int[]> configs_;
     public HashMap<MixedModel,Double> likelihoods_;
+    private HashMap<int[], double[]> configToWeight_;
     public ParseNet parser_;
     public int noComponents_;
     public long startTime_=10;
@@ -73,6 +74,7 @@ public class FitMixedModel extends SimpleAction {
                 weights[i] = (double)config[i]/granularity_;
             }
             MixedModel mm = obm.copy();
+            configToWeight_.put(config,weights);
             mm.setWeights(weights);
             likelihoods_.put(mm,0.0);
         }
@@ -94,6 +96,7 @@ public class FitMixedModel extends SimpleAction {
         noComponents_ = obm.components_.size();
         configs_=generatePartitions(granularity_,noComponents_);
         likelihoods_= new HashMap<MixedModel,Double>();
+        configToWeight_=new HashMap<int[], double[]>();
 
         generateModels(obm);
 
@@ -109,22 +112,16 @@ public class FitMixedModel extends SimpleAction {
             for (Operation op: newOps) {
                 long time = op.getTime();
                 obm.calcNormalisation(network_);
-                //ArrayList<double[]> componentProbabilities = op.getComponentProbabilities(network_,objectModel_.objectModelAtTime(op.time_));
-                updateLikelihoods(op);
+                updateLikelihoods(op, obm);
                 noChoices+=op.getNoChoices();
                 network_.buildUpTo(time);
             }
-            ArrayList<Link> newLinks = new ArrayList<Link>();
-            for (int i = lset.size(); i < links.size(); i++){
-                newLinks.add(links.get(i));
-            }
-            network_.linksToBuild_=newLinks;
         }
 
         // Turn everything into a C0 value
         double maxLike=0.0;
         double bestRaw=0.0;
-        MixedModel bestConfig_ = new MixedModel();
+        MixedModel bestConfig_=null;
         for (MixedModel mm: likelihoods_.keySet()) {
             double like= likelihoods_.get(mm);
             double c0 = Math.exp(like/noChoices);
@@ -141,9 +138,13 @@ public class FitMixedModel extends SimpleAction {
 
     }
 
-    public void updateLikelihoods(Operation op) {
-        for (MixedModel mm: likelihoods_.keySet()) {
-            likelihoods_.put(mm,op.calcLogLike(mm,network_,orderedData_));
+    public void updateLikelihoods(Operation op, MixedModel obm) {
+        op.setNodeChoices(orderedData_);
+        for (int[] c: configs_) {
+            double[] weights = configToWeight_.get(c);
+            obm.setWeights(weights);
+            double oldLike = likelihoods_.get(obm);
+            likelihoods_.put(obm,oldLike+op.calcLogLike(obm,network_,orderedData_));
         }
     }
 

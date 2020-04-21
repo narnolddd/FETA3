@@ -39,7 +39,7 @@ public class FullObjectModel {
         }
         for (int j = 0; j<objectModels_.size(); j++) {
             MixedModel om = objectModels_.get(j);
-            om.checkValid();
+            //om.checkValid();
             timeToOM_.put(times_.get(j), om);
         }
     }

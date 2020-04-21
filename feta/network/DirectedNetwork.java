@@ -1,10 +1,13 @@
 package feta.network;
 
+import feta.Methods;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class DirectedNetwork extends Network {
@@ -106,6 +109,10 @@ public class DirectedNetwork extends Network {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int[] getOutLinks(int node) {
+        return Methods.toIntArray(outLinks_.get(node));
     }
 
     public void closeWriters() throws IOException {

@@ -15,11 +15,11 @@ public class Email extends OperationModel {
         //System.err.println("No Recipients "+noRecipients_);
         if (r<propInternal_) {
             Star intStar = new Star(noRecipients_,true);
-            intStar.noExisting_=noRecipients_;
+            intStar.setNoExisting(noRecipients_);
             return intStar;
         } else {
             Star extStar = new Star(noRecipients_,false);
-            extStar.noExisting_=noRecipients_;
+            extStar.setNoExisting(noRecipients_);
             return extStar;
         }
     }
