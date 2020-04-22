@@ -46,8 +46,8 @@ public class DegreeModelComponent extends ObjectModelComponent{
             return 0.0;
         }
         if (useInDegree_) {
-            return (net.getInDegree(node))/normalisationConstant_;
-        } else return (net.getOutDegree(node))/normalisationConstant_;
+            return (net.getInDegree(node))/tempConstant_;
+        } else return (net.getOutDegree(node))/tempConstant_;
     }
 
     public void parseJSON(JSONObject params) {

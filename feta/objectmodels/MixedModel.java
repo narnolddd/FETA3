@@ -80,9 +80,8 @@ public class MixedModel {
         }
 
         // Removes already chosen nodes from the sample space
-        Arrays.sort(alreadyChosenNodes);
-        for (int k = alreadyChosenNodes.length - 1; k>=0; k--) {
-            nodeList.remove((Integer) alreadyChosenNodes[k]);
+        for (int k = 0; k < chosen.length; k++) {
+            nodeList.remove((Integer) chosen[k]);
         }
 
         if (nodeList.isEmpty()) {
@@ -116,10 +115,11 @@ public class MixedModel {
             chosenNodes[j] = -1;
         }
         int [] removedFromSample= Methods.concatenate(alreadyChosen,chosenNodes);
+        calcNormalisation(net, Methods.removeNegativeNumbers(removedFromSample));
         for (int i = 0; i < sampleSize; i++) {
             int chosenNode = nodeDrawWithoutReplacement(net, removedFromSample);
             chosenNodes[i]=chosenNode;
-            removedFromSample[i]=chosenNode;
+            removedFromSample[alreadyChosen.length + i]=chosenNode;
         }
         return Methods.removeNegativeNumbers(chosenNodes);
     }
@@ -190,7 +190,7 @@ public class MixedModel {
         if (o == null || getClass() != o.getClass()) return false;
         MixedModel obm = (MixedModel) o;
         for (int i = 0; i < components_.size(); i++) {
-            if (weights_[i]!=obm.weights_[i] || components_.get(i).toString() != obm.components_.get(i).toString()) {
+            if (weights_[i]!=obm.weights_[i] ) {
                 return false;
             }
         }

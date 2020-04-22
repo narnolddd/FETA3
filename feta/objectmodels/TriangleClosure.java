@@ -20,7 +20,7 @@ public class TriangleClosure extends ObjectModelComponent {
         neighbourhood_= new HashSet<>();
         int depth = Math.min(depth_,justChosen_.length);
         for (int i=0; i < depth; i++) {
-            int node = justChosen_[i];
+            int node = justChosen_[justChosen_.length-1-i];
             for (int n: net.neighbours_.get(node)) {
                 neighbourhood_.add(n);
             }

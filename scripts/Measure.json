@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "output/baTest.dat",
+    "GraphInputFile": "output/triangleTest.dat",
     "GraphInputType": "NNT",
     "Directed": false,
     "OutputLineSeparator": " "
@@ -9,7 +9,7 @@
     "Measure": {
       "Start": 10,
       "Interval":10,
-      "MaxNodes": 1000,
+      "MaxNodes": 10000,
       "Statistics": ["NoNodes", "NoLinks", "MeanSquaredDegree", "Assortativity", "Clustering"],
       "PrintDegVector": false,
       "PrintHeader": true,

@@ -8,7 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Methods {
 
     public static int[] concatenate(int[] first, int[] second) {
-        int[] both = Arrays.copyOf(first, first.length + second.length);
+        int[] both = new int[first.length + second.length];
+        System.arraycopy(first,0,both,0,first.length);
         System.arraycopy(second, 0, both, first.length, second.length);
         return both;
     }

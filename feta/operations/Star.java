@@ -48,6 +48,7 @@ public class Star extends Operation{
             nodeChoices_.add(leafNodes_);
         }
         filterNodeChoices();
+        nodeOrders_ = generateOrdersFromOperation();
     }
 
     public void setCentreNode(String centre) {
@@ -87,9 +88,7 @@ public class Star extends Operation{
             }
             internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
         } else {
-            int [] chosen_ = new int[1];
-            chosen_[0]=centreNode_;
-            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
+            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, new int[]{centreNode_});
         }
         // Add new nodes
         int noNew = noLeaves_ - noExisting_;

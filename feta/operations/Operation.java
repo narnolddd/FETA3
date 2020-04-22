@@ -10,7 +10,8 @@ import java.util.HashSet;
 
 public abstract class Operation {
 
-    public ArrayList<int[]> nodeChoices_;
+    ArrayList<int[]> nodeChoices_;
+    ArrayList <int[]> nodeOrders_;
     private long time_;
     private int noChoices_=0;
 
@@ -36,8 +37,7 @@ public abstract class Operation {
 
     /** Gets loglikelihood (start to finish) */
     public double calcLogLike(MixedModel obm, Network net, boolean orderedData) {
-        ArrayList<int[]> nodeOrders = generateOrdersFromOperation();
-        return logLikeFromList(nodeOrders,obm,net);
+        return logLikeFromList(nodeOrders_,obm,net);
     }
 
     /** Returns the likelihood ratio against random model of an ordered set of nodes nodeSet, given that alreadyChosen
@@ -95,7 +95,7 @@ public abstract class Operation {
         return finalList;
     }
 
-    private ArrayList<int[]> generateOrdersFromOperation() {
+    ArrayList<int[]> generateOrdersFromOperation() {
         ArrayList<ArrayList<int[]>> listOfLists = new ArrayList<ArrayList<int[]>>();
         for (int[] arr: nodeChoices_) {
             if (arr.length <= 5) {

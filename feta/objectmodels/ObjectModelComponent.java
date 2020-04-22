@@ -44,6 +44,7 @@ public abstract class ObjectModelComponent {
 
     public void updateNormalisation(UndirectedNetwork net, int [] removed) {
         calcNormalisation(net,removed);
+        tempConstant_=normalisationConstant_;
     }
 
     public void updateNormalisation(DirectedNetwork net, int [] removed) {

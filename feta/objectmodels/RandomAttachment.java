@@ -10,9 +10,11 @@ public class RandomAttachment extends ObjectModelComponent {
     @Override
     public void calcNormalisation(Network net, int[] removed) {
         if (removed.length >= net.noNodes_) {
-            throw new ArithmeticException("No nodes in network to calculate probability");
+            normalisationConstant_=0.0;
         }
-        else normalisationConstant_= (double) net.noNodes_-removed.length;
+        else {
+            normalisationConstant_= (double) net.noNodes_-removed.length;
+        }
         tempConstant_=normalisationConstant_;
     }
 

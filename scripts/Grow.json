@@ -3,8 +3,7 @@
     "GraphInputFile": "seed_graphs/clique-5.dat",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
-    "GraphOutputFile": "output/dpTest.dat",
-    "NoRecents": 5,
+    "GraphOutputFile": "output/triangleTest.dat",
     "Directed": false
   },
   "Action": {
@@ -20,15 +19,15 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreePower",
+          "ComponentName": "feta.objectmodels.TriangleClosure",
           "Weight": 1.0,
-          "Power": 2.0
+          "Depth": 4
         }
       ]
     }],
     "OperationModel":
       {
         "Name": "feta.operations.PreferentialAttachment",
-        "InitialDegree": 3
+        "InitialDegree": 4
       }
 }
