@@ -178,11 +178,13 @@ public class MixedModel {
 
             // Heck...
 
-            double weight = (double) comp.get("Weight");
+            Double weight = (Double) comp.get("Weight");
+            if (weight!=null) {
+                weights_[i]=weight;
+            }
 
             omc.parseJSON(comp);
             components_.add(omc);
-            weights_[i]=weight;
         }
     }
 
