@@ -2,7 +2,6 @@ package feta.operations;
 
 import feta.network.Network;
 import feta.objectmodels.MixedModel;
-import feta.objectmodels.ObjectModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
