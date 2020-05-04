@@ -15,21 +15,22 @@ public class MaxDegree extends Measurement {
     }
     @Override
     public void update(DirectedNetwork net) {
-        maxDeg_=net.maxInDeg_;
+        maxInDeg_=net.maxInDeg_;
+        maxOutDeg_=net.maxOutDeg_;
     }
 
     @Override
     public void update(UndirectedNetwork net) {
-
+        maxDeg_=net.maxDeg_;
     }
 
     @Override
     public String toStringDirected() {
-        return null;
+        return String.format("%1$d %2$d", maxInDeg_, maxOutDeg_);
     }
 
     @Override
     public String toStringUndirected() {
-        return null;
+        return String.format("%d", maxDeg_);
     }
 }

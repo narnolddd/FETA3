@@ -33,6 +33,8 @@ public class DirectedNetwork extends Network {
     private double OutOutAssort_;
     public int maxInDeg_;
     public int maxOutDeg_;
+    private int transitiveTri_;
+    private int cyclicTri_;
     private BufferedWriter brIn_=null;
     private BufferedWriter brOut_=null;
 
@@ -69,6 +71,10 @@ public class DirectedNetwork extends Network {
         reduceInDegDist(getInDegree(dst)-1);
         incrementOutDegDist(getOutDegree(src));
         reduceOutDegDist(getOutDegree(src)-1);
+    }
+
+    public void closeTriangles(int src, int dst) {
+
     }
 
     public boolean isLink(int a, int b) {
@@ -178,10 +184,8 @@ public class DirectedNetwork extends Network {
         // Removes all links from or to a node. WHY WOULD YOU DO THIS???
     }
 
-    public String measureToString() {
-        return noNodes_+" "+noLinks_+" "+avgInDeg_+" "+avgOutDeg_+" "+maxInDeg_+" "+maxOutDeg_+" "+meanInDegSq_+" "+
-                meanOutDegSq_+" "+InInAssort_+" "+InOutAssort_+" "+OutInAssort_+" "+OutOutAssort_;
-    }
+    public int[] getInDegreeDist() {return inDegreeDist_;}
+    public int[] getOutDegreeDist() {return outDegreeDist_;}
 
     public String degreeVectorToString() {
         String degs = "";

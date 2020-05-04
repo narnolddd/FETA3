@@ -185,10 +185,16 @@ public class UndirectedNetwork extends Network {
         return degrees_[nodeno];
     }
 
+    public int getTriCount() {return totTri_;}
+
     public double getDensity() {
         double possibleLinks = 0.5 * noNodes_ * (noNodes_ - 1);
         double density = noLinks_/possibleLinks;
         return density;
+    }
+
+    public int[] getDegreeDist() {
+        return degreeDist_;
     }
 
     /** Calculates local clustering of node */
