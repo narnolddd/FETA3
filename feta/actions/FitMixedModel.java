@@ -5,13 +5,10 @@ import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
 import feta.network.Link;
-import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
 import feta.objectmodels.MixedModel;
-import feta.objectmodels.ObjectModel;
 import feta.operations.Operation;
-import feta.operations.Star;
 import feta.parsenet.ParseNet;
 import feta.parsenet.ParseNetDirected;
 import feta.parsenet.ParseNetUndirected;
@@ -20,7 +17,6 @@ import feta.parsenet.ParseNetUndirected;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.json.simple.JSONObject;
 
