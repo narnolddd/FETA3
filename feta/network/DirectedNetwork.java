@@ -23,18 +23,12 @@ public class DirectedNetwork extends Network {
     private int maxNodeNo_=1000;
 
     /** Doubles relating to measurements */
-    private double avgInDeg_;
-    private double avgOutDeg_;
-    private double meanInDegSq_;
-    private double meanOutDegSq_;
-    private double InInAssort_;
-    private double InOutAssort_;
-    private double OutInAssort_;
-    private double OutOutAssort_;
     public int maxInDeg_;
     public int maxOutDeg_;
-    private int transitiveTri_;
-    private int cyclicTri_;
+    private int transitiveTri_=0;
+    private int cyclicTri_=0;
+    private int[] transitiveTriCount_;
+    private int[] cyclicTriCount_;
     private BufferedWriter brIn_=null;
     private BufferedWriter brOut_=null;
 
@@ -44,18 +38,22 @@ public class DirectedNetwork extends Network {
 
         inDegreeDist_= new int[inDegArraySize_];
         outDegreeDist_= new int[outDegArraySize_];
+        transitiveTriCount_= new int[maxNodeNo_];
+        cyclicTriCount_= new int[maxNodeNo_];
 
-        avgInDeg_= 0.0;
-        avgOutDeg_= 0.0;
-        meanInDegSq_= 0.0;
-        meanOutDegSq_= 0.0;
-        InInAssort_=0.0;
-        InOutAssort_=0.0;
-        OutInAssort_=0.0;
-        OutOutAssort_=0.0;
     }
 
     public void addNode(int nodeno) {
+        if (nodeno >= maxNodeNo_) {
+            int[] newTransTriCount = new int[2*maxNodeNo_];
+            int[] newCyclicTriCount = new int[2*maxNodeNo_];
+            System.arraycopy(transitiveTriCount_,0,newTransTriCount,0,maxNodeNo_);
+            System.arraycopy(cyclicTriCount_, 0, newCyclicTriCount, 0, maxNodeNo_);
+            transitiveTriCount_= newTransTriCount;
+            cyclicTriCount_= newCyclicTriCount;
+            maxNodeNo_ *= 2;
+        }
+
         inLinks_.put(nodeno, new ArrayList<Integer>());
         outLinks_.put(nodeno, new ArrayList<Integer>());
         incrementInDegDist(0);
@@ -71,10 +69,53 @@ public class DirectedNetwork extends Network {
         reduceInDegDist(getInDegree(dst)-1);
         incrementOutDegDist(getOutDegree(src));
         reduceOutDegDist(getOutDegree(src)-1);
+        if(trackCluster_) {
+            closeTriangle(src, dst);
+        }
     }
 
-    public void closeTriangles(int src, int dst) {
+    public void closeTriangle(int src, int dst) {
+        int newTransitiveTri=0;
+        int newCyclicTri=0;
 
+        for (int n1: outLinks_.get(src)) {
+            if (n1 == dst){
+                continue;
+            }
+            for (int n2: inLinks_.get(dst)) {
+                if (n1==n2) {
+                    transitiveTriCount_[src]++;
+                    newTransitiveTri++;
+                }
+            }
+        }
+
+        for (int n1: inLinks_.get(src)) {
+            if (n1 == dst) {
+                continue;
+            }
+            for (int n2: outLinks_.get(dst)) {
+                if (n2 == src) {
+                    continue;
+                }
+                if (n1 == n2) {
+                    cyclicTriCount_[src]++;
+                    cyclicTriCount_[dst]++;
+                    cyclicTriCount_[n1]++;
+                    newCyclicTri++;
+                }
+            }
+        }
+        transitiveTri_+=newTransitiveTri;
+        cyclicTri_+=newCyclicTri;
+    }
+
+    public double localTransitivity(int node) {
+        int possibleTri = getOutDegree(node) * (getOutDegree(node) - 1);
+        if (possibleTri == 0) {
+            return 0.0;
+        }
+        return ((double) transitiveTriCount_[node])/possibleTri;
     }
 
     public boolean isLink(int a, int b) {
@@ -134,6 +175,14 @@ public class DirectedNetwork extends Network {
         return outLinks_.get(node).size();
     }
 
+    public int getTransitiveTri() {
+        return transitiveTri_;
+    }
+
+    public int getCyclicTri() {
+        return cyclicTri_;
+    }
+
     public int getTotDegree(int node) {
         return getInDegree(node) + getOutDegree(node);
     }
@@ -177,8 +226,6 @@ public class DirectedNetwork extends Network {
     public void reduceOutDegDist(int degree) {
         outDegreeDist_[degree]--;
     }
-
-
 
     public void removeLinks(String nodename) {
         // Removes all links from or to a node. WHY WOULD YOU DO THIS???

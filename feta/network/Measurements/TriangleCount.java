@@ -16,8 +16,8 @@ public class TriangleCount extends Measurement{
 
     @Override
     public void update (DirectedNetwork net) {
-        transitiveTri_=0;
-        cyclicTri_=0;
+        transitiveTri_=net.getTransitiveTri();
+        cyclicTri_=net.getCyclicTri();
     }
 
     @Override

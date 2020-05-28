@@ -5,16 +5,19 @@ import feta.network.Network;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.awt.geom.Path2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class MixedModel {
 
     public ArrayList<ObjectModelComponent> components_;
     private double[] weights_;
     private boolean checkWeights_;
+    private HashMap<double[], Double> likelihoods_;
 
     public MixedModel() {components_=new ArrayList<ObjectModelComponent>();}
 
@@ -57,6 +60,14 @@ public class MixedModel {
         for (ObjectModelComponent omc: components_) {
             omc.updateNormalisation(net, removed);
         }
+    }
+
+    public double[] getComponentProbs(Network net, int node) {
+        double[] probs = new double[components_.size()];
+        for (int i = 0; i < components_.size(); i++) {
+            probs[i] = components_.get(i).calcProbability(net, node);
+        }
+        return probs;
     }
 
     /** Having calculated normalisation, get node probability */
@@ -220,6 +231,61 @@ public class MixedModel {
     /** For assigning weights at runtime */
     public void setWeights(double[] weights) {
         weights_=weights;
+    }
+
+    public void initialiseLikelihoods(ArrayList<double[]> weights) {
+        likelihoods_=new HashMap<double[], Double>();
+        for (double[] weight: weights) {
+            likelihoods_.put(weight,0.0);
+        }
+    }
+
+    public void updateLikelihoods(Network net, ArrayList<int[]> nodeOrders) {
+        int noOrders = nodeOrders.size();
+        HashMap<double[], Double> opLikeRatio = new HashMap<>();
+
+        for (double[] weight : likelihoods_.keySet()) {
+            opLikeRatio.put(weight, 0.0);
+        }
+
+        for (int[] order : nodeOrders) {
+            HashMap<double[], Double> updated = updateIndividualLikelihoods(net, order, new int[0]);
+            for (double[] weight : likelihoods_.keySet())
+                opLikeRatio.put(weight, opLikeRatio.get(weight) + updated.get(weight));
+        }
+
+        for (double [] weight: likelihoods_.keySet()) {
+            double like = opLikeRatio.get(weight);
+            if (like == 0.0 || noOrders == 0) {
+                return;
+            }
+            double logLike = Math.log(opLikeRatio.get(weight)) - Math.log(noOrders);
+            likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
+        }
+
+
+    }
+
+    public HashMap<double[], Double> updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen) {
+        HashMap<double[], Double> likeRatio = new HashMap<>();
+        for (double[] weight : likelihoods_.keySet()) {
+            likeRatio.put(weight,1.0);
+        }
+        for (int i = 0; i < nodeSet.length; i++) {
+            int node = nodeSet[i];
+            updateNormalisation(net,alreadyChosen);
+            double[] probs = getComponentProbs(net,node);
+            for (double[] weight : likelihoods_.keySet()) {
+                double prob = 0.0;
+                for (int j = 0; j < weight.length; j++) {
+                    prob+=weight[j]*probs[j];
+                }
+                prob *= (net.noNodes_ - alreadyChosen.length);
+                likeRatio.put(weight,likeRatio.get(weight) * prob);
+            }
+            alreadyChosen = Methods.concatenate(alreadyChosen, new int[] {node});
+        }
+        return likeRatio;
     }
 
 }

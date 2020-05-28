@@ -55,6 +55,7 @@ public abstract class Operation {
         return prob;
     }
 
+
     /** Gets Likelihood of operation from possible node orders */
     private double logLikeFromList (ArrayList<int[]> orders, MixedModel obm, Network net) {
         int noOrders = orders.size();

@@ -85,6 +85,8 @@ public class UndirectedNetwork extends Network {
             if (n1neighbour == dst)
                 continue;
             for (int n2neighbour: neighbours_.get(dst)) {
+                if (n2neighbour == src)
+                    continue;
                 if (n1neighbour == n2neighbour) {
                     // delet this pls
                     // System.out.println(degrees_[src]+" "+degrees_[dst]);

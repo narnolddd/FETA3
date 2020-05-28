@@ -6,15 +6,25 @@ import feta.network.UndirectedNetwork;
 public class Clustering extends Measurement {
 
     public double averageClustering_;
+    public double averageTransitivity_;
 
     public Clustering() {
-        nameDirected_="";
+        nameDirected_="AverageTransitivity";
         nameUndirected_= "AverageClustering";
     }
 
     @Override
     public void update(DirectedNetwork net) {
-        averageClustering_=0.0;
+        int noNodes_=net.noNodes_;
+        double sum = 0.0;
+        for (int i = 0; i < noNodes_; i++) {
+            sum+= net.localTransitivity(i);
+        }
+        if (sum == 0.0) {
+            averageTransitivity_= 0.0;}
+        else {
+            averageTransitivity_= sum/noNodes_;
+        }
     }
 
     @Override
@@ -33,7 +43,7 @@ public class Clustering extends Measurement {
 
     @Override
     public String toStringDirected() {
-        return "";
+        return String.format("%f", averageTransitivity_);
     }
 
     @Override
