@@ -272,9 +272,9 @@ public class MixedModel {
                 return;
             }
             double logLike = Math.log(like) - Math.log(noOrders);
-            if (Double.isInfinite(logLike)) {
-                System.out.println("Aaaahh!!! "+like+" "+noOrders);
-            }
+//            if (Double.isInfinite(logLike)) {
+//                System.out.println("Aaaahh!!! "+like+" "+noOrders);
+//            }
             likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
         }
 
