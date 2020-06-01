@@ -1,23 +1,24 @@
 package feta.actions;
 
+/** Feta packages */
 import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
 import feta.network.Link;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
-import feta.objectmodels.ObjectModel;
+import feta.objectmodels.MixedModel;
 import feta.operations.Operation;
 import feta.parsenet.ParseNet;
 import feta.parsenet.ParseNetDirected;
 import feta.parsenet.ParseNetUndirected;
-import org.json.simple.JSONObject;
 
-import java.lang.reflect.Array;
+/** Utils */
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import org.json.simple.JSONObject;
 
 /** Finds best model mixture - hopefully will be better than calculating likelihood many times */
 
@@ -27,11 +28,10 @@ public class FitMixedModel extends SimpleAction {
     public FullObjectModel objectModel_;
     public int granularity_;
     public List<int[]> configs_;
-    public HashMap<int[],Double> likelihoods_;
-    public HashMap<int[], double[]> partitionToWeight_;
     public ParseNet parser_;
     public int noComponents_;
     public long startTime_=10;
+    private boolean orderedData_ = false;
 
     public FitMixedModel(FetaOptions options){
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -39,7 +39,8 @@ public class FitMixedModel extends SimpleAction {
         objectModel_= new FullObjectModel(options_.fullObjectModel_);
     }
 
-    public List<int[]> generatePartitions(int n, int k) {
+    /** Method that generates all possible configurations of model mixture */
+    private static List<int[]> generatePartitions(int n, int k) {
         List<int[]> parts = new ArrayList<>();
         if (k == 1) {
             parts.add(new int[] {n});
@@ -58,6 +59,18 @@ public class FitMixedModel extends SimpleAction {
         return newParts;
     }
 
+    private ArrayList<double[]> generateModels() {
+        ArrayList<double[]> weightList = new ArrayList<>();
+        for (int[] config: configs_) {
+            double[] weights = new double[config.length];
+            for (int i=0; i < config.length; i++) {
+                weights[i] = (double)config[i]/granularity_;
+            }
+            weightList.add(weights);
+        }
+        return weightList;
+    }
+
     public void execute(){
         if (!options_.directedInput_) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
@@ -70,24 +83,16 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public void getLikelihoods(long start, long end) {
-        noComponents_ = objectModel_.objectModelAtTime(start).components_.size();
+        MixedModel obm = objectModel_.objectModelAtTime(start);
+        noComponents_ = obm.components_.size();
         configs_=generatePartitions(granularity_,noComponents_);
-        partitionToWeight_=new HashMap<int[], double[]>();
-        likelihoods_= new HashMap<>();
 
-        // Get partition to weights vector ready & likelihood
-        for (int[] config: configs_) {
-            likelihoods_.put(config,0.0);
-            double[] weights = new double[config.length];
-            for (int i=0; i < config.length; i++) {
-                weights[i] = (double)config[i]/granularity_;
-            }
-            partitionToWeight_.put(config,weights);
-        }
+        ArrayList<double[]> weightList = generateModels();
+        obm.initialiseLikelihoods(weightList);
 
         network_.buildUpTo(start);
         int noChoices = 0;
-        HashMap<int[], Double> c0Values_ = new HashMap<>();
+        HashMap<double[], Double> c0Values = new HashMap<>();
         while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
             if (network_.latestTime_ > end)
                 break;
@@ -95,75 +100,40 @@ public class FitMixedModel extends SimpleAction {
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
             for (Operation op: newOps) {
-                objectModel_.objectModelAtTime(op.time_).normaliseAll(network_);
-                // like += op.calcLogLike(network_, objectModel_.objectModelAtTime(op.time_));
-
-                ArrayList<double[]> componentProbabilities = op.getComponentProbabilities(network_,objectModel_.objectModelAtTime(op.time_));
-                updateLikelihoods(componentProbabilities);
-                noChoices+=op.noChoices_;
-                op.build(network_);
+                long time = op.getTime();
+                obm.calcNormalisation(network_);
+                updateLikelihoods(op, obm);
+                noChoices+=op.getNoChoices();
+                network_.buildUpTo(time);
             }
-            ArrayList<Link> newLinks = new ArrayList<Link>();
-            for (int i = lset.size(); i < links.size(); i++){
-                newLinks.add(links.get(i));
-            }
-            network_.linksToBuild_=newLinks;
         }
 
         // Turn everything into a C0 value
         double maxLike=0.0;
-        double[] bestConfig_ = new double[noComponents_];
-        for (int[] partition: likelihoods_.keySet()) {
-            double c0 = Math.exp(likelihoods_.get(partition)/noChoices);
-            c0Values_.put(partition,c0);
+        double bestRaw=0.0;
+        double[] bestConfig = new double[noComponents_];
+        HashMap<double[], Double> likelihoods = obm.getLikelihoods();
+        for (double [] weights : weightList) {
+            double like= likelihoods.get(weights);
+            double c0 = Math.exp(like/noChoices);
+            c0Values.put(weights,c0);
             if (c0> maxLike) {
                 maxLike=c0;
-                bestConfig_=partitionToWeight_.get(partition);
+                bestRaw= like;
+                bestConfig=weights;
             }
         }
 
-        System.out.println("Max likelihood : "+maxLike);
-        for (int l=0; l < bestConfig_.length; l++){
-            System.out.println(bestConfig_[l]+" "+objectModel_.objectModelAtTime(start).components_.get(l));
-            // System.out.println(noChoices);
+        System.out.println("Max c0 : "+maxLike+" max like "+bestRaw+" choices "+noChoices);
+        for (int i = 0; i < bestConfig.length; i++) {
+            System.out.println(bestConfig[i]+" "+obm.components_.get(i));
         }
-
     }
 
-    // Updates the likelihood vector of different object model weight parametrisations
-    public void updateLikelihoods(ArrayList<double[]> nodeCompProbs) {
-        for (int[] partition: likelihoods_.keySet()) {
-            double[] weights = partitionToWeight_.get(partition);
-
-            double logSum = 0.0;
-            double logRand = 0.0;
-            double probUsed = 0.0;
-            double randUsed = 0.0;
-            double like = 0.0;
-
-            for (double[] node : nodeCompProbs) {
-
-                // calc prob of choosing node with this weighting
-                double nodeprob = 0.0;
-                for (int i = 0; i < node.length; i++) {
-                    nodeprob+=node[i]*weights[i];
-                }
-                if (nodeprob <= 0) {
-                    //System.out.println("Node returned zero probability");
-                    logSum = 0;
-                    logRand = 0;
-                    break;
-                }
-                logSum+= Math.log(nodeprob) - Math.log(1 - probUsed);
-                logRand+=Math.log(1.0/network_.noNodes_) - Math.log(1 - randUsed);
-                randUsed+= 1.0/network_.noNodes_;
-                probUsed+= nodeprob;
-
-            }
-            like = logSum - logRand;
-
-            likelihoods_.put(partition, likelihoods_.get(partition) + like);
-        }
+    public void updateLikelihoods(Operation op, MixedModel obm) {
+        op.setNodeChoices(orderedData_);
+        ArrayList<int[]> nc = op.getNodeOrders();
+        obm.updateLikelihoods(network_,nc);
     }
 
     public void parseActionOptions(JSONObject obj) {
@@ -172,5 +142,8 @@ public class FitMixedModel extends SimpleAction {
         Long start = (Long) obj.get("Start");
         if (start != null)
             startTime_=start;
+        Boolean ordereddata = (Boolean) obj.get("OrderedData");
+        if (ordereddata != null)
+            orderedData_=ordereddata;
     }
 }

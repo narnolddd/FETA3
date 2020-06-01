@@ -1,185 +1,142 @@
 package feta.operations;
 
-import feta.network.Link;
+import feta.Methods;
 import feta.network.Network;
 import feta.network.UndirectedNetwork;
-import feta.objectmodels.ObjectModel;
+import feta.objectmodels.MixedModel;
 
 import java.util.ArrayList;
 
-/** Class represents growth of network by a star. NB a single link may be considered a star with one leaf */
+public class Star extends Operation{
 
-public class Star extends Operation {
+    private int centreNode_;
+    private int[] leafNodes_;
+    private String centreNodeName_;
+    private String[] leafNodeNames_;
+    private boolean internal_;
+    private int internalId_;
+    private int noExisting_;
+    private int noLeaves_;
 
-    // Node at the centre of the star
-    public String centreNodeName_;
-    public int centreNode_;
-
-    // Leaf nodes
-    public String[] leafNodeNames_;
-    public int[] leafNodes_;
-    public boolean internal_;
-    // How many of the leaf nodes are already existing in the network?
-
-    public Star(int noLeaves, boolean internal_){
-        this.internal_=internal_;
-        leafNodeNames_= new String[noLeaves];
-        leafNodes_= new int[noLeaves];
-        noChoices_=noLeaves;
+    public Star(int noLeaves, boolean internal) {
+        internal_=internal;
+        internalId_=internal_ ? 1 : 0;
+        noLeaves_=noLeaves;
     }
 
-    public void build(Network net) {
-
-        if (net.newNode(centreNodeName_)) {
-            net.addNodeToList(centreNodeName_);
+    public void bufferLinks(Network net) {
+        for (String leaf: leafNodeNames_) {
+            net.addNewLink(centreNodeName_,leaf,getTime());
         }
-
-        for(String leaf: leafNodeNames_) {
-            if(net.newNode(leaf)) {
-                net.addNodeToList(leaf);
-            }
-            net.addLink(centreNodeName_,leaf);
-            net.noLinks_++;
-
-            net.recentlyPickedNodes_.add(net.nodeNameToNo(leaf));
-            if (net.recentlyPickedNodes_.size()>net.numRecents_) {
-                net.recentlyPickedNodes_.remove(0);
-            }
-        }
-        net.latestTime_=time_;
     }
 
-    public void pickCentreNode_(Network net, ObjectModel om) {
+    public void chooseNodes(Network net, MixedModel obm) {
+        pickCentreNode(net,obm);
+        pickLeafNodes(net,obm);
+    }
+
+    public void setNodeChoices(boolean orderedData) {
+        nodeChoices_= new ArrayList<int[]>();
         if (internal_) {
-            centreNode_ = om.nodeSampleWithoutReplacement(net, new int[0]);
+            nodeChoices_.add(new int[] {centreNode_});
+        }
+        if (orderedData) {
+            for (int node: leafNodes_) {
+                nodeChoices_.add(new int[] {node});
+            }
+        } else {
+            nodeChoices_.add(leafNodes_);
+        }
+        filterNodeChoices();
+        nodeOrders_ = generateOrdersFromOperation();
+    }
+
+    public void setCentreNode(String centre) {
+        centreNodeName_=centre;
+    }
+
+    public void setLeaves(String [] leaves) {
+        leafNodeNames_=leaves;
+    }
+
+    public int getNoExisting() {
+        return noExisting_;
+    }
+
+    public void setNoExisting(int noExisting) {
+        noExisting_=noExisting;
+    }
+
+    public void pickCentreNode(Network net, MixedModel obm) {
+        if (internal_) {
+            centreNode_ = obm.nodeDrawWithoutReplacement(net, new int[0]);
             centreNodeName_=net.nodeNoToName(centreNode_);
         }
         else {
             centreNodeName_ = net.generateNodeName();
-            centreNode_=net.noNodes_;
-            net.addNodeToList(centreNodeName_);
+            centreNode_=net.nodeNameToNo(centreNodeName_);
         }
     }
 
-    public void pickLeafNodes_(Network net, ObjectModel om) {
-        int[] existingLeaves= new int[this.noExisting_];
-        if (internal_ && net.getClass()==UndirectedNetwork.class) {
-            int [] chosen_ = new int[1+((UndirectedNetwork) net).degrees_[centreNode_]];
-            chosen_[0]=centreNode_;
-            for (int n = 0; n < ((UndirectedNetwork) net).neighbours_.get(centreNode_).size(); n++) {
-                chosen_[n+1] = ((UndirectedNetwork) net).neighbours_.get(centreNode_).get(n);
+    public void pickLeafNodes(Network net, MixedModel obm) {
+        int[] internalLeaves;
+        if (internal_) {
+            int [] chosen_ = new int[1+net.getOutLinks(centreNode_).length];
+            chosen_[0] = centreNode_;
+            for (int n = 0; n < net.getOutLinks(centreNode_).length; n++) {
+                chosen_[n+1] = net.getOutLinks(centreNode_)[n];
             }
-            existingLeaves=om.getNodesWithoutReplacement(net, noExisting_, chosen_);
+            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
         } else {
-            int [] chosen_ = new int[1];
-            chosen_[0]=centreNode_;
-            existingLeaves=om.getNodesWithoutReplacement(net, noExisting_, chosen_);
+            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, new int[]{centreNode_});
         }
         // Add new nodes
-        int noNew_ = leafNodes_.length - noExisting_;
-        int[] newLeaves_= new int[noNew_];
-        for (int i = 0; i < noNew_; i++) {
+        int noNew = noLeaves_ - noExisting_;
+        int[] newLeaves= new int[noNew];
+        for (int i = 0; i < noNew; i++) {
             String newName = net.generateNodeName();
-            net.addNodeToList(newName);
-            newLeaves_[i]=net.nodeNameToNo(newName);
+            newLeaves[i]=net.nodeNameToNo(newName);
         }
-        leafNodes_=ObjectModel.concatenate(existingLeaves,newLeaves_);
+        leafNodes_= Methods.concatenate(internalLeaves,newLeaves);
+        nodesToNames(net);
     }
 
-    public void fill(Network net, ObjectModel om) {
-        pickCentreNode_(net, om);
-        pickLeafNodes_(net, om);
+    public void nodesToNames(Network net) {
+        leafNodeNames_= new String[leafNodes_.length];
+        for (int i = 0; i < leafNodes_.length; i++) {
+            leafNodeNames_[i] = net.nodeNoToName(leafNodes_[i]);
+        }
+    }
 
-        for(int leaf: leafNodes_) {
-            String leafName = net.nodeNoToName(leaf);
-            if (net.isLink(centreNodeName_,leafName) && !net.allowDuplicates_)
-                continue;
-            net.addNewLink(centreNodeName_, leafName, time_);
+    public void namesToNodes(Network net) {
+        if (!net.newNode(centreNodeName_)) {
+            centreNode_=net.nodeNameToNo(centreNodeName_);
+        } else {
+            centreNode_=-1;
+        }
+        leafNodes_= new int[noLeaves_];
+        for (int i = 0; i < noLeaves_; i++) {
+            String node = leafNodeNames_[i];
+            if (net.newNode(node)) {
+                leafNodes_[i] = -1;
+            }
+            else {
+                leafNodes_[i] = net.nodeNameToNo(leafNodeNames_[i]);
+            }
         }
     }
 
     public String toString() {
-        String str = time_+" STAR "+centreNodeName_+" LEAVES ";
+        String str = getTime()+" STAR "+centreNodeName_+" LEAVES ";
         for (String leaf: leafNodeNames_) {
             str+=leaf+" ";
         }
         if (internal_){
-            str+="INTERNAL";
+            str += "INTERNAL";
         } else {
-            str+="EXTERNAL";
+            str += "EXTERNAL";
         }
-        str+=" "+noExisting_;
+        str += " " + noExisting_;
         return str;
-    }
-
-    public double calcLogLike(Network net, ObjectModel obm) {
-        double logSum = 0.0;
-        double logRand = 0.0;
-        double randUsed = 0.0;
-        for (int i =0; i<leafNodeNames_.length; i++) {
-            int[] chosen = new int[i];
-            for (int j = 0; j < i; j++) {
-                if (!net.newNode(leafNodeNames_[j])) {
-                    chosen[j] = net.nodeNameToNo(leafNodeNames_[j]);
-                } else {
-                    chosen[j] = -1;
-                }
-            }
-            obm.normaliseAll(net,chosen);
-            String leaf = leafNodeNames_[i];
-            if (!net.newNode(leafNodeNames_[i])) {
-                int node = net.nodeNameToNo(leaf);
-                double prob = obm.calcProbability(net,node);
-                if (prob <= 0) {
-                    //System.out.println("Node with probability zero");
-                    continue;
-                }
-                // Log Likelihood is calculated without replacement
-                // System.out.println(leafNodeNames_[i]+" "+prob);
-                logSum+= Math.log(prob);
-                logRand+=Math.log(1.0/net.noNodes_) - Math.log(1 - randUsed);
-                randUsed+= 1.0/net.noNodes_;
-            }
-            else continue;
-        }
-        return logSum - logRand;
-    }
-
-    public ArrayList<double[]> getComponentProbabilities(Network net, ObjectModel obm) {
-        ArrayList<double[]> probs = new ArrayList<>();
-        for (int i =0; i<leafNodeNames_.length; i++) {
-            int[] chosen = new int[i];
-            for (int j = 0; j < i; j++) {
-                if (!net.newNode(leafNodeNames_[j])) {
-                    chosen[j] = net.nodeNameToNo(leafNodeNames_[j]);
-                } else {
-                    chosen[j] = -1;
-                }
-            }
-            obm.normaliseAll(net,chosen);
-            String leaf = leafNodeNames_[i];
-            if (!net.newNode(leaf)) {
-                int node = net.nodeNameToNo(leaf);
-                double[] nodeprobs = obm.getComponentProbabilities(net, node);
-                probs.add(nodeprobs);
-                net.recentlyPickedNodes_.add(node);
-                if (net.recentlyPickedNodes_.size()>net.numRecents_) {
-                    net.recentlyPickedNodes_.remove(0);
-                }
-            }
-
-            else continue;
-        }
-        return probs;
-    }
-
-
-    public void printMeanLike(double meanLike, ObjectModel om, Network network){
-        for (String leaf : leafNodeNames_) {
-            int node = network.nodeNameToNo(leaf);
-            double prob = om.calcProbability(network,node);
-            double normLike = prob/meanLike;
-            System.out.println(time_+" "+normLike);
-        }
     }
 }

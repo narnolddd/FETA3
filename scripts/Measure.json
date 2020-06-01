@@ -1,17 +1,18 @@
 {
   "Data": {
-    "GraphInputFile": "output/Citations_Copy_Graph.dat",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
-    "Directed": false,
+    "Directed": true,
     "OutputLineSeparator": " "
   },
   "Action": {
     "Measure": {
-      "Start": 10,
-      "Interval":10,
+      "Start": 820800000,
+      "Interval":1000000,
       "MaxNodes": 10000,
-      "PrintDegVector": false,
-      "FileName": "experiments/Citations_Copy_Undir_Measurements.dat"
+      "Statistics": ["NoNodes", "NoLinks", "MeanSquaredDegree", "Assortativity", "Clustering", "TriangleCount"],
+      "PrintHeader": true,
+      "FileName": "output/test.dat"
     }
   }
 }

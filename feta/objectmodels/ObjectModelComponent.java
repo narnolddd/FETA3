@@ -9,6 +9,7 @@ public abstract class ObjectModelComponent {
 
     /** Normalisation constant (changing) to avoid calculating every time probability of node is needed */
     double normalisationConstant_;
+    double tempConstant_;
 
     /** Methods relating to Object Model */
 
@@ -22,6 +23,7 @@ public abstract class ObjectModelComponent {
         if (network.getClass() == UndirectedNetwork.class) {
             calcNormalisation((UndirectedNetwork) network, removed);
         } else calcNormalisation((DirectedNetwork) network, removed);
+        tempConstant_=normalisationConstant_;
     }
 
     public abstract void calcNormalisation(UndirectedNetwork net, int [] removed);
@@ -30,11 +32,27 @@ public abstract class ObjectModelComponent {
     public abstract double calcProbability(UndirectedNetwork net, int node);
     public abstract double calcProbability(DirectedNetwork net, int node);
 
-    public void calcNormalisation(Network net) {
+    public final void calcNormalisation(Network net) {
         calcNormalisation(net, new int[0]);
+    }
+
+    public final void updateNormalisation(Network net, int [] removed) {
+        if (net.getClass() == UndirectedNetwork.class) {
+            updateNormalisation((UndirectedNetwork) net,removed);
+        } else updateNormalisation((DirectedNetwork) net, removed);
+    }
+
+    public void updateNormalisation(UndirectedNetwork net, int [] removed) {
+        if (removed.length!=0) {
+            calcNormalisation(net, removed);
+        }
+        tempConstant_=normalisationConstant_;
+    }
+
+    public void updateNormalisation(DirectedNetwork net, int [] removed) {
+        calcNormalisation(net,removed);
     }
 
     /** Parse JSON for parameters when necessary */
     public void parseJSON(JSONObject params){}
-
 }

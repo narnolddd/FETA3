@@ -11,24 +11,17 @@ import java.util.HashMap;
 /** Class describing the fully specified object model with times each is active */
 public class FullObjectModel {
 
-    public ArrayList<ObjectModel> objectModels_;
+    public ArrayList<MixedModel> objectModels_;
     public ArrayList<TimeInterval> times_;
-    public HashMap<TimeInterval, ObjectModel> timeToOM_;
+    public HashMap<TimeInterval, MixedModel> timeToOM_;
     public long lastTime_;
 
     public FullObjectModel(JSONArray model){
-        objectModels_=new ArrayList<ObjectModel>();
+        objectModels_=new ArrayList<MixedModel>();
         times_= new ArrayList<TimeInterval>();
-        timeToOM_= new HashMap<TimeInterval, ObjectModel>();
+        timeToOM_= new HashMap<TimeInterval, MixedModel>();
         parseObjectModels(model);
         lastTime_=times_.get(times_.size()-1).end_;
-    }
-
-    /** Maps a node and network object to a probability of choosing node */
-    public double calcProbability(Network net, int node, long time){
-        ObjectModel om = objectModelAtTime(time);
-
-        return 0.0;
     }
 
     /** Checks object models given are valid */
@@ -45,14 +38,14 @@ public class FullObjectModel {
             }
         }
         for (int j = 0; j<objectModels_.size(); j++) {
-            ObjectModel om = objectModels_.get(j);
-            om.checkValid();
+            MixedModel om = objectModels_.get(j);
+            //om.checkValid();
             timeToOM_.put(times_.get(j), om);
         }
     }
 
     /** Returns object model active at given time */
-    public ObjectModel objectModelAtTime(long time) {
+    public MixedModel objectModelAtTime(long time) {
         for (TimeInterval ti: times_) {
             if (ti.contains(time)) {
                 return timeToOM_.get(ti);
@@ -64,13 +57,13 @@ public class FullObjectModel {
     public void parseObjectModels(JSONArray model) {
         int number = model.size();
 
-        objectModels_= new ArrayList<ObjectModel>(number);
+        objectModels_= new ArrayList<MixedModel>(number);
         times_= new ArrayList<TimeInterval>(number);
 
         for (int i = 0; i< number; i++) {
             JSONObject om = (JSONObject) model.get(i);
             JSONArray components = (JSONArray) om.get("Components");
-            ObjectModel obm = new ObjectModel();
+            MixedModel obm = new MixedModel();
             obm.readObjectModelOptions(components);
 
             long start = (Long) om.get("Start");

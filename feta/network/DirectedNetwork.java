@@ -1,10 +1,13 @@
 package feta.network;
 
+import feta.Methods;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class DirectedNetwork extends Network {
@@ -20,16 +23,12 @@ public class DirectedNetwork extends Network {
     private int maxNodeNo_=1000;
 
     /** Doubles relating to measurements */
-    private double avgInDeg_;
-    private double avgOutDeg_;
-    private double meanInDegSq_;
-    private double meanOutDegSq_;
-    private double InInAssort_;
-    private double InOutAssort_;
-    private double OutInAssort_;
-    private double OutOutAssort_;
-    private int maxInDeg_;
-    private int maxOutDeg_;
+    public int maxInDeg_;
+    public int maxOutDeg_;
+    private int transitiveTri_=0;
+    private int cyclicTri_=0;
+    private int[] transitiveTriCount_;
+    private int[] cyclicTriCount_;
     private BufferedWriter brIn_=null;
     private BufferedWriter brOut_=null;
 
@@ -39,18 +38,22 @@ public class DirectedNetwork extends Network {
 
         inDegreeDist_= new int[inDegArraySize_];
         outDegreeDist_= new int[outDegArraySize_];
+        transitiveTriCount_= new int[maxNodeNo_];
+        cyclicTriCount_= new int[maxNodeNo_];
 
-        avgInDeg_= 0.0;
-        avgOutDeg_= 0.0;
-        meanInDegSq_= 0.0;
-        meanOutDegSq_= 0.0;
-        InInAssort_=0.0;
-        InOutAssort_=0.0;
-        OutInAssort_=0.0;
-        OutOutAssort_=0.0;
     }
 
     public void addNode(int nodeno) {
+        if (nodeno >= maxNodeNo_) {
+            int[] newTransTriCount = new int[2*maxNodeNo_];
+            int[] newCyclicTriCount = new int[2*maxNodeNo_];
+            System.arraycopy(transitiveTriCount_,0,newTransTriCount,0,maxNodeNo_);
+            System.arraycopy(cyclicTriCount_, 0, newCyclicTriCount, 0, maxNodeNo_);
+            transitiveTriCount_= newTransTriCount;
+            cyclicTriCount_= newCyclicTriCount;
+            maxNodeNo_ *= 2;
+        }
+
         inLinks_.put(nodeno, new ArrayList<Integer>());
         outLinks_.put(nodeno, new ArrayList<Integer>());
         incrementInDegDist(0);
@@ -66,6 +69,53 @@ public class DirectedNetwork extends Network {
         reduceInDegDist(getInDegree(dst)-1);
         incrementOutDegDist(getOutDegree(src));
         reduceOutDegDist(getOutDegree(src)-1);
+        if(trackCluster_) {
+            closeTriangle(src, dst);
+        }
+    }
+
+    public void closeTriangle(int src, int dst) {
+        int newTransitiveTri=0;
+        int newCyclicTri=0;
+
+        for (int n1: outLinks_.get(src)) {
+            if (n1 == dst){
+                continue;
+            }
+            for (int n2: inLinks_.get(dst)) {
+                if (n1==n2) {
+                    transitiveTriCount_[src]++;
+                    newTransitiveTri++;
+                }
+            }
+        }
+
+        for (int n1: inLinks_.get(src)) {
+            if (n1 == dst) {
+                continue;
+            }
+            for (int n2: outLinks_.get(dst)) {
+                if (n2 == src) {
+                    continue;
+                }
+                if (n1 == n2) {
+                    cyclicTriCount_[src]++;
+                    cyclicTriCount_[dst]++;
+                    cyclicTriCount_[n1]++;
+                    newCyclicTri++;
+                }
+            }
+        }
+        transitiveTri_+=newTransitiveTri;
+        cyclicTri_+=newCyclicTri;
+    }
+
+    public double localTransitivity(int node) {
+        int possibleTri = getOutDegree(node) * (getOutDegree(node) - 1);
+        if (possibleTri == 0) {
+            return 0.0;
+        }
+        return ((double) transitiveTriCount_[node])/possibleTri;
     }
 
     public boolean isLink(int a, int b) {
@@ -108,6 +158,10 @@ public class DirectedNetwork extends Network {
         }
     }
 
+    public int[] getOutLinks(int node) {
+        return Methods.toIntArray(outLinks_.get(node));
+    }
+
     public void closeWriters() throws IOException {
         brIn_.close();
         brOut_.close();
@@ -119,6 +173,14 @@ public class DirectedNetwork extends Network {
 
     public int getOutDegree(int node) {
         return outLinks_.get(node).size();
+    }
+
+    public int getTransitiveTri() {
+        return transitiveTri_;
+    }
+
+    public int getCyclicTri() {
+        return cyclicTri_;
     }
 
     public int getTotDegree(int node) {
@@ -165,163 +227,12 @@ public class DirectedNetwork extends Network {
         outDegreeDist_[degree]--;
     }
 
-
-
     public void removeLinks(String nodename) {
-        // Work in progress. Probably a terrible idea to implement.
+        // Removes all links from or to a node. WHY WOULD YOU DO THIS???
     }
 
-    public double getAverageInDegree(){
-        double avgInDeg = (double)noLinks_/noNodes_;
-        return avgInDeg;
-    }
-
-    public double getAverageOutDegree(){
-        return getAverageInDegree();
-    }
-
-    public double getMeanInDegSq() {
-        double sum = 0.0;
-        for (int i = 0; i < noNodes_; i++) {
-            double inDeg = getInDegree(i);
-            sum += inDeg*inDeg;
-        }
-        if (noNodes_> 0) {
-            return sum/noNodes_;
-        }
-        return 0.0;
-    }
-
-    public double getMeanOutDegSq() {
-        double sum = 0.0;
-        for (int i = 0; i < noNodes_; i++) {
-            double outDeg = getOutDegree(i);
-            sum += outDeg*outDeg;
-        }
-        if (noNodes_> 0) {
-            return sum/noNodes_;
-        }
-        return 0.0;
-    }
-
-    public double getInAssort() {
-        double assSum = 0.0;
-        double assProd = 0.0;
-        double assSq = 0.0;
-
-        for (int i = 0; i < noNodes_; i++) {
-            ArrayList<Integer> links = inLinks_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
-                if (l < i)
-                    continue;
-                int srcDeg = getInDegree(i);
-                int dstDeg = getInDegree(l);
-                assSum += 0.5 * (1.0/noLinks_) * (srcDeg + dstDeg);
-                assProd += srcDeg * dstDeg;
-                assSq += 0.5 * (1.0/noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
-            }
-        }
-        double assNum = (1.0/noLinks_) * assProd - assSum * assSum;
-        double assDom = assSq - assSum * assSum;
-        return assNum/assDom;
-    }
-
-    public double getOutAssort() {
-        double assSum = 0.0;
-        double assProd = 0.0;
-        double assSq = 0.0;
-
-        for (int i = 0; i < noNodes_; i++) {
-            ArrayList<Integer> links = outLinks_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
-                if (l < i)
-                    continue;
-                int srcDeg = getOutDegree(i);
-                int dstDeg = getOutDegree(l);
-                assSum += 0.5 * (1.0/noLinks_) * (srcDeg + dstDeg);
-                assProd += srcDeg * dstDeg;
-                assSq += 0.5 * (1.0/noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
-            }
-        }
-        double assNum = (1.0/noLinks_) * assProd - assSum * assSum;
-        double assDom = assSq - assSum * assSum;
-        return assNum/assDom;
-    }
-
-    public void getAssort() {
-        double assSumInIn = 0.0;
-        double assSumInOut = 0.0;
-        double assSumOutIn = 0.0;
-        double assSumOutOut = 0.0;
-
-        double assProdInIn = 0.0;
-        double assProdInOut = 0.0;
-        double assProdOutIn = 0.0;
-        double assProdOutOut = 0.0;
-
-        double degSqIn = 0.0;
-        double degSqOut = 0.0;
-
-        for (int i = 0; i < noNodes_; i++) {
-            int srcDegIn = getInDegree(i);
-            int srcDegOut = getOutDegree(i);
-
-            degSqIn+= (1.0/noLinks_)*srcDegIn * srcDegIn;
-            degSqOut+= (1.0/noLinks_)*srcDegOut * srcDegOut;
-
-            ArrayList<Integer> links = outLinks_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
-                if (l < i)
-                    continue;
-                int dstDegIn = getInDegree(l);
-                int dstDegOut = getOutDegree(l);
-
-                assSumInIn += (1.0/noNodes_) * (srcDegIn + dstDegIn);
-                assSumInOut += (1.0/noNodes_) * (srcDegIn + dstDegOut);
-                assSumOutIn += (1.0/noNodes_) * (srcDegOut + dstDegIn);
-                assSumOutOut += (1.0/noNodes_) * (srcDegOut + dstDegOut);
-
-                assProdInIn += (1.0/noLinks_) * srcDegIn*dstDegIn;
-                assProdInOut += (1.0/noLinks_)* srcDegIn*dstDegOut;
-                assProdOutIn += (1.0/noLinks_) * srcDegOut*dstDegIn;
-                assProdOutOut += (1.0/noLinks_)* srcDegOut*dstDegOut;
-            }
-        }
-
-        double numInIn = assProdInIn - assSumInIn + (1.0/noNodes_)*(noLinks_/noNodes_);
-        double numInOut = assProdInOut - assSumInOut + (1.0/noNodes_)*(noLinks_/noNodes_);
-        double numOutIn = assProdOutIn - assSumOutIn + (1.0/noNodes_)*(noLinks_/noNodes_);
-        double numOutOut = assProdOutOut - assSumOutOut + (1.0/noNodes_)*(noLinks_/noNodes_);
-
-        double sigmaIn = Math.sqrt(degSqIn - noLinks_/noNodes_);
-        double sigmaOut = Math.sqrt(degSqOut - noLinks_/noNodes_);
-
-        double denInIn = sigmaIn*sigmaIn;
-        double denInOut = sigmaIn*sigmaOut;
-        double denOutOut = sigmaOut*sigmaOut;
-
-        InInAssort_= numInIn/denInIn;
-        InOutAssort_= numInOut/denInOut;
-        OutInAssort_= numOutIn/denInOut;
-        OutOutAssort_= numOutOut/denOutOut;
-
-    }
-
-    public void calcMeasurements() {
-        avgInDeg_= getAverageInDegree();
-        avgOutDeg_= getAverageOutDegree();
-        meanInDegSq_= getMeanInDegSq();
-        meanOutDegSq_= getMeanOutDegSq();
-        getAssort();
-    }
-
-    public String measureToString() {
-        return noNodes_+" "+noLinks_+" "+avgInDeg_+" "+avgOutDeg_+" "+maxInDeg_+" "+maxOutDeg_+" "+meanInDegSq_+" "+
-                meanOutDegSq_+" "+InInAssort_+" "+InOutAssort_+" "+OutInAssort_+" "+OutOutAssort_;
-    }
+    public int[] getInDegreeDist() {return inDegreeDist_;}
+    public int[] getOutDegreeDist() {return outDegreeDist_;}
 
     public String degreeVectorToString() {
         String degs = "";

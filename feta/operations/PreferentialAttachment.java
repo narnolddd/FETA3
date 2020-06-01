@@ -7,8 +7,8 @@ public class PreferentialAttachment extends OperationModel {
     public int initDegree_= 3;
 
     public Operation nextOperation() {
-        Operation op = new Star(initDegree_,false);
-        op.noExisting_=initDegree_;
+        Star op = new Star(initDegree_,false);
+        op.setNoExisting(initDegree_);
         return op;
     }
 

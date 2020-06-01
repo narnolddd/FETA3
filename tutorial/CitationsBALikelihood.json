@@ -9,7 +9,8 @@
     "Likelihood": {
       "Start": 706492800,
       "Interval": 1,
-      "MaxNodes": 10000
+      "MaxNodes": 10000,
+      "OrderedData": false
     }
   },
   "ObjectModel": [
@@ -18,7 +19,7 @@
       "End": 1006492800,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "DegreeModelComponent",
           "Weight": 1.0
         }
       ]

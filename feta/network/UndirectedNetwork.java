@@ -1,10 +1,13 @@
 package feta.network;
 
+import feta.Methods;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.TreeMap;
 
 
@@ -82,6 +85,8 @@ public class UndirectedNetwork extends Network {
             if (n1neighbour == dst)
                 continue;
             for (int n2neighbour: neighbours_.get(dst)) {
+                if (n2neighbour == src)
+                    continue;
                 if (n1neighbour == n2neighbour) {
                     // delet this pls
                     // System.out.println(degrees_[src]+" "+degrees_[dst]);
@@ -102,6 +107,11 @@ public class UndirectedNetwork extends Network {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int[] getOutLinks(int node) {
+        return Methods.toIntArray(neighbours_.get(node));
     }
 
     public void setUpDegDistWriters(String fname) {
@@ -166,7 +176,6 @@ public class UndirectedNetwork extends Network {
         }
         neighbours_.put(nodeno, new ArrayList<Integer>());
         incrementDegDist(0);
-
     }
 
     public void removeLinks(String nodename) {
@@ -178,47 +187,16 @@ public class UndirectedNetwork extends Network {
         return degrees_[nodeno];
     }
 
-    /** Gets average degree of network */
-    public double getAverageDegree(){
-        double avgDeg = 2.0 * noLinks_/noNodes_;
-        return avgDeg;
-    }
-
-    /** Returns mean squared degree of network */
-    public double getSecondMoment() {
-        double sum = 0.0;
-        for (int i = 0; i < noNodes_; i++) {
-            double deg = getDegree(i);
-            sum += deg*deg;
-        }
-        if (noNodes_ > 0) {
-            return sum/noNodes_;
-        }
-        return 0.0;
-    }
-
-    /** Returns number of pairs of neighbours of node that are themselves neighbours */
-    public int triangleCount(int node) {
-        if(duplicatesPresent_) {
-            System.out.println("Warning: Triangle count is badly defined in non-simple networks.");
-        }
-        int count = 0;
-        for (int i = 0; i < getDegree(node); i++) {
-            for (int j = 0; j <i; j++) {
-                int n1 = neighbours_.get(node).get(i);
-                int n2 = neighbours_.get(node).get(j);
-                if (isLink(n1, n2)) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
+    public int getTriCount() {return totTri_;}
 
     public double getDensity() {
         double possibleLinks = 0.5 * noNodes_ * (noNodes_ - 1);
         double density = noLinks_/possibleLinks;
         return density;
+    }
+
+    public int[] getDegreeDist() {
+        return degreeDist_;
     }
 
     /** Calculates local clustering of node */
@@ -229,55 +207,6 @@ public class UndirectedNetwork extends Network {
         double actualTriangles = triCount_[node];
         double possibleTriangles = 0.5 * getDegree(node) * (getDegree(node) - 1);
         return actualTriangles/possibleTriangles;
-    }
-
-    /** Average clustering across network */
-    public double getAverageCluster() {
-        double sum = 0.0;
-        for (int i = 0; i < noNodes_; i++) {
-            sum+= localCluster(i);
-        }
-        if (sum == 0.0) {return 0.0;}
-        return sum/noNodes_;
-    }
-
-    public void calcMeasurements() {
-        avgDeg_= getAverageDegree();
-        meanDegSq_= getSecondMoment();
-        averageCluster_ = getAverageCluster();
-        assort_=getAssortativity();
-        density_=getDensity();
-        cutOff_ = Math.sqrt(avgDeg_ * noNodes_);
-        singletons_=degreeDist_[1];
-        doubletons_=degreeDist_[2];
-    }
-
-    /** Degree-degree assortativity */
-    private double getAssortativity() {
-        double assSum = 0.0;
-        double assProd = 0.0;
-        double assSq = 0.0;
-
-        for (int i = 0; i < noNodes_; i++) {
-            ArrayList<Integer> links = neighbours_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
-                if (l < i)
-                    continue;
-                int srcDeg = getDegree(i);
-                int dstDeg = getDegree(l);
-                assSum += 0.5 * (1.0/noLinks_) * (srcDeg + dstDeg);
-                assProd += srcDeg * dstDeg;
-                assSq += 0.5 * (1.0/noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
-            }
-        }
-        double assNum = (1.0/noLinks_) * assProd - assSum * assSum;
-        double assDom = assSq - assSum * assSum;
-        return assNum/assDom;
-    }
-
-    public String measureToString() {
-        return noNodes_+" "+noLinks_+" "+avgDeg_+" "+density_+" "+maxDeg_+" "+averageCluster_+" "+meanDegSq_+" "+assort_+" "+cutOff_+" "+singletons_+" "+doubletons_+" "+totTri_;
     }
 
     public String degreeVectorToString() {

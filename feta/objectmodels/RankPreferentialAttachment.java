@@ -21,17 +21,28 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
             }
         }
         normalisationConstant_=rankSum;
+        tempConstant_=normalisationConstant_;
     }
 
     public void calcNormalisation(UndirectedNetwork net, int[] removed){}
     public void calcNormalisation(DirectedNetwork net, int[] removed){}
 
     public double calcProbability(UndirectedNetwork net, int node) {
-        return Math.pow(node + 1, - alpha_)/normalisationConstant_;
+        return Math.pow(node + 1, - alpha_)/tempConstant_;
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
-        return Math.pow(node + 1, - alpha_)/normalisationConstant_;
+        return Math.pow(node + 1, - alpha_)/tempConstant_;
+    }
+
+    @Override
+    public void updateNormalisation(UndirectedNetwork net, int[] removed) {
+        if (removed.length==0) {
+            tempConstant_=normalisationConstant_;
+            return;
+        }
+        int node = removed[removed.length-1];
+        tempConstant_-= Math.pow(node + 1, - alpha_);
     }
 
     public void parseJSON(JSONObject params) {

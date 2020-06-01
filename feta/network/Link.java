@@ -6,4 +6,6 @@ public abstract class Link {
     public String destNode_;
     public long time_;
 
+    public abstract Link reverse();
+
 }

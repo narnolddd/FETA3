@@ -38,8 +38,9 @@ public class FetaModel {
         }
     }
     public void parseActionList(JSONObject actionList) {
-        Set<String> actionNames_ = actionList.keySet();
-        for (String singleAction: actionNames_) {
+
+        for (Object o: actionList.keySet()) {
+            String singleAction= o.toString();
             SimpleAction action = newAction(singleAction);
             action.parseActionOptions((JSONObject) actionList.get(singleAction));
             action.parseStoppingConditions((JSONObject) actionList.get(singleAction));

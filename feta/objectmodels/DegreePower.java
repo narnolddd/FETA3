@@ -45,17 +45,27 @@ public class DegreePower extends ObjectModelComponent {
     }
 
     public double calcProbability(UndirectedNetwork net, int node) {
-        if (normalisationConstant_==0.0)
+        if (tempConstant_==0.0)
             return 0.0;
-        return Math.pow(net.getDegree(node), power_)/normalisationConstant_;
+        return Math.pow(net.getDegree(node), power_)/tempConstant_;
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
-        if (normalisationConstant_==0.0)
+        if (tempConstant_==0.0)
             return 0.0;
         if (useInDegree_)
-            return Math.pow(net.getInDegree(node)+1,power_)/normalisationConstant_;
-        return Math.pow(net.getOutDegree(node)+1,power_)/normalisationConstant_;
+            return Math.pow(net.getInDegree(node)+1,power_)/tempConstant_;
+        return Math.pow(net.getOutDegree(node)+1,power_)/tempConstant_;
+    }
+
+    @Override
+    public void updateNormalisation(UndirectedNetwork net, int[] removed) {
+        if (removed.length==0) {
+            tempConstant_=normalisationConstant_;
+            return;
+        }
+        int node = removed[removed.length-1];
+        tempConstant_-= Math.pow(net.getDegree(node), power_);
     }
 
     public void parseJSON(JSONObject params) {

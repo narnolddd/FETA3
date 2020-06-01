@@ -9,7 +9,8 @@
     "FitMixedModel": {
       "Start": 706492800,
       "Interval": 60400,
-      "MaxNodes": 10000,
+      "MaxNodes": 1000,
+      "OrderedData": false,
       "Granularity": 100
     }
   },
@@ -19,16 +20,14 @@
       "End": 1006492800,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
-          "Weight": 1.0
+          "ComponentName": "DegreeModelComponent",
         },
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Weight": 1.0
+          "ComponentName": "RandomAttachment",
         },
         {
-          "ComponentName": "feta.objectmodels.TriangleClosureDegree",
-          "Weight":1.0
+          "ComponentName": "TriangleClosure",
+          "Depth":1
         }
       ]
     }

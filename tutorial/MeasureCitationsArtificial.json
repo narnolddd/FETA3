@@ -8,7 +8,9 @@
     "Measure": {
       "Start": 706492800,
       "Interval":604800,
-      "MaxNodes": 34343,
+      "MaxNodes": 1000,
+      "Statistics": ["NoNodes", "NoLinks", "AverageDegree", "MaxDegree","Singletons","MeanSquaredDegree", "Assortativity", "Clustering", "TriangleCount"],
+      "PrintHeader": true,
       "FileName":"tutorial/CitationsTSArtificial.dat"
     }
   }

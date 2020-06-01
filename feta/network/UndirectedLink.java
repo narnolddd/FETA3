@@ -28,4 +28,8 @@ public class UndirectedLink extends Link implements Comparable<UndirectedLink> {
         return 0;
     }
 
+    public Link reverse() {
+        return new UndirectedLink(destNode_, sourceNode_, time_);
+    }
+
 }
