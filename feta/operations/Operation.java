@@ -35,35 +35,8 @@ public abstract class Operation {
 
     public int getNoChoices() {return noChoices_;}
 
-    /** Gets loglikelihood (start to finish) */
-    public double calcLogLike(MixedModel obm, Network net, boolean orderedData) {
-        return logLikeFromList(nodeOrders_,obm,net);
-    }
-
-    /** Returns the likelihood ratio against random model of an ordered set of nodes nodeSet, given that alreadyChosen
-     * have been chosen. These can be added up to get likelihoods for unordered sets of nodes */
-    private double likelihoodRatioOrderedSet(Network net, MixedModel obm, int[] nodeSet, int[] alreadyChosen){
-        obm.updateNormalisation(net, alreadyChosen);
-        double prob = 1.0;
-        for (int i = 0; i < nodeSet.length; i++) {
-            int node = nodeSet[i];
-            obm.updateNormalisation(net,alreadyChosen);
-            prob *= obm.calcProbability(net, node);
-            prob *= (net.noNodes_-alreadyChosen.length);
-            alreadyChosen = Methods.concatenate(alreadyChosen, new int[] {node});
-        }
-        return prob;
-    }
-
-
-    /** Gets Likelihood of operation from possible node orders */
-    private double logLikeFromList (ArrayList<int[]> orders, MixedModel obm, Network net) {
-        int noOrders = orders.size();
-        double sum = 0.0;
-        for (int[] order: orders) {
-            sum+= likelihoodRatioOrderedSet(net, obm, order, new int[0]);
-        }
-        return Math.log(sum) - Math.log(noOrders);
+    public ArrayList<int[]> getNodeOrders() {
+        return nodeOrders_;
     }
 
     /** Helper methods */

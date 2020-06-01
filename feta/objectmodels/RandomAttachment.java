@@ -23,10 +23,14 @@ public class RandomAttachment extends ObjectModelComponent {
 
     @Override
     public double calcProbability(UndirectedNetwork net, int node) {
+        if (tempConstant_==0)
+            return 0.0;
         return 1.0/tempConstant_;
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
+        if (tempConstant_==0)
+            return 0.0;
         return 1.0/tempConstant_;
     }
 

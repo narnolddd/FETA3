@@ -28,12 +28,9 @@ public class FitMixedModel extends SimpleAction {
     public FullObjectModel objectModel_;
     public int granularity_;
     public List<int[]> configs_;
-    public HashMap<MixedModel,Double> likelihoods_;
-    private HashMap<int[], double[]> configToWeight_;
     public ParseNet parser_;
     public int noComponents_;
     public long startTime_=10;
-    public ArrayList<int[]> permList;
     private boolean orderedData_ = false;
 
     public FitMixedModel(FetaOptions options){
@@ -62,18 +59,16 @@ public class FitMixedModel extends SimpleAction {
         return newParts;
     }
 
-    private void generateModels(MixedModel obm) {
+    private ArrayList<double[]> generateModels() {
+        ArrayList<double[]> weightList = new ArrayList<>();
         for (int[] config: configs_) {
-
             double[] weights = new double[config.length];
             for (int i=0; i < config.length; i++) {
                 weights[i] = (double)config[i]/granularity_;
             }
-            MixedModel mm = obm.copy();
-            configToWeight_.put(config,weights);
-            mm.setWeights(weights);
-            likelihoods_.put(mm,0.0);
+            weightList.add(weights);
         }
+        return weightList;
     }
 
     public void execute(){
@@ -91,14 +86,13 @@ public class FitMixedModel extends SimpleAction {
         MixedModel obm = objectModel_.objectModelAtTime(start);
         noComponents_ = obm.components_.size();
         configs_=generatePartitions(granularity_,noComponents_);
-        likelihoods_= new HashMap<MixedModel,Double>();
-        configToWeight_=new HashMap<int[], double[]>();
 
-        generateModels(obm);
+        ArrayList<double[]> weightList = generateModels();
+        obm.initialiseLikelihoods(weightList);
 
         network_.buildUpTo(start);
         int noChoices = 0;
-        HashMap<MixedModel, Double> c0Values_ = new HashMap<>();
+        HashMap<double[], Double> c0Values = new HashMap<>();
         while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
             if (network_.latestTime_ > end)
                 break;
@@ -117,31 +111,29 @@ public class FitMixedModel extends SimpleAction {
         // Turn everything into a C0 value
         double maxLike=0.0;
         double bestRaw=0.0;
-        MixedModel bestConfig_=null;
-        for (MixedModel mm: likelihoods_.keySet()) {
-            double like= likelihoods_.get(mm);
+        double[] bestConfig = new double[noComponents_];
+        HashMap<double[], Double> likelihoods = obm.getLikelihoods();
+        for (double [] weights : weightList) {
+            double like= likelihoods.get(weights);
             double c0 = Math.exp(like/noChoices);
-            c0Values_.put(mm,c0);
+            c0Values.put(weights,c0);
             if (c0> maxLike) {
                 maxLike=c0;
                 bestRaw= like;
-                bestConfig_=mm;
+                bestConfig=weights;
             }
         }
 
-        System.out.println("Max c0 : "+maxLike+" max like "+bestRaw);
-        System.out.println(bestConfig_);
-
+        System.out.println("Max c0 : "+maxLike+" max like "+bestRaw+" choices "+noChoices);
+        for (int i = 0; i < bestConfig.length; i++) {
+            System.out.println(bestConfig[i]+" "+obm.components_.get(i));
+        }
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {
         op.setNodeChoices(orderedData_);
-        for (int[] c: configs_) {
-            double[] weights = configToWeight_.get(c);
-            obm.setWeights(weights);
-            double oldLike = likelihoods_.get(obm);
-            likelihoods_.put(obm,oldLike+op.calcLogLike(obm,network_,orderedData_));
-        }
+        ArrayList<int[]> nc = op.getNodeOrders();
+        obm.updateLikelihoods(network_,nc);
     }
 
     public void parseActionOptions(JSONObject obj) {

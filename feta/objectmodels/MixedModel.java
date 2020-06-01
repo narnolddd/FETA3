@@ -21,6 +21,12 @@ public class MixedModel {
 
     public MixedModel() {components_=new ArrayList<ObjectModelComponent>();}
 
+    public HashMap<double[], Double> getLikelihoods () {
+        return likelihoods_;
+    }
+
+    public double[] getWeights() {return weights_;}
+
     /** Checks object model prescribed is valid */
     public void checkValid(){
         if (weights_.length == 0 || components_.size()==0) {
@@ -240,6 +246,12 @@ public class MixedModel {
         }
     }
 
+    public void initialiseLikelihoods() {
+        ArrayList<double[]> list = new ArrayList<>();
+        list.add(weights_);
+        initialiseLikelihoods(list);
+    }
+
     public void updateLikelihoods(Network net, ArrayList<int[]> nodeOrders) {
         int noOrders = nodeOrders.size();
         HashMap<double[], Double> opLikeRatio = new HashMap<>();
@@ -259,7 +271,10 @@ public class MixedModel {
             if (like == 0.0 || noOrders == 0) {
                 return;
             }
-            double logLike = Math.log(opLikeRatio.get(weight)) - Math.log(noOrders);
+            double logLike = Math.log(like) - Math.log(noOrders);
+            if (Double.isInfinite(logLike)) {
+                System.out.println("Aaaahh!!! "+like+" "+noOrders);
+            }
             likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
         }
 
