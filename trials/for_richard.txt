@@ -1,0 +1,17 @@
+Instructions for running trial files.
+
+1. To grow the graph that's 0.3 BA, 0.7 random with 1000 nodes, run:
+
+java -jar feta3-1.0.0.jar trials/BARandomTest.json
+
+which generates the graph file trials/baTest.dat
+
+2. To fit the BA/Random mixed model on this generated graph, run:
+
+java -jar feta3-1.0.0.jar trials/BARandomLikeTest.json
+
+3. (maybe?) If you need it to be something that takes longer to run for the profiler to do it's job, ramp up the "MaxNodes" value from 1000 in both of the jsons, and maybe the "NoRecipients" in line 35 of BARandomTest when generating the graph.
+
+================================================
+
+NB trials/LikelihoodTest.json was there for checking correctness of the new likelihood routine but should be redundant now.

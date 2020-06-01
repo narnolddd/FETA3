@@ -1,0 +1,31 @@
+{
+  "Data": {
+    "GraphInputFile": "trials/baTest.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": false,
+  },
+  "Action": {
+    "FitMixedModel": {
+      "Start": 10,
+      "Interval": 10,
+      "MaxNodes": 1000,
+      "Granularity": 100,
+      "OrderedData": false
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 10,
+      "End": 100000,
+      "Components": [
+        {
+          "ComponentName": "DegreeModelComponent",
+        },
+        {
+          "ComponentName": "RandomAttachment",
+        }
+      ]
+    }
+  ]
+}
