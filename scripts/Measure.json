@@ -1,17 +1,16 @@
 {
   "Data": {
-    "GraphInputFile": "output/triangleTest.dat",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
-    "Directed": false,
+    "Directed": true,
     "OutputLineSeparator": " "
   },
   "Action": {
     "Measure": {
-      "Start": 10,
-      "Interval":10,
+      "Start": 820800000,
+      "Interval":1000000,
       "MaxNodes": 10000,
-      "Statistics": ["NoNodes", "NoLinks", "MeanSquaredDegree", "Assortativity", "Clustering"],
-      "PrintDegVector": false,
+      "Statistics": ["NoNodes", "NoLinks", "MeanSquaredDegree", "Assortativity", "Clustering", "TriangleCount"],
       "PrintHeader": true,
       "FileName": "output/test.dat"
     }

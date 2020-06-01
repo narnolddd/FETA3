@@ -19,6 +19,7 @@ feta_documentation.pdf
 output
 experiments/
 venv
+trials
 
 # tutorial files
 tutorial/*.dat
