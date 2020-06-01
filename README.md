@@ -82,7 +82,7 @@ The single argument `scripts/[some-script-name].json` is a JSON config file tell
 
 ## Obtaining time series of network quantities
 
-Let's do an example of obtaining a time series of measurements from a timestamped network dataset. In the `data` folder there's a file 'cit-HepPh-ordered.txt'
+Let's do an example of obtaining a time series of measurements from a timestamped network dataset. In the `data` folder there's a file 'cit-HepPh-new.txt'
 which is a timestamped citation network dataset from ArXiV high energy physics phenomenology, available from [SNAP](https://snap.stanford.edu/data/). We will 
 use the script `MeasureCitations.json` in the `tutorial` folder, which looks like:
 
@@ -98,6 +98,8 @@ use the script `MeasureCitations.json` in the `tutorial` folder, which looks lik
       "Start": 706492800,
       "Interval":604800,
       "MaxNodes": 34343,
+      "Statistics": ["NoNodes", "NoLinks", "AverageDegree", "MaxDegree","Singletons","MeanSquaredDegree", "Assortativity", "Clustering", "TriangleCount"],
+      "PrintHeader": true,
       "FileName":"tutorial/CitationsTS.dat"
     }
   }
@@ -118,9 +120,11 @@ The `Action` tag tells FETA what to do with the inputted file; in this case we w
 
 * `Interval` - time between measurements. In this case, we specify weekly measurements
 
-* Stopping condition. This can either be a latest time `MaxTime`, maximum number of nodes `MaxNodes` or links `MaxLinks`. This specifies
+* Stopping condition. This can either be a latest time (given as long) `MaxTime`, maximum number of nodes `MaxNodes` or links `MaxLinks`. This specifies
 how long the measurements should take place for - in this example the measurements will finish when the network size has reached 34343 nodes,
 the complete size of this network dataset.
+
+* `Statistics` - a string vector of the different statistics desired. In this JSON I have listed all available statistics.
 
 * `FileName` - where to write the measurements to. This will also generate one, or two files (depending on whether or not the network
 is directed) to store the degree distribution at different snapshots.
@@ -167,6 +171,8 @@ We're going to run the same command as before, but with the file `tutorial/Measu
       "Start": 706492800,
       "Interval":604800,
       "MaxNodes": 34343,
+      "Statistics": ["NoNodes", "NoLinks", "AverageDegree", "MaxDegree","Singletons","MeanSquaredDegree", "Assortativity", "Clustering", "TriangleCount"],
+      "PrintHeader": true,
       "FileName":"tutorial/CitationsTSDirected.dat"
     }
   }
@@ -359,7 +365,7 @@ Run
 java -jar feta3-1.0.0.jar tutorial/MeasureArtificial.json
 ```
 
-and finally get some measurements using:
+and finally plot using:
 
 ```bash
 python3 tutorial/ArtificialTS.py
@@ -392,7 +398,8 @@ java -jar feta3-1.0.0.jar tutorial/CitationsBALikelihood.json
 
 Let's look in closer detail at the JSON file:
 
-```JSON
+```json
+
 {
   "Data": {
     "GraphInputFile": "data/cit-HepPh-new.txt",
@@ -404,7 +411,8 @@ Let's look in closer detail at the JSON file:
     "Likelihood": {
       "Start": 706492800,
       "Interval": 1,
-      "MaxNodes": 10000
+      "MaxNodes": 10000,
+      "OrderedData": false
     }
   },
   "ObjectModel": [
@@ -413,7 +421,7 @@ Let's look in closer detail at the JSON file:
       "End": 1006492800,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "DegreeModelComponent",
           "Weight": 1.0
         }
       ]
@@ -423,8 +431,15 @@ Let's look in closer detail at the JSON file:
 ```
 
 We are calculating the likelihood (c0) value of the degree preferential attachment (BA) model for the citation network as 
-before, for the network's entire evolution up to 10,000 nodes. Running the above script may take a couple of minutes but 
-should produce a value around 1.5.
+before, for the network's entire evolution from time `706492800` up to it reaching 10,000 nodes. The likelihood returned 
+looks something like this:
+
+```
+c0 1.5773221701566862 raw 18497.567340787682 choices 40589
+```
+
+The value for `raw` is the log-likelihood of the model, whilst c0 is a value scaled by the number of node choices made
+(= `exp(raw/choices)`).
 
 #### Model fitting
 
@@ -433,7 +448,6 @@ to a dataset, identifying the mixture of models which gives the highest likeliho
 the citations network dataset - see the file `tutorial/CitationsFitMixed.json`:
 
 ```JSON
-
 {
   "Data": {
     "GraphInputFile": "data/cit-HepPh-new.txt",
@@ -445,7 +459,8 @@ the citations network dataset - see the file `tutorial/CitationsFitMixed.json`:
     "FitMixedModel": {
       "Start": 706492800,
       "Interval": 60400,
-      "MaxNodes": 10000,
+      "MaxNodes": 1000,
+      "OrderedData": false,
       "Granularity": 100
     }
   },
@@ -455,16 +470,14 @@ the citations network dataset - see the file `tutorial/CitationsFitMixed.json`:
       "End": 1006492800,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
-          "Weight": 1.0
+          "ComponentName": "DegreeModelComponent",
         },
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
-          "Weight": 1.0
+          "ComponentName": "RandomAttachment",
         },
         {
-          "ComponentName": "feta.objectmodels.TriangleClosureDegree",
-          "Weight":1.0
+          "ComponentName": "TriangleClosure",
+          "Depth":1
         }
       ]
     }
@@ -476,8 +489,7 @@ the citations network dataset - see the file `tutorial/CitationsFitMixed.json`:
 Here we invoke the action `FitMixedModel`, a routine for finding the highest likelihood mixture of the model components chosen,
 here degree (BA), random attachment and triangle closure. Granularity refers to how fine-grained a search over all possible model
 mixtures (in terms of weights) - here granularity 100 means a search over the parameter space in increments of 0.01 for 
-each model component weight. (It's worth pointing out that there are a few redundant tags here: `Interval`, `Weight` since this is what we are trying to 
-estimate.)
+each model component weight. 
 
 Running the command:
 
@@ -485,13 +497,13 @@ Running the command:
 java -jar feta3-1.0.0.jar tutorial/CitationsFitMixed.json
 ```
 
-should yield the response after a couple of minutes:
+should yield a response something like this (not necessarily exactly the same as there is some randomness):
 
 ```
-Max likelihood : 3.1579848759775535
-0.46 Degree
-0.14 Random
-0.4 TriangleClosureDegree
+Max c0 : 1.3560584194081042 max like 130.36121188081304 choices 428
+0.4 Degree
+0.45 Random
+0.15 TriangleClosure 1
 ```
 
 This is the maximum likelihood mixture from the model components tested, but not necessarily a good model. How do we evaluate
@@ -553,7 +565,7 @@ to those found having the highest likelihood:
     "Grow": {
       "Start": 706492800,
       "Interval": 1000,
-      "MaxNodes": 34343
+      "MaxNodes": 1000
     }
   },
   "ObjectModel": [
@@ -585,5 +597,6 @@ to those found having the highest likelihood:
 }
 ```
 
-As before, we can obtain measurements on quantities of interest using a file `tutorial/MeasureCitationsArtificial.json`
+As before, we can obtain measurements on quantities of interest using a file `tutorial/MeasureCitationsArtificial.json` and plot for comparison.
 
+![artificial2](tutorial/plots/CitationsVsArtificial.png)

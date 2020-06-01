@@ -19,7 +19,7 @@
       "End": 1000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeWithAgeing",
+          "ComponentName": "DegreeWithAgeing",
           "Weight": 1.0,
           "AgeingExponent": 0.8
         }
@@ -30,11 +30,11 @@
       "End": 2000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "ComponentName": "RandomAttachment",
           "Weight": 0.5
         },
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "DegreeModelComponent",
           "Weight": 0.5
         }
       ]
@@ -44,7 +44,7 @@
       "End": 3000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.RankPreferentialAttachment",
+          "ComponentName": "RankPreferentialAttachment",
           "Weight": 1.0,
           "Alpha": 0.6
         }
@@ -53,7 +53,7 @@
   ],
   "OperationModel":
   {
-    "Name": "feta.operations.Email",
+    "Name": "Email",
     "NoRecipients": 3,
     "PropInternal":0.2
   }

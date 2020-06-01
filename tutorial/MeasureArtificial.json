@@ -8,7 +8,9 @@
     "Measure": {
       "Start": 10,
       "Interval":10,
-      "MaxTime": 3000,
+      "MaxNodes": 3000,
+      "Statistics": ["NoNodes", "NoLinks", "AverageDegree", "MaxDegree","Singletons","MeanSquaredDegree", "Assortativity", "Clustering", "TriangleCount"],
+      "PrintHeader": true,
       "FileName": "tutorial/ArtificialTS.dat"
     }
   }
