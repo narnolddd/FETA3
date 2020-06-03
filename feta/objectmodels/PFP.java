@@ -61,7 +61,8 @@ public class PFP extends ObjectModelComponent{
     @Override
     public void updateNormalisation(UndirectedNetwork net, int [] removed) {
         int node = removed[removed.length-1];
-        normalisationConstant_ -= Math.pow(net.getDegree(node), 1 + delta_ * Math.log10(net.getDegree(node)));
+        if (node >= 0)
+            normalisationConstant_ -= Math.pow(net.getDegree(node), 1 + delta_ * Math.log10(net.getDegree(node)));
     }
 
     public void parseJSON(JSONObject params) {

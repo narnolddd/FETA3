@@ -90,15 +90,16 @@ public class MixedModel {
     /** Draw a single node without replacement */
     public final int nodeDrawWithoutReplacement(Network net, int[] alreadyChosenNodes) {
         ArrayList<Integer> nodeList = new ArrayList<Integer>();
-        int [] chosen = Methods.removeNegativeNumbers(alreadyChosenNodes);
+        //int [] chosen = Methods.removeNegativeNumbers(alreadyChosenNodes);
         int node;
         for (int j = 0; j < net.noNodes_; j++) {
             nodeList.add(j);
         }
 
         // Removes already chosen nodes from the sample space
-        for (int k = 0; k < chosen.length; k++) {
-            nodeList.remove((Integer) chosen[k]);
+        for (int k = 0; k < alreadyChosenNodes.length; k++) {
+            if (alreadyChosenNodes[k] >= 0)
+                nodeList.remove((Integer) alreadyChosenNodes[k]);
         }
 
         if (nodeList.isEmpty()) {
@@ -106,7 +107,7 @@ public class MixedModel {
         }
         else {
             // This part does the sampling.
-            updateNormalisation(net, chosen);
+            updateNormalisation(net, alreadyChosenNodes);
             double r = Math.random();
             double weightSoFar = 0.0;
             int l;
@@ -127,18 +128,31 @@ public class MixedModel {
     }
 
     public int[] drawMultipleNodesWithoutReplacement(Network net, int sampleSize, int[] alreadyChosen) {
-        int[] chosenNodes = new int[sampleSize];
+        int[] removedFromSample = new int[sampleSize+alreadyChosen.length];
         for (int j = 0; j<sampleSize; j++) {
-            chosenNodes[j] = -1;
+            removedFromSample[j] = -1;
         }
-        int [] removedFromSample= Methods.concatenate(alreadyChosen,chosenNodes);
-        calcNormalisation(net, Methods.removeNegativeNumbers(removedFromSample));
+        for (int j= 0; j < alreadyChosen.length; j++) {
+            removedFromSample[j+sampleSize]= alreadyChosen[j];
+        }
+        calcNormalisation(net, removedFromSample);
+        int count= 0;
         for (int i = 0; i < sampleSize; i++) {
             int chosenNode = nodeDrawWithoutReplacement(net, removedFromSample);
-            chosenNodes[i]=chosenNode;
-            removedFromSample[alreadyChosen.length + i]=chosenNode;
+            if (chosenNode >= 0) {
+                removedFromSample[count]=chosenNode;
+                count++;
+            }
         }
-        return Methods.removeNegativeNumbers(chosenNodes);
+        int []chosen= new int[count];
+        count= 0;
+        for (int i= 0; i < sampleSize; i++) {
+            if (removedFromSample[i] >= 0) {
+                chosen[count]= removedFromSample[i];
+                count++;
+            }
+        }
+        return chosen;
     }
 
     public int[] drawMultipleNodesWithReplacement(Network net, int sampleSize, int[] alreadyChosen) {

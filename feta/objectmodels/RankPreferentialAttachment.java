@@ -42,7 +42,8 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
             return;
         }
         int node = removed[removed.length-1];
-        tempConstant_-= Math.pow(node + 1, - alpha_);
+        if (node >= 0)
+            tempConstant_-= Math.pow(node + 1, - alpha_);
     }
 
     public void parseJSON(JSONObject params) {
