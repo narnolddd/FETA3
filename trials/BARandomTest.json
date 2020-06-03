@@ -31,8 +31,7 @@
     }],
   "OperationModel":
   {
-    "Name": "Email",
-    "NoRecipients": 10,
-    "PropInternal": 0.3
+    "Name": "PreferentialAttachment",
+    "InitialDegree": 3
   }
 }

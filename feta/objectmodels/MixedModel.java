@@ -254,53 +254,52 @@ public class MixedModel {
 
     public void updateLikelihoods(Network net, ArrayList<int[]> nodeOrders) {
         int noOrders = nodeOrders.size();
-        HashMap<double[], Double> opLikeRatio = new HashMap<>();
-
-        for (double[] weight : likelihoods_.keySet()) {
-            opLikeRatio.put(weight, 0.0);
-        }
+        double[] opLikeRatio = new double[likelihoods_.size()];
 
         for (int[] order : nodeOrders) {
-            HashMap<double[], Double> updated = updateIndividualLikelihoods(net, order, new int[0]);
-            for (double[] weight : likelihoods_.keySet())
-                opLikeRatio.put(weight, opLikeRatio.get(weight) + updated.get(weight));
+            updateIndividualLikelihoods(net, order, new int[0], opLikeRatio);
         }
 
+        int i=0;
         for (double [] weight: likelihoods_.keySet()) {
-            double like = opLikeRatio.get(weight);
+            double like = opLikeRatio[i];
             if (like == 0.0 || noOrders == 0) {
                 return;
             }
             double logLike = Math.log(like) - Math.log(noOrders);
-            if (Double.isInfinite(logLike)) {
-                System.out.println("Aaaahh!!! "+like+" "+noOrders);
-            }
             likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
+            i++;
         }
-
-
     }
 
-    public HashMap<double[], Double> updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen) {
-        HashMap<double[], Double> likeRatio = new HashMap<>();
-        for (double[] weight : likelihoods_.keySet()) {
-            likeRatio.put(weight,1.0);
+    public void updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen,
+                                                                 double[] opLikeRatio) {
+        double[] likeRatio = new double[likelihoods_.size()];
+
+        for (int i = 0; i < likeRatio.length; i++) {
+            likeRatio[i]=1.0;
         }
+
         for (int i = 0; i < nodeSet.length; i++) {
             int node = nodeSet[i];
             updateNormalisation(net,alreadyChosen);
             double[] probs = getComponentProbs(net,node);
+            int k = 0;
             for (double[] weight : likelihoods_.keySet()) {
                 double prob = 0.0;
                 for (int j = 0; j < weight.length; j++) {
                     prob+=weight[j]*probs[j];
                 }
                 prob *= (net.noNodes_ - alreadyChosen.length);
-                likeRatio.put(weight,likeRatio.get(weight) * prob);
+                likeRatio[k] *= prob;
+                k+=1;
             }
             alreadyChosen = Methods.concatenate(alreadyChosen, new int[] {node});
         }
-        return likeRatio;
+
+        for (int i = 0; i < likeRatio.length; i++) {
+            opLikeRatio[i]+=likeRatio[i];
+        }
     }
 
 }

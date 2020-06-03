@@ -20,10 +20,10 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "DegreeModelComponent",
+          "ComponentName": "DegreeModelComponent"
         },
         {
-          "ComponentName": "RandomAttachment",
+          "ComponentName": "RandomAttachment"
         }
       ]
     }

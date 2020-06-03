@@ -10,7 +10,7 @@
     "Grow": {
       "Start": 1,
       "Interval": 1,
-      "MaxNodes": 1000
+      "MaxNodes": 10000
     }
   },
   "ObjectModel": [
@@ -21,7 +21,7 @@
         {
           "ComponentName": "feta.objectmodels.TriangleClosure",
           "Weight": 1.0,
-          "Depth": 4
+          "Depth": 1
         }
       ]
     }],
