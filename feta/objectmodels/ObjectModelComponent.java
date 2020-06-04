@@ -13,11 +13,11 @@ public abstract class ObjectModelComponent {
 
     /** Methods relating to Object Model */
 
-    public double calcProbability(Network net, int node) {
-        if (net.getClass() == UndirectedNetwork.class) {
-            return calcProbability((UndirectedNetwork) net, node);
-        } else return calcProbability((DirectedNetwork) net, node);
-    }
+//    public double calcProbability(Network net, int node) {
+//        if (net.getClass() == UndirectedNetwork.class) {
+//            return calcProbability((UndirectedNetwork) net, node);
+//        } else return calcProbability((DirectedNetwork) net, node);
+//    }
 
     public void calcNormalisation(Network network, int [] removed) {
         if (network.getClass() == UndirectedNetwork.class) {

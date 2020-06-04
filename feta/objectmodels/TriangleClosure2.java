@@ -10,14 +10,15 @@ import java.util.Set;
 
 public class TriangleClosure2 extends ObjectModelComponent{
 
-    private ArrayList<Integer> occurrences_;
+    private int[] occurrences_;
     private int [] justChosen_;
     private boolean random_;
 
 
     @Override
     public void calcNormalisation (UndirectedNetwork net, int[] removed) {
-        occurrences_ = new ArrayList<>();
+        int total=0;
+        occurrences_ = new int[net.noNodes_+1];
         justChosen_=removed;
         if (justChosen_.length==0) {
             normalisationConstant_=net.noNodes_;
@@ -31,15 +32,16 @@ public class TriangleClosure2 extends ObjectModelComponent{
                         continue;
                     if (net.isLink(node, n2))
                         continue;
-                    occurrences_.add(n2);
+                    occurrences_[n2]++;
+                    total++;
                 }
             }
 
-            if (occurrences_.size() == 0) {
+            if (total == 0) {
                 random_ = true;
                 normalisationConstant_ = net.noNodes_ - removed.length;
             } else {
-                normalisationConstant_ = occurrences_.size();
+                normalisationConstant_ = total;
             }
         }
         tempConstant_=normalisationConstant_;
@@ -47,29 +49,31 @@ public class TriangleClosure2 extends ObjectModelComponent{
 
     @Override
     public void calcNormalisation (DirectedNetwork net, int[] removed) {
-        ArrayList<Integer> occurrences = new ArrayList<>();
+        int total=0;
+        occurrences_ = new int[net.noNodes_+1];
         justChosen_=removed;
         if (justChosen_.length==0) {
             normalisationConstant_=net.noNodes_;
             random_=true;
         }
         else {
-            int node = justChosen_[justChosen_.length-1];
+            int node = justChosen_[justChosen_.length - 1];
             for (int n1 : net.outLinks_.get(node)) {
-                for (int n2: net.outLinks_.get(n1)) {
-                    if(n2 == node)
+                for (int n2 : net.outLinks_.get(n1)) {
+                    if (n2 == node)
                         continue;
-                    if(net.isLink(node,n2))
+                    if (net.isLink(node, n2))
                         continue;
-                    occurrences.add(n2);
+                    occurrences_[n2]++;
+                    total++;
                 }
             }
-            if (occurrences_.size()==0) {
-                random_=true;
-                normalisationConstant_=net.noNodes_ - removed.length;
-            }
-            else {
-                normalisationConstant_ = occurrences_.size();
+
+            if (total == 0) {
+                random_ = true;
+                normalisationConstant_ = net.noNodes_ - removed.length;
+            } else {
+                normalisationConstant_ = total;
             }
         }
         tempConstant_=normalisationConstant_;
@@ -84,7 +88,7 @@ public class TriangleClosure2 extends ObjectModelComponent{
             random_=false;
             return 1.0/tempConstant_;
         }
-        double numerator = Collections.frequency(occurrences_,node);
+        double numerator = occurrences_[node];
         return numerator/tempConstant_;
     }
 
@@ -97,7 +101,7 @@ public class TriangleClosure2 extends ObjectModelComponent{
             random_=false;
             return 1.0/tempConstant_;
         }
-        double numerator = Collections.frequency(occurrences_,node);
+        double numerator = occurrences_[node];
         return numerator/tempConstant_;
     }
 

@@ -1,5 +1,6 @@
 package feta.network;
 
+import feta.objectmodels.ObjectModelComponent;
 import feta.readnet.ReadNet;
 
 import java.io.*;
@@ -210,5 +211,7 @@ public abstract class Network {
 
     /** Growth */
     public abstract void addNewLink(String src, String dst, long time);
+
+    public abstract double calcProbability(ObjectModelComponent omc, int node);
 
 }

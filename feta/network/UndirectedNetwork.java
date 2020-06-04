@@ -1,6 +1,7 @@
 package feta.network;
 
 import feta.Methods;
+import feta.objectmodels.ObjectModelComponent;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -220,5 +221,9 @@ public class UndirectedNetwork extends Network {
     /** Section related to growing networks */
     public void addNewLink(String src, String dst, long time) {
         linksToBuild_.add(new UndirectedLink(src, dst, time));
+    }
+
+    public double calcProbability(ObjectModelComponent omc, int node) {
+        return omc.calcProbability(this, node);
     }
 }

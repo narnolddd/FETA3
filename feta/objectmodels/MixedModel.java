@@ -71,7 +71,7 @@ public class MixedModel {
     public double[] getComponentProbs(Network net, int node) {
         double[] probs = new double[components_.size()];
         for (int i = 0; i < components_.size(); i++) {
-            probs[i] = components_.get(i).calcProbability(net, node);
+            probs[i] = net.calcProbability(components_.get(i), node);
         }
         return probs;
     }
@@ -80,7 +80,7 @@ public class MixedModel {
     public double calcProbability(Network net, int node) {
         double probability_=0.0;
         for (int i = 0; i < components_.size(); i++) {
-            probability_+= weights_[i]*components_.get(i).calcProbability(net, node);
+            probability_+= weights_[i]*net.calcProbability(components_.get(i), node);
         }
         return probability_;
     }
