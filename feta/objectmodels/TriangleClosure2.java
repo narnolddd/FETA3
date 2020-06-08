@@ -21,7 +21,7 @@ public class TriangleClosure2 extends ObjectModelComponent{
         }
         else {
             int total=0;
-            occurrences_ = new int[net.noNodes_+1];
+            occurrences_ = new int[net.noNodes_+2];
             int node = removed[removed.length - 1];
             for (int n1 : net.neighbours_.get(node)) {
                 for (int n2 : net.neighbours_.get(n1)) {
