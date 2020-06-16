@@ -1,0 +1,43 @@
+{
+  "Data": {
+    "GraphInputFile": "trials/cpTest.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "FitMixedModel": {
+      "Start": 10,
+      "Interval": 10,
+      "MaxNodes": 10000,
+      "Granularity": 100,
+      "OrderedData": false
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 10,
+      "End": 5000,
+      "Components": [
+        {
+          "ComponentName": "DegreeModelComponent",
+        },
+        {
+          "ComponentName": "TriangleClosure2"
+        }
+      ]
+    },
+    {
+      "Start": 5000,
+      "End": 11000,
+      "Components": [
+        {
+          "ComponentName": "DegreeModelComponent",
+        },
+        {
+          "ComponentName": "TriangleClosure2"
+        }
+      ]
+    }
+  ]
+}

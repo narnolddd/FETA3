@@ -15,6 +15,7 @@ public class TriangleClosure2 extends ObjectModelComponent{
 
 
     public void calcNormalisation (UndirectedNetwork net, int[] removed) {
+        random_=false;
         if (removed.length==0) {
             normalisationConstant_=net.noNodes_;
             random_=true;
@@ -22,7 +23,7 @@ public class TriangleClosure2 extends ObjectModelComponent{
         else {
             int total=0;
             occurrences_ = new int[net.noNodes_+2];
-            int node = removed[removed.length - 1];
+            int node = removed[0];
             for (int n1 : net.neighbours_.get(node)) {
                 for (int n2 : net.neighbours_.get(n1)) {
                     if (n2 == node)
@@ -81,7 +82,6 @@ public class TriangleClosure2 extends ObjectModelComponent{
             return 0.0;
         }
         if (random_) {
-            random_=false;
             return 1.0/tempConstant_;
         }
         double numerator = occurrences_[node];
@@ -94,7 +94,6 @@ public class TriangleClosure2 extends ObjectModelComponent{
             return 0.0;
         }
         if (random_) {
-            random_=false;
             return 1.0/tempConstant_;
         }
         double numerator = occurrences_[node];

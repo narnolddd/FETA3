@@ -1,0 +1,52 @@
+{
+  "Data": {
+    "GraphInputFile": "seed_graphs/clique-5.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "GraphOutputFile": "trials/cpTest.dat",
+    "Directed": false
+  },
+  "Action": {
+    "Grow": {
+      "Start": 1,
+      "Interval": 1,
+      "MaxNodes": 10000
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 1,
+      "End": 5000,
+      "Components": [
+        {
+          "ComponentName": "DegreeModelComponent",
+          "Weight": 0.3
+        },
+        {
+          "ComponentName": "TriangleClosure2",
+          "Weight": 0.7
+        }
+      ]
+    },
+    {
+      "Start": 5000,
+      "End": 11000,
+      "Components": [
+        {
+          "ComponentName": "DegreeModelComponent",
+          "Weight": 0.7
+        },
+        {
+          "ComponentName": "TriangleClosure2",
+          "Weight": 0.3
+        }
+      ]
+    }
+  ],
+  "OperationModel":
+  {
+    "Name": "Email",
+    "NoRecipients": 1,
+    "PropInternal": 0.5
+  }
+}
