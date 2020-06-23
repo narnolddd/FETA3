@@ -35,6 +35,11 @@ public class TriangleClosure2 extends ObjectModelComponent{
                 }
             }
 
+            for (int n: removed) {
+                total-= occurrences_[n];
+                occurrences_[n]=0;
+            }
+
             if (total == 0) {
                 random_ = true;
                 normalisationConstant_ = net.noNodes_ - removed.length;

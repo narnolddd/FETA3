@@ -19,11 +19,11 @@
       "End": 5000,
       "Components": [
         {
-          "ComponentName": "DegreeModelComponent",
+          "ComponentName": "RandomAttachment",
           "Weight": 0.3
         },
         {
-          "ComponentName": "TriangleClosure2",
+          "ComponentName": "TriangleClosure",
           "Weight": 0.7
         }
       ]
@@ -33,11 +33,11 @@
       "End": 11000,
       "Components": [
         {
-          "ComponentName": "DegreeModelComponent",
+          "ComponentName": "RandomAttachment",
           "Weight": 0.7
         },
         {
-          "ComponentName": "TriangleClosure2",
+          "ComponentName": "TriangleClosure",
           "Weight": 0.3
         }
       ]
@@ -45,8 +45,7 @@
   ],
   "OperationModel":
   {
-    "Name": "Email",
-    "NoRecipients": 1,
-    "PropInternal": 0.5
+    "Name": "PreferentialAttachment",
+    "InitialDegree": 10
   }
 }

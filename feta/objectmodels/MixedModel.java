@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import java.awt.geom.Path2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -256,8 +257,9 @@ public class MixedModel {
         int noOrders = nodeOrders.size();
         double[] opLikeRatio = new double[likelihoods_.size()];
 
+        int[] counters = new int[likelihoods_.size()];
         for (int[] order : nodeOrders) {
-            updateIndividualLikelihoods(net, order, new int[0], opLikeRatio);
+            updateIndividualLikelihoods(counters, net, order, new int[0], opLikeRatio);
         }
 
         int i=0;
@@ -266,13 +268,13 @@ public class MixedModel {
             if (like == 0.0 || noOrders == 0) {
                 return;
             }
-            double logLike = Math.log(like) - Math.log(noOrders);
+            double logLike = Math.log(like) + counters[i] * Math.log(10.0) - Math.log(noOrders);
             likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
             i++;
         }
     }
 
-    public void updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen,
+    public void updateIndividualLikelihoods(int[] counters, Network net, int [] nodeSet, int[] alreadyChosen,
                                                                  double[] opLikeRatio) {
         double[] likeRatio = new double[likelihoods_.size()];
 
@@ -291,8 +293,14 @@ public class MixedModel {
                     prob+=weight[j]*probs[j];
                 }
                 prob *= (net.noNodes_ - alreadyChosen.length);
+                if (prob > 10.0) {
+                    // There's a product in here that gets pretty huge, the following code is to avoid double overflow.
+                    prob /=10.0;
+                    opLikeRatio[k]/=10.0;
+                    counters[k]++;
+                }
                 likeRatio[k] *= prob;
-                k+=1;
+                k++;
             }
             alreadyChosen = Methods.concatenate(alreadyChosen, new int[] {node});
         }
