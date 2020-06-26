@@ -108,6 +108,7 @@ public class MixedModel {
         else {
             // This part does the sampling.
             updateNormalisation(net, chosen);
+            // checkUpdatedNorm(net,chosen);
             double r = Math.random();
             double weightSoFar = 0.0;
             int l;
@@ -159,6 +160,20 @@ public class MixedModel {
         calcNormalisation(net);
         for (int node = 0; node < net.noNodes_; node++) {
             sum += calcProbability(net, node);
+        }
+        if (Math.abs(sum - 1.0) > 0.0005) {
+            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);
+            System.exit(-1);
+        }
+    }
+
+    public void checkUpdatedNorm(Network net, int[] from) {
+        double sum = 0.0;
+        for (int node = 0; node < net.noNodes_; node++) {
+            sum += calcProbability(net, node);
+        }
+        for (int node : from) {
+            sum -= calcProbability(net,node);
         }
         if (Math.abs(sum - 1.0) > 0.0005) {
             System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);

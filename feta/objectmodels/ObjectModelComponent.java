@@ -42,9 +42,10 @@ public abstract class ObjectModelComponent {
         } else updateNormalisation((DirectedNetwork) net, removed);
     }
 
+    /**For if an object  */
     public void updateNormalisation(UndirectedNetwork net, int [] removed) {
         if (removed.length!=0) {
-            calcNormalisation(net, removed);
+            calcNormalisation((Network) net, removed);
         }
         tempConstant_=normalisationConstant_;
     }

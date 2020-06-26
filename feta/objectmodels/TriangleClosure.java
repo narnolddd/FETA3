@@ -78,7 +78,7 @@ public class TriangleClosure extends ObjectModelComponent {
     }
 
     public double calcProbability (UndirectedNetwork net, int node) {
-        if (tempConstant_==0) {
+        if (tempConstant_==0 || node >= occurrences_.length) {
             return 0.0;
         }
         if (random_) {

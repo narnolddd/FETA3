@@ -35,7 +35,6 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
         return Math.pow(node + 1, - alpha_)/tempConstant_;
     }
 
-    @Override
     public void updateNormalisation(UndirectedNetwork net, int[] removed) {
         if (removed.length==0) {
             tempConstant_=normalisationConstant_;

@@ -79,6 +79,13 @@ public class Star extends Operation{
     }
 
     public void pickLeafNodes(Network net, MixedModel obm) {
+        // Add new nodes
+        int noNew = noLeaves_ - noExisting_;
+        int[] newLeaves= new int[noNew];
+        for (int i = 0; i < noNew; i++) {
+            String newName = net.generateNodeName();
+            newLeaves[i]=net.nodeNameToNo(newName);
+        }
         int[] internalLeaves;
         if (internal_) {
             int [] chosen_ = new int[1+net.getOutLinks(centreNode_).length];
@@ -89,13 +96,6 @@ public class Star extends Operation{
             internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
         } else {
             internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, new int[]{centreNode_});
-        }
-        // Add new nodes
-        int noNew = noLeaves_ - noExisting_;
-        int[] newLeaves= new int[noNew];
-        for (int i = 0; i < noNew; i++) {
-            String newName = net.generateNodeName();
-            newLeaves[i]=net.nodeNameToNo(newName);
         }
         leafNodes_= Methods.concatenate(internalLeaves,newLeaves);
         nodesToNames(net);
