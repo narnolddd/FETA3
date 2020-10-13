@@ -308,7 +308,10 @@ public class MixedModel {
                     prob+=weight[j]*probs[j];
                 }
                 prob *= (net.noNodes_ - alreadyChosen.length);
+                if (i==0)
+                    prob /= Math.pow(10,counters[k]);
                 if (prob > 10.0) {
+                    // System.out.println("BIG");
                     // There's a product in here that gets pretty huge, the following code is to avoid double overflow.
                     prob /=10.0;
                     opLikeRatio[k]/=10.0;
