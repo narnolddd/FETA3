@@ -17,6 +17,7 @@ import feta.parsenet.ParseNetUndirected;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.json.simple.JSONObject;
 
@@ -32,11 +33,13 @@ public class FitMixedModel extends SimpleAction {
     public int noComponents_;
     public long startTime_=10;
     private boolean orderedData_ = false;
+    private Random random_;
 
     public FitMixedModel(FetaOptions options){
         stoppingConditions_= new ArrayList<StoppingCondition>();
         options_=options;
         objectModel_= new FullObjectModel(options_.fullObjectModel_);
+        random_= new Random(42);
     }
 
     /** Method that generates all possible configurations of model mixture */
@@ -149,6 +152,7 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {
+        op.setRandom(random_);
         op.setNodeChoices(orderedData_);
         ArrayList<int[]> nc = op.getNodeOrders();
         obm.updateLikelihoods(network_,nc);
