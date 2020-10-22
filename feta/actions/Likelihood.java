@@ -15,6 +15,7 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Likelihood extends SimpleAction {
 
@@ -25,6 +26,8 @@ public class Likelihood extends SimpleAction {
     public ParseNet parser_;
     private boolean orderedData_; // default false
 
+    private Random random_;
+    private boolean debugMode_=false;
 
     public Likelihood(FetaOptions options){
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -45,6 +48,11 @@ public class Likelihood extends SimpleAction {
         if (!options_.directedInput_) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
+        if (debugMode_) {
+            random_= new Random(42);
+        } else {
+            random_= new Random();
+        }
         for (int j = 0; j < objectModel_.objectModels_.size(); j++) {
             long start = objectModel_.times_.get(j).start_;
             long end = objectModel_.times_.get(j).end_;
@@ -86,6 +94,7 @@ public class Likelihood extends SimpleAction {
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {
+        op.setRandom(random_);
         op.setNodeChoices(orderedData_);
         ArrayList<int[]> nc = op.getNodeOrders();
         obm.updateLikelihoods(network_,nc);
