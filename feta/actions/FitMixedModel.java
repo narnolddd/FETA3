@@ -33,13 +33,14 @@ public class FitMixedModel extends SimpleAction {
     public int noComponents_;
     public long startTime_=10;
     private boolean orderedData_ = false;
+
     private Random random_;
+    private boolean debugMode_=false;
 
     public FitMixedModel(FetaOptions options){
         stoppingConditions_= new ArrayList<StoppingCondition>();
         options_=options;
         objectModel_= new FullObjectModel(options_.fullObjectModel_);
-        random_= new Random(42);
     }
 
     /** Method that generates all possible configurations of model mixture */
@@ -78,6 +79,11 @@ public class FitMixedModel extends SimpleAction {
         if (!options_.directedInput_) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
+        if (debugMode_) {
+            random_= new Random(42);
+        } else {
+            random_= new Random();
+        }
         int noChanges = objectModel_.objectModels_.size()-1;
         System.out.println("{\"changepoints\": "+noChanges+", \"intervals\": [");
         int[] totalChoices = new int[1];
@@ -167,5 +173,8 @@ public class FitMixedModel extends SimpleAction {
         Boolean ordereddata = (Boolean) obj.get("OrderedData");
         if (ordereddata != null)
             orderedData_=ordereddata;
+        Boolean debug = (Boolean) obj.get("DebugMode");
+        if (debug != null)
+            debugMode_=debug;
     }
 }
