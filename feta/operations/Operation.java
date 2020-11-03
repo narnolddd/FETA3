@@ -81,7 +81,7 @@ public abstract class Operation {
                 listOfLists.add(Methods.generatePerms(0,arr,new ArrayList<int[]>()));
             }
             else {
-                listOfLists.add(Methods.generateRandomShuffles(arr, 50, generator_));
+                listOfLists.add(Methods.generateRandomShuffles(arr, 200, generator_));
             }
         }
         return generatePossibleSequences(listOfLists);

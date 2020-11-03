@@ -123,7 +123,10 @@ public class FitMixedModel extends SimpleAction {
                 long time = op.getTime();
                 obm.calcNormalisation(network_);
                 updateLikelihoods(op, obm);
-                noChoices+=op.getNoChoices();
+                // debug line
+                //if (op.getNoChoices() <= 5) {
+                    noChoices+=op.getNoChoices();
+                //}
                 network_.buildUpTo(time);
             }
         }
@@ -160,6 +163,12 @@ public class FitMixedModel extends SimpleAction {
     public void updateLikelihoods(Operation op, MixedModel obm) {
         op.setRandom(random_);
         op.setNodeChoices(orderedData_);
+
+        //debugging line, remember to comment out
+//        if (op.getNoChoices() > 5) {
+//            return;
+//        }
+
         ArrayList<int[]> nc = op.getNodeOrders();
         obm.updateLikelihoods(network_,nc);
     }

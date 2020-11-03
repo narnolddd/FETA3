@@ -79,11 +79,11 @@ public class MixedModel {
 
     /** Having calculated normalisation, get node probability */
     public double calcProbability(Network net, int node) {
-        double probability_=0.0;
+        double probability=0.0;
         for (int i = 0; i < components_.size(); i++) {
-            probability_+= weights_[i]*net.calcProbability(components_.get(i), node);
+            probability+= weights_[i]*net.calcProbability(components_.get(i), node);
         }
-        return probability_;
+        return probability;
     }
 
     /** Functions for node sampling */
@@ -272,30 +272,30 @@ public class MixedModel {
         int noOrders = nodeOrders.size();
         double[] opLikeRatio = new double[likelihoods_.size()];
 
-        int[] counters = new int[likelihoods_.size()];
+        for (int i = 0; i < opLikeRatio.length; i++) {
+            opLikeRatio[i] = -1 * Double.POSITIVE_INFINITY;
+        }
+
         for (int[] order : nodeOrders) {
-            updateIndividualLikelihoods(counters, net, order, new int[0], opLikeRatio);
+            updateIndividualLikelihoods(net, order, new int[0], opLikeRatio);
         }
 
         int i=0;
         for (double [] weight: likelihoods_.keySet()) {
             double like = opLikeRatio[i];
-            if (like == 0.0 || noOrders == 0) {
+            if (noOrders == 0) {
                 return;
             }
-            double logLike = Math.log(like) + counters[i] * Math.log(10.0) - Math.log(noOrders);
+            double logLike = like - Math.log(noOrders);
             likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
             i++;
         }
+        //System.out.println(Arrays.toString(counters));
     }
 
-    public void updateIndividualLikelihoods(int[] counters, Network net, int [] nodeSet, int[] alreadyChosen,
+    public void updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen,
                                                                  double[] opLikeRatio) {
         double[] likeRatio = new double[likelihoods_.size()];
-
-        for (int i = 0; i < likeRatio.length; i++) {
-            likeRatio[i]=1.0;
-        }
 
         for (int i = 0; i < nodeSet.length; i++) {
             int node = nodeSet[i];
@@ -308,24 +308,33 @@ public class MixedModel {
                     prob+=weight[j]*probs[j];
                 }
                 prob *= (net.noNodes_ - alreadyChosen.length);
-                if (i==0)
-                    prob /= Math.pow(10,counters[k]);
-                if (prob > 10.0) {
-                    // System.out.println("BIG");
-                    // There's a product in here that gets pretty huge, the following code is to avoid double overflow.
-                    prob /=10.0;
-                    opLikeRatio[k]/=10.0;
-                    counters[k]++;
-                }
-                likeRatio[k] *= prob;
+//                if (prob > 10.0) {
+//                    // System.out.println("BIG");
+//                    // There's a product in here that gets pretty huge, the following code is to avoid double overflow.
+//                    prob /=10.0;
+//                    opLikeRatio[k]/=10.0;
+//                    counters[k]++;
+//                }
+                likeRatio[k] += Math.log(prob);
                 k++;
             }
             alreadyChosen = Methods.concatenate(alreadyChosen, new int[] {node});
         }
 
         for (int i = 0; i < likeRatio.length; i++) {
-            opLikeRatio[i]+=likeRatio[i];
+            //System.out.println(opLikeRatio[i]);
+            double tmp = addLogs(opLikeRatio[i],likeRatio[i]);
+            opLikeRatio[i] = tmp;
+            //System.out.println(likeRatio[i]+" "+opLikeRatio[i]);
         }
+    }
+
+    public double addLogs( double logA, double logB ) {
+        // returns log(A + B)
+        double maxLog = Math.max(logA,logB);
+        double minLog = Math.min(logA,logB);
+
+        return Math.log(1 + Math.exp(minLog - maxLog)) + maxLog;
     }
 
 }
