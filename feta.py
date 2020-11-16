@@ -82,3 +82,7 @@ def del_none(d):
         elif isinstance(value, dict):
             del_none(value)
     return d  # For convenience
+
+###
+
+name_to_model = {"Degree":"DegreeModelComponent", "Random":"RandomAttachment", "TriangleClosure": "TriangleClosure", "TriangleClosure2":"TriangleClosure2"}

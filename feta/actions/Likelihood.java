@@ -45,6 +45,8 @@ public class Likelihood extends SimpleAction {
     }
 
     public void execute(){
+        int noChanges = objectModel_.objectModels_.size()-1;
+        System.out.println("{\"changepoints\": "+noChanges+", \"intervals\": [");
         if (!options_.directedInput_) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
@@ -53,14 +55,21 @@ public class Likelihood extends SimpleAction {
         } else {
             random_= new Random();
         }
+        int[] totalChoices = new int[1];
+        double[] runningLike = new double[1];
         for (int j = 0; j < objectModel_.objectModels_.size(); j++) {
             long start = objectModel_.times_.get(j).start_;
             long end = objectModel_.times_.get(j).end_;
-            getLikelihoods(start,end);
+            String line = getLikelihoods(start, end, totalChoices, runningLike);
+            if (j != objectModel_.objectModels_.size()-1)
+                line+=",";
+            else
+                line+="],";
+            System.out.println(line);
         }
     }
 
-    public void getLikelihoods(long start, long end) {
+    public String getLikelihoods(long start, long end, int[] totalChoices, double[] runningLike) {
         MixedModel obm = objectModel_.objectModelAtTime(start);
 
         obm.initialiseLikelihoods();
@@ -90,7 +99,13 @@ public class Likelihood extends SimpleAction {
         raw = likelihoods.get(obm.getWeights());
         like = Math.exp(raw/noChoices);
 
-        System.out.println("c0 "+like+" raw "+raw+" choices "+noChoices);
+        runningLike[0] += raw;
+        totalChoices[0] += noChoices;
+
+        String toPrint = "{\"start\":"+start+", \"c0max\" : "+like+
+                ", \"raw\": "+raw+", \"choices\": "+noChoices+", \"models\": ";
+
+        return toPrint;
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {

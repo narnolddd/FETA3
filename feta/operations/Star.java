@@ -69,6 +69,7 @@ public class Star extends Operation{
 
     public void pickCentreNode(Network net, MixedModel obm) {
         if (internal_) {
+            obm.calcNormalisation(net);
             centreNode_ = obm.nodeDrawWithoutReplacement(net, new int[0]);
             centreNodeName_=net.nodeNoToName(centreNode_);
         }
