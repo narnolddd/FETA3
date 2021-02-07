@@ -20,7 +20,7 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "RankPreferentialAttachment",
+          "ComponentName": "DegreeModelComponent",
           "Weight": 1.0
         }
       ]

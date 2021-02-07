@@ -10,12 +10,14 @@ class FetaObject:
         self.OperationModel = operation
 
 class DataObject:
-    def __init__(self,infile, intype="NNT", outtype="NNT", outfile = None, directed=False):
+    def __init__(self,infile, intype="NNT", outtype="NNT", outfile = None, directed=False, sampled=False, sampleprop=1.0):
         self.GraphInputFile=infile
         self.GraphInputType=intype
         self.GraphOutputType=outtype
         self.GraphOutputFile=outfile
         self.Directed=directed
+        self.SampleIncomingGraph=sampled
+        self.SampleProportion=sampleprop
 
 class Action:
     def __init__(self,fmm=None,grow=None, measure=None):

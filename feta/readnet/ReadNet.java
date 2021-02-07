@@ -6,18 +6,21 @@ import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class ReadNet {
 
-    public ArrayList<Link> links_;
     LinkBuilder lb_;
     public String sep_;
     String networkInput_;
     boolean removeDuplicates_=true;
+    boolean sampled_;
+    double samplingProp_=0.0;
 
     public ReadNet(FetaOptions options){
-        links_= new ArrayList<Link>();
         sep_=options.inSep_;
+        sampled_ = options.netInputSampled_;
+        samplingProp_= options.sampleProp_;
         networkInput_=options.netInputFile_;
 
         if (options.directedInput_) {
@@ -25,8 +28,9 @@ public abstract class ReadNet {
         } else lb_= new UndirectedLinkBuilder();
     }
 
-    public final void readNetwork(){
+    public final ArrayList<Link> readNetwork(){
         int linkno = 1;
+        ArrayList<Link> links_= new ArrayList<Link>();
         try {
             FileInputStream fstream = new FileInputStream(networkInput_);
             DataInputStream dstream = new DataInputStream(fstream);
@@ -37,13 +41,18 @@ public abstract class ReadNet {
                 if (line.length() == 0)
                     continue;
                 Link link = parseLine(line, linkno);
-                // aint got time for loops
+                // remove self-loops
                 if (link.sourceNode_.equals(link.destNode_)) {
                     System.out.println("Self Loop at time "+link.time_+"!");
                     continue;
                 }
 //               if (removeDuplicates_ && links_.contains(link))
 //                    continue;
+                if (sampled_) {
+                    Random rg = new Random();
+                    if (rg.nextDouble() > samplingProp_)
+                        continue;
+                }
                 links_.add(link);
             }
         } catch (FileNotFoundException e) {
@@ -52,6 +61,7 @@ public abstract class ReadNet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return links_;
     }
 
     public abstract Link parseLine(String line, long linkno);

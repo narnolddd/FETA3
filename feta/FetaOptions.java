@@ -16,6 +16,8 @@ public class FetaOptions {
     public String netOutputFile_;
     public String inputType_ = "NNT";
     public boolean directedInput_;
+    public boolean netInputSampled_;
+    public double sampleProp_= 1.0;
     public String outputType_="NNT";
     public String inSep_ = "\\s+";
     public String outSep_= " ";
@@ -83,6 +85,18 @@ public class FetaOptions {
         if (in != null) {
             inputType_ = in;
             df.remove("GraphInputType");
+        }
+
+        Boolean insample = (Boolean) df.get("SampleIncomingGraph");
+        if (insample != null) {
+            netInputSampled_= insample;
+            df.remove("SampleIncomingGraph");
+        }
+
+        Double sampleProp = (Double) df.get("SampleProportion");
+        if (sampleProp != null) {
+            sampleProp_=sampleProp;
+            df.remove("SampleProportion");
         }
 
         String out = (String) df.get("GraphOutputType");

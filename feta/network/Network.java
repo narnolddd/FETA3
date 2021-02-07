@@ -20,8 +20,7 @@ public abstract class Network {
     public long latestTime_; // Time at which the most recent link was added
 
     /** Options for reading network */
-    public boolean duplicatesPresent_=false;
-    public ReadNet networkReader_;
+    private ReadNet networkReader_;
     public boolean allowDuplicates_=true;
 
     /** Data structures mapping node names to their index and vice versa */
@@ -125,8 +124,7 @@ public abstract class Network {
 
     /** Read links from network file */
     public void getLinksFromFile() {
-        networkReader_.readNetwork();
-        linksToBuild_=networkReader_.links_;
+        linksToBuild_=networkReader_.readNetwork();
     }
 
     /** Update tracker of recently picked nodes */
