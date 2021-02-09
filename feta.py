@@ -34,9 +34,10 @@ class Measure:
         self.FileName = fname
 
 class Grow:
-    def __init__(self, start, end, interval=10000):
+    def __init__(self, start, end=None, maxnodes=None, interval=10000):
         self.Start = start
         self.MaxTime = end
+        self.MaxNodes= maxnodes
         self.Interval = interval
 
 
@@ -49,10 +50,11 @@ class FitMixedModel:
         self.DebugMode = debug
 
 class OperationModel:
-    def __init__(self, name, start, file):
+    def __init__(self, name, start=None, file=None, initialdeg=None):
         self.Name = name
         self.Start = start
         self.FileName = file
+        self.InitialDegree=initialdeg
 
 class ObjectModel:
     def __init__(self, start, end, components):
