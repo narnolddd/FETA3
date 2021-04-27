@@ -31,8 +31,7 @@ n.a.arnold@qmul.ac.uk
 
 Please cite as:
 
-Naomi A. Arnold, Raul J. Mondragon, Richard G. Clegg. (2019). Changing the tune: mixtures of network models that vary in time.
-arXiv:xxxx.XXXX
+Arnold, Naomi A., Raul J. Mondragón, and Richard G. Clegg. "Likelihood-based approach to discriminate mixtures of network models that vary in time." _Scientific reports_ 11.1 (2021): 1-13.
 
 # Building and running
 
