@@ -140,7 +140,7 @@ You should now have the file `CitationsTS.dat` in the `tutorial` folder. The col
 number of links, average degree, density (number of links/number of possible links), maximum degree, average clustering coeff,
 mean squared degree, degree assortativity.
 
-To see what these time series look like, you can use your favourite plotting device. Mine happens to be pyplot. I have written 
+To see what these time series look like, you can use your favourite plotting device. Mine happens to be pyplot. To use this you should have pandas instlaled for python3. I have written 
 a script for plotting these measurements you've just calculated - run the command:
 
 ```bash
