@@ -49,10 +49,10 @@ public class FetaModel {
     }
 
     public void initialiseNetwork() {
-        if (options_.directedInput_) {
+        if (options_.isDirectedInput()) {
             network_= new DirectedNetwork();
         } else network_= new UndirectedNetwork();
-        network_.numRecents_=options_.noRecents_;
+        network_.numRecents_=options_.getNoRecents();
     }
 
     /** Reads from a string the relevant action type */
@@ -63,8 +63,8 @@ public class FetaModel {
             return new Grow(options_);
         } else if (name.equals("Translate")) {
             return new Translate(options_);
-        } else if (name.equals("ParseTest") & !options_.directedInput_) {
-            return new ParseTest(options_.directedInput_);
+        } else if (name.equals("ParseTest") & !options_.isDirectedInput()) {
+            return new ParseTest(options_.isDirectedInput());
         } else if (name.equals("Likelihood")) {
             return new Likelihood(options_);
         } else if (name.equals("NormalisedLikelihood")) {
@@ -80,12 +80,13 @@ public class FetaModel {
     /** Sets which network file reader to do the job */
     private ReadNet newReader() {
         ReadNet reader;
-        if (options_.inputType_.equals("NNT")) {
-            reader = new ReadNetNNT(options_);
-        } else if (options_.inputType_.equals("NN")){
-            reader = new ReadNetNN(options_);
-        }
-        else reader = null;
+        String inputType = options_.getInputType();
+        reader = switch (inputType) {
+            case "NNT" -> new ReadNetNNT(options_);
+            case "NN" -> new ReadNetNN(options_);
+            case "CSV" -> new ReadNetCSV(options_);
+            default -> null;
+        };
         return reader;
     }
 

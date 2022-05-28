@@ -72,7 +72,7 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public void execute(){
-        if (!options_.directedInput_) {
+        if (!options_.isDirectedInput()) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
         for (int j = 0; j < objectModel_.objectModels_.size(); j++) {

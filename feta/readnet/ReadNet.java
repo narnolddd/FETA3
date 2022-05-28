@@ -17,10 +17,10 @@ public abstract class ReadNet {
 
     public ReadNet(FetaOptions options){
         links_= new ArrayList<Link>();
-        sep_=options.inSep_;
-        networkInput_=options.netInputFile_;
+        sep_=options.getInSep();
+        networkInput_=options.getNetInputFile();
 
-        if (options.directedInput_) {
+        if (options.isDirectedInput()) {
             lb_= new DirectedLinkBuilder();
         } else lb_= new UndirectedLinkBuilder();
     }

@@ -1,0 +1,20 @@
+{
+  "Data": {
+    "GraphInputFile": "data/cit-HepPh-new.txt",
+    "GraphInputType": "CSV",
+    "Source": 0,
+    "Target": 1,
+    "Time": 2,
+    "Directed": false
+  },
+  "Action": {
+    "Measure": {
+      "Start": 706492800,
+      "Interval":604800,
+      "MaxNodes": 34343,
+      "Statistics": ["NoNodes", "NoLinks", "AverageDegree", "MaxDegree","Singletons","MeanSquaredDegree", "Assortativity", "Clustering", "TriangleCount"],
+      "PrintHeader": true,
+      "FileName":"tutorial/CitationsTS.dat"
+    }
+  }
+}

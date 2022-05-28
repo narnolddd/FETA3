@@ -15,8 +15,8 @@ public abstract class WriteNet {
     public ArrayList<Link> linksToWrite_;
 
     public WriteNet(ArrayList<Link> links, FetaOptions options){
-        sep_= options.outSep_;
-        networkOutput_=options.netOutputFile_;
+        sep_= options.getOutSep();
+        networkOutput_=options.getNetOutputFile();
         linksToWrite_=links;
     }
 

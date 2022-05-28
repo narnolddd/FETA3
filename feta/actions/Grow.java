@@ -64,11 +64,12 @@ public class Grow extends SimpleAction {
         }
 
         WriteNet writer;
-        if (options_.outputType_.equals("NNT")) {
+        String outputType = options_.getOutputType();
+        if (outputType.equals("NNT")) {
             writer = new WriteNetNNT(network_.linksBuilt_, options_);
-        } else if (options_.outputType_== "NN") {
+        } else if (outputType.equals("NN")) {
             writer = new WriteNetNN(network_.linksBuilt_, options_);
-        } else throw new IllegalArgumentException("Unrecognised output type "+options_.outputType_);
+        } else throw new IllegalArgumentException("Unrecognised output type "+outputType);
         writer.write(1,Long.MAX_VALUE);
     }
 

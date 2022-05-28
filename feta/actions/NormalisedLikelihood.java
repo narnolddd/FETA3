@@ -28,7 +28,7 @@ public class NormalisedLikelihood extends SimpleAction {
     }
 
     public void execute() {
-        if (!options_.directedInput_) {
+        if (!options_.isDirectedInput()) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
         getLike(startTime_, Long.MAX_VALUE);

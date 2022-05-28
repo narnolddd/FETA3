@@ -12,14 +12,17 @@ import org.json.simple.parser.ParseException;
 public class FetaOptions {
 
     /** Default options related to the data input and output files */
-    public String netInputFile_="seed_graphs/clique-5.dat";
-    public String netOutputFile_;
-    public String inputType_ = "NNT";
-    public boolean directedInput_;
-    public String outputType_="NNT";
-    public String inSep_ = "\\s+";
-    public String outSep_= " ";
-    public int noRecents_=10;
+    private String netInputFile_="seed_graphs/clique-5.dat";
+    private String netOutputFile_;
+    private String inputType_ = "NNT";
+    private boolean directedInput_;
+    private String outputType_="NNT";
+    private int sourceColumn=-1;
+    private int dstColumn=-1;
+    private int timeColumn=-1;
+    private String inSep_ = "\\s+";
+    private String outSep_= " ";
+    private int noRecents_=10;
 
     /** Type of action. Everything else related to the action will be parsed in the relevant action class */
     JSONObject actionOps_;
@@ -85,6 +88,24 @@ public class FetaOptions {
             df.remove("GraphInputType");
         }
 
+        Long srccol = (Long) df.get("Source");
+        if (in != null) {
+            sourceColumn = Math.toIntExact(srccol);
+            df.remove("Source");
+        }
+
+        Long dstcol = (Long) df.get("Target");
+        if (in != null) {
+            dstColumn = Math.toIntExact(dstcol);
+            df.remove("Target");
+        }
+
+        Long timecol = (Long) df.get("Time");
+        if (in != null) {
+            timeColumn = Math.toIntExact(timecol);
+            df.remove("Time");
+        }
+
         String out = (String) df.get("GraphOutputType");
         if (out != null) {
             outputType_= out;
@@ -118,5 +139,61 @@ public class FetaOptions {
         if (df.keySet().size() != 0) {
             throw new ParseException(ParseException.ERROR_UNEXPECTED_TOKEN);
         }
+    }
+
+    public String getNetInputFile() {
+        return netInputFile_;
+    }
+
+    public String getNetOutputFile() {
+        return netOutputFile_;
+    }
+
+    public String getInputType() {
+        return inputType_;
+    }
+
+    public boolean isDirectedInput() {
+        return directedInput_;
+    }
+
+    public String getOutputType() {
+        return outputType_;
+    }
+
+    public String getInSep() {
+        return inSep_;
+    }
+
+    public String getOutSep() {
+        return outSep_;
+    }
+
+    public int getNoRecents() {
+        return noRecents_;
+    }
+
+    public JSONObject getActionOps() {
+        return actionOps_;
+    }
+
+    public JSONArray getFullObjectModel() {
+        return fullObjectModel_;
+    }
+
+    public JSONObject getOperationModel() {
+        return operationModel_;
+    }
+
+    public int getSourceColumn() {
+        return sourceColumn;
+    }
+
+    public int getDstColumn() {
+        return dstColumn;
+    }
+
+    public int getTimeColumn() {
+        return timeColumn;
     }
 }

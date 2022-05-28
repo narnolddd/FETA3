@@ -32,11 +32,12 @@ public class Translate extends SimpleAction {
 
     public void execute() {
         WriteNet writer;
-        if (options_.outputType_== "NNT") {
+        String outputType = options_.getOutputType();
+        if (outputType.equals("NNT")) {
             writer = new WriteNetNNT(network_.linksToBuild_, options_);
-        } else if (options_.outputType_== "NN") {
+        } else if (outputType.equals("NN")) {
             writer = new WriteNetNN(network_.linksToBuild_, options_);
-        } else throw new IllegalArgumentException("Unrecognised output type "+options_.outputType_);
+        } else throw new IllegalArgumentException("Unrecognised output type "+outputType);
         long time = startTime_;
         while(!stoppingConditionsExceeded_(network_)) {
             network_.buildUpTo(time);
