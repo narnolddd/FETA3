@@ -28,6 +28,9 @@ public abstract class Network {
     private HashMap <Integer, String> nodeNames_;
     private ArrayList <Integer> nodes_;
 
+    /** Typed network datastructures */
+    private NodeTypes nodeTypes;
+
     /** This bit is for aiming to get good triangle closure */
     public ArrayList<Integer> recentlyPickedNodes_;
     public int numRecents_=15;

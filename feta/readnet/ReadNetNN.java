@@ -18,8 +18,7 @@ public class ReadNetNN extends ReadNet {
         }
         else {
             String node1 = parts[0];
-            String node2 = parts[2];
-            long time = linkno;
+            String node2 = parts[1];
             return lb_.build(node1,node2,linkno);
         }
     }

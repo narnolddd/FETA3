@@ -20,6 +20,12 @@ public class FetaOptions {
     private int sourceColumn=-1;
     private int dstColumn=-1;
     private int timeColumn=-1;
+
+    /** Options related to typed networks */
+    private boolean typedNetwork=false;
+    private int sourceTypeColumn=-1;
+    private int dstTypeColumn=-1;
+
     private String inSep_ = "\\s+";
     private String outSep_= " ";
     private int noRecents_=10;
@@ -89,21 +95,39 @@ public class FetaOptions {
         }
 
         Long srccol = (Long) df.get("Source");
-        if (in != null) {
+        if (srccol != null) {
             sourceColumn = Math.toIntExact(srccol);
             df.remove("Source");
         }
 
         Long dstcol = (Long) df.get("Target");
-        if (in != null) {
+        if (dstcol != null) {
             dstColumn = Math.toIntExact(dstcol);
             df.remove("Target");
         }
 
         Long timecol = (Long) df.get("Time");
-        if (in != null) {
+        if (timecol != null) {
             timeColumn = Math.toIntExact(timecol);
             df.remove("Time");
+        }
+
+        Boolean typed = (Boolean) df.get("Typed");
+        if (typed != null) {
+            typedNetwork = typed;
+            df.remove("Typed");
+        }
+
+        Long srctype = (Long) df.get("SourceType");
+        if (srctype != null) {
+            sourceTypeColumn = Math.toIntExact(srccol);
+            df.remove("SourceType");
+        }
+
+        Long dsttype = (Long) df.get("TargetType");
+        if (dsttype != null) {
+            dstTypeColumn = Math.toIntExact(dstcol);
+            df.remove("TargetType");
         }
 
         String out = (String) df.get("GraphOutputType");
@@ -195,5 +219,17 @@ public class FetaOptions {
 
     public int getTimeColumn() {
         return timeColumn;
+    }
+
+    public boolean isTypedNetwork() {
+        return typedNetwork;
+    }
+
+    public int getSourceTypeColumn() {
+        return sourceTypeColumn;
+    }
+
+    public int getDstTypeColumn() {
+        return dstTypeColumn;
     }
 }

@@ -9,4 +9,9 @@ public class UndirectedLinkBuilder implements LinkBuilder {
         return new UndirectedLink(n1, n2, time);
     }
 
+    @Override
+    public Link build(String n1, String n2, long time, String n1Type, String n2Type) {
+        return null;
+    }
+
 }
