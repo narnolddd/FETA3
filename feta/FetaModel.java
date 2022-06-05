@@ -8,7 +8,6 @@ import feta.readnet.*;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 /** Class controlling what FETA does */
 
@@ -27,7 +26,7 @@ public class FetaModel {
         options_.readConfig(configFile);
     }
 
-    public void goForIt() {
+    public void execute() {
         parseActionList(options_.actionOps_);
         initialiseNetwork();
         network_.setNetworkReader(newReader());

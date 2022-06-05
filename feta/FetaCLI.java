@@ -17,6 +17,6 @@ public class FetaCLI {
 
         FetaModel fm = new FetaModel();
         fm.readConfigs(args[0]);
-        fm.goForIt();
+        fm.execute();
     }
 }
