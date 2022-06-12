@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 import java.util.TreeMap;
 
 
@@ -21,29 +20,16 @@ public class UndirectedNetwork extends Network {
     private int maxNodeNumber = 1000;
 
     /** Variables related to measurements */
-    private double avgDeg_;
-    private double averageCluster_;
-    private double meanDegSq_;
     public int maxDeg_;
-    private double assort_;
-    private double density_;
     private int[] triCount_;
     private int totTri_;
-    private int singletons_;
-    private int doubletons_;
-    private double cutOff_;
     private BufferedWriter br_;
 
     public UndirectedNetwork() {
-        neighbours_= new TreeMap<Integer, ArrayList<Integer>>();
-
+        neighbours_= new TreeMap<>();
         degreeDist_= new int[degArraySize_];
         degrees_= new int[maxNodeNumber];
-        avgDeg_=0.0;
-        averageCluster_=0.0;
-        meanDegSq_=0.0;
         maxDeg_=0;
-        assort_=0;
         triCount_= new int[maxNodeNumber];
     }
 
@@ -57,17 +43,14 @@ public class UndirectedNetwork extends Network {
         neighbours_.get(src).add(dst);
         neighbours_.get(dst).add(src);
 
-        if (src < maxNodeNumber && dst < maxNodeNumber) {
-            degrees_[src]++;
-            degrees_[dst]++;
-        } else {
-            int[] newDegrees_= new int[2*maxNodeNumber];
-            System.arraycopy(degrees_,0,newDegrees_,0,maxNodeNumber);
-            degrees_=newDegrees_;
-            maxNodeNumber*=2;
-            degrees_[src]++;
-            degrees_[dst]++;
+        if (src >= maxNodeNumber || dst >= maxNodeNumber) {
+            int[] newDegrees_ = new int[2 * maxNodeNumber];
+            System.arraycopy(degrees_, 0, newDegrees_, 0, maxNodeNumber);
+            degrees_ = newDegrees_;
+            maxNodeNumber *= 2;
         }
+        degrees_[src]++;
+        degrees_[dst]++;
         incrementDegDist(getDegree(src));
         reduceDegDist(getDegree(src)-1);
         incrementDegDist(getDegree(dst));
@@ -88,8 +71,6 @@ public class UndirectedNetwork extends Network {
                 if (n2neighbour == src)
                     continue;
                 if (n1neighbour == n2neighbour) {
-                    // delet this pls
-                    // System.out.println(degrees_[src]+" "+degrees_[dst]);
                     newTri++;
                     triCount_[n1neighbour]++;
                 }
@@ -103,10 +84,7 @@ public class UndirectedNetwork extends Network {
     }
 
     public boolean isLink(int a, int b) {
-        if (neighbours_.get(a).contains(b)) {
-            return true;
-        }
-        return false;
+        return neighbours_.get(a).contains(b);
     }
 
     @Override
@@ -128,9 +106,9 @@ public class UndirectedNetwork extends Network {
     }
 
     public void writeDegDist() {
-        String degString = "";
+        StringBuilder degString = new StringBuilder();
         for (int i = 0; i < degArraySize_; i++) {
-            degString+=degreeDist_[i]+" ";
+            degString.append(degreeDist_[i]).append(" ");
         }
         try {
             br_.write(degString+"\n");
@@ -174,12 +152,12 @@ public class UndirectedNetwork extends Network {
             triCount_=newTriCount_;
             maxNodeNumber*=2;
         }
-        neighbours_.put(nodeno, new ArrayList<Integer>());
+        neighbours_.put(nodeno, new ArrayList<>());
         incrementDegDist(0);
     }
 
     public void removeLinks(String nodename) {
-        // Why on earth would you want to do this, please don't!
+        // Not implemented as not used in any graph model
     }
 
     /** Returns degree of a node */
@@ -191,8 +169,7 @@ public class UndirectedNetwork extends Network {
 
     public double getDensity() {
         double possibleLinks = 0.5 * noNodes_ * (noNodes_ - 1);
-        double density = noLinks_/possibleLinks;
-        return density;
+        return noLinks_/possibleLinks;
     }
 
     public int[] getDegreeDist() {
@@ -209,12 +186,13 @@ public class UndirectedNetwork extends Network {
         return actualTriangles/possibleTriangles;
     }
 
+    /** Return degree sequence as a string */
     public String degreeVectorToString() {
-        String degs = "";
+        StringBuilder degs = new StringBuilder();
         for (int i = 0; i < noNodes_; i++) {
-            degs +=getDegree(i)+" ";
+            degs.append(getDegree(i)).append(" ");
         }
-        return degs;
+        return degs.toString();
     }
 
     /** Section related to growing networks */

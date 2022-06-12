@@ -10,7 +10,6 @@ import java.util.*;
 public abstract class Network {
 
     /** Properties and methods performed by all networks */
-
     public int noNodes_;
     public int noLinks_;
 
@@ -24,9 +23,8 @@ public abstract class Network {
     public boolean allowDuplicates_=true;
 
     /** Data structures mapping node names to their index and vice versa */
-    private HashMap <String, Integer> nodeNumbers_;
-    private HashMap <Integer, String> nodeNames_;
-    private ArrayList <Integer> nodes_;
+    private final HashMap <String, Integer> nodeNumbers_;
+    private final HashMap <Integer, String> nodeNames_;
 
     /** Typed network datastructures */
     private NodeTypes nodeTypes;
@@ -50,7 +48,6 @@ public abstract class Network {
     public Network() {
         noNodes_= 0;
         noLinks_= 0;
-        nodes_= new ArrayList<Integer>();
         linksToBuild_= new ArrayList<Link>();
         linksBuilt_=new ArrayList<Link>();
         nodeNumbers_= new HashMap <String, Integer> ();
@@ -68,14 +65,10 @@ public abstract class Network {
         for (i=0; i < linksToBuild_.size(); i++) {
             Link link = linksToBuild_.get(i);
             if (link.time_ > time){
-                if (i>0) {
-                    changed_=true;
-                } else {
-                    changed_=false;
-                }
+                changed_= i > 0;
                 remaining_=linksToBuild_;
-                for (int j=0; j < i; j++) {
-                    remaining_.remove(0);
+                if (i > 0) {
+                    remaining_.subList(0, i).clear();
                 }
                 break;
             }
@@ -100,16 +93,12 @@ public abstract class Network {
 
     /** Is a given node new? */
     public boolean newNode(String node) {
-        if (nodeNumbers_.get(node) == null) {
-            return true;
-        }
-        return false;
+        return nodeNumbers_.get(node) == null;
     }
 
     /** Add a new node to all data structures */
 
     public void addNodeToList(String nodeName) {
-        nodes_.add(latestNodeNo_);
         int nodeNo= latestNodeNo_;
         latestNodeNo_++;
         noNodes_++;

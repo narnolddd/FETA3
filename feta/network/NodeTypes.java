@@ -14,7 +14,7 @@ public class NodeTypes {
 	public static void setNodeType(int nodeNo, String nodeType) 
 	{
 		Integer typeNo= nt_.typeNumbers_.get(nodeType);
-		/** If this is a new type add it*/
+		/** If this is a new type add it */
 		if (typeNo == null) {
 			typeNo= addNewType(nodeType);
 		}
