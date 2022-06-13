@@ -17,11 +17,11 @@ public abstract class SimpleAction {
 
     public ArrayList<StoppingCondition> stoppingConditions_;
 
-    public boolean stoppingConditionsExceeded_(Network net) {
+    public boolean withinStoppingConditions(Network net) {
         for (StoppingCondition sc: stoppingConditions_) {
-            if (sc.hasBeenReached(net)) {return true;}
+            if (sc.hasBeenReached(net)) {return false;}
         }
-        return false;
+        return true;
     }
 
     public abstract void parseActionOptions(JSONObject obj);

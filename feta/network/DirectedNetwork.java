@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 import java.util.TreeMap;
 
 public class DirectedNetwork extends Network {
@@ -119,10 +118,7 @@ public class DirectedNetwork extends Network {
     }
 
     public boolean isLink(int a, int b) {
-        if (outLinks_.get(a).contains(b)) {
-            return true;
-        }
-        return false;
+        return outLinks_.get(a).contains(b);
     }
 
     public void setUpDegDistWriters(String fname) {
@@ -142,13 +138,13 @@ public class DirectedNetwork extends Network {
     }
 
     public void writeDegDist() {
-        String inString = "";
-        String outString = "";
+        StringBuilder inString = new StringBuilder();
+        StringBuilder outString = new StringBuilder();
         for (int i = 0; i < inDegArraySize_; i++) {
-            inString +=inDegreeDist_[i]+" ";
+            inString.append(inDegreeDist_[i]).append(" ");
         }
         for (int j = 0; j < outDegArraySize_; j++) {
-            outString +=outDegreeDist_[j]+" ";
+            outString.append(outDegreeDist_[j]).append(" ");
         }
         try {
             brIn_.write(inString+"\n");
@@ -235,9 +231,9 @@ public class DirectedNetwork extends Network {
     public int[] getOutDegreeDist() {return outDegreeDist_;}
 
     public String degreeVectorToString() {
-        String degs = "";
+        StringBuilder degs = new StringBuilder();
         for (int i = 0; i < noNodes_; i++) {
-            degs +=getInDegree(i)+" ";
+            degs.append(getInDegree(i)).append(" ");
         }
         return degs+"\n";
     }

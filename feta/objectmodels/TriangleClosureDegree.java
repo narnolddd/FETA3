@@ -16,9 +16,7 @@ public class TriangleClosureDegree extends ObjectModelComponent{
         neighbourhood_= new HashSet<>();
         for (Integer r: recents) {
             neighbourhood_.add(r);
-            for (int n: network.neighbours_.get(r)) {
-                neighbourhood_.add(n);
-            }
+            neighbourhood_.addAll(network.neighbours_.get(r));
         }
         for (int nd: neighbourhood_) {
             normalisationConstant_ += network.degrees_[nd];
@@ -37,9 +35,7 @@ public class TriangleClosureDegree extends ObjectModelComponent{
         neighbourhood_= new HashSet<>();
         for (Integer r: recents) {
             neighbourhood_.add(r);
-            for (int n: net.outLinks_.get(r)) {
-                neighbourhood_.add(n);
-            }
+            neighbourhood_.addAll(net.outLinks_.get(r));
         }
         for (int nd: neighbourhood_) {
             normalisationConstant_+=net.getInDegree(nd);

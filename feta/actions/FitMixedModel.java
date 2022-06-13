@@ -1,6 +1,5 @@
 package feta.actions;
 
-/** Feta packages */
 import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
@@ -13,7 +12,6 @@ import feta.parsenet.ParseNet;
 import feta.parsenet.ParseNetDirected;
 import feta.parsenet.ParseNetUndirected;
 
-/** Utils */
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +19,6 @@ import java.util.List;
 import org.json.simple.JSONObject;
 
 /** Finds best model mixture - hopefully will be better than calculating likelihood many times */
-
 public class FitMixedModel extends SimpleAction {
 
     public FetaOptions options_;
@@ -93,7 +90,7 @@ public class FitMixedModel extends SimpleAction {
         network_.buildUpTo(start);
         int noChoices = 0;
         HashMap<double[], Double> c0Values = new HashMap<>();
-        while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
+        while (network_.linksToBuild_.size()>0 && withinStoppingConditions(network_)) {
             if (network_.latestTime_ > end)
                 break;
             ArrayList<Link> links = network_.linksToBuild_;

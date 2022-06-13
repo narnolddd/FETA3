@@ -39,7 +39,7 @@ public class Translate extends SimpleAction {
             writer = new WriteNetNN(network_.linksToBuild_, options_);
         } else throw new IllegalArgumentException("Unrecognised output type "+outputType);
         long time = startTime_;
-        while(!stoppingConditionsExceeded_(network_)) {
+        while(withinStoppingConditions(network_)) {
             network_.buildUpTo(time);
             time+=interval_;
         }

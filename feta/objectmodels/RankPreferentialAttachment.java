@@ -15,9 +15,9 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
         for (int i = 0; i < net.noNodes_; i++) {
             rankSum+= Math.pow(i+1, - alpha_);
         }
-        for (int j = 0 ; j < removed.length; j++) {
-            if (removed[j]>=0) {
-                rankSum-= Math.pow(removed[j]+1, - alpha_);
+        for (int i : removed) {
+            if (i >= 0) {
+                rankSum -= Math.pow(i + 1, -alpha_);
             }
         }
         normalisationConstant_=rankSum;

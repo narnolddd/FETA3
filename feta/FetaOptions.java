@@ -66,9 +66,7 @@ public class FetaOptions {
 
         } catch (FileNotFoundException e) {
             System.err.println("JSON Options file "+file+" not found.");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
 

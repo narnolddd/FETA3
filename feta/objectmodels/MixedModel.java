@@ -5,7 +5,6 @@ import feta.network.Network;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.awt.geom.Path2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -37,11 +36,11 @@ public class MixedModel {
         }
 
         double sum = 0.0;
-        for (int i = 0; i< weights_.length; i++) {
-            if (weights_[i]<0) {
+        for (double v : weights_) {
+            if (v < 0) {
                 throw new IllegalArgumentException("Cannot have negative weights");
             }
-            sum+= weights_[i];
+            sum += v;
         }
         if (Math.abs(1.0 - sum) > 0.0005) {
             throw new IllegalArgumentException("Model weights should add to 1.0, current sum "+sum);
@@ -85,8 +84,6 @@ public class MixedModel {
         return probability_;
     }
 
-    /** Functions for node sampling */
-
     /** Draw a single node without replacement */
     public final int nodeDrawWithoutReplacement(Network net, int[] alreadyChosenNodes) {
         ArrayList<Integer> nodeList = new ArrayList<Integer>();
@@ -97,8 +94,8 @@ public class MixedModel {
         }
 
         // Removes already chosen nodes from the sample space
-        for (int k = 0; k < chosen.length; k++) {
-            nodeList.remove((Integer) chosen[k]);
+        for (int i : chosen) {
+            nodeList.remove((Integer) i);
         }
 
         if (nodeList.isEmpty()) {
@@ -170,37 +167,32 @@ public class MixedModel {
         weights_= new double[componentList.size()];
         for (int i = 0; i< componentList.size(); i++) {
             JSONObject comp = (JSONObject) componentList.get(i);
+            ObjectModelComponent omc;
+            String omcClass = (String) comp.get("ComponentName");
 
-            /** Gets object model element class from string. Bit of a mouthful */
-            ObjectModelComponent omc = null;
-            String omcClass = "feta.objectmodels."+comp.get("ComponentName");
-            Class <?extends ObjectModelComponent> component = null;
-
-            try {
-                component= Class.forName(omcClass).asSubclass(ObjectModelComponent.class);
-                Constructor<?> c = component.getConstructor();
-                omc = (ObjectModelComponent)c.newInstance();
-            } catch (ClassNotFoundException e){
-                System.err.println("Object Model Component "+omcClass+" not found.");
-                System.exit(-1);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-
-            // Heck...
+            omc = switch (omcClass) {
+                case "DegreeModelComponent" -> new DegreeModelComponent();
+                case "DegreePower" -> new DegreePower();
+                case "DegreeWithAgeing" -> new DegreeWithAgeing();
+                case "K2Model" -> new K2Model();
+                case "PFP" -> new PFP();
+                case "RandomAttachment" -> new RandomAttachment();
+                case "RankPreferentialAttachment" -> new RankPreferentialAttachment();
+                case "TriangleClosure" -> new TriangleClosure();
+                case "TriangleClosureDegree" -> new TriangleClosureDegree();
+                case "TriangleClosureInverseDegree" -> new TriangleClosureInverseDegree();
+                case "TriangleClosureV2" -> new TriangleClosureV2();
+                default -> null;
+            };
 
             Double weight = (Double) comp.get("Weight");
             if (weight!=null) {
                 weights_[i]=weight;
             }
 
-            omc.parseJSON(comp);
+            if (omc != null) {
+                omc.parseJSON(comp);
+            }
             components_.add(omc);
         }
     }
@@ -217,15 +209,15 @@ public class MixedModel {
     }
 
     public int hashCode() {
-        return weights_.hashCode();
+        return Arrays.hashCode(weights_);
     }
 
     public String toString() {
-        String str="";
+        StringBuilder str= new StringBuilder();
         for (int i = 0; i < components_.size(); i++) {
-            str+=weights_[i]+" "+components_.get(i)+"\n";
+            str.append(weights_[i]).append(" ").append(components_.get(i)).append("\n");
         }
-        return str;
+        return str.toString();
     }
 
     public MixedModel copy() {
@@ -272,9 +264,6 @@ public class MixedModel {
                 return;
             }
             double logLike = Math.log(like) - Math.log(noOrders);
-//            if (Double.isInfinite(logLike)) {
-//                System.out.println("Aaaahh!!! "+like+" "+noOrders);
-//            }
             likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
         }
 
@@ -286,19 +275,18 @@ public class MixedModel {
         for (double[] weight : likelihoods_.keySet()) {
             likeRatio.put(weight,1.0);
         }
-        for (int i = 0; i < nodeSet.length; i++) {
-            int node = nodeSet[i];
-            updateNormalisation(net,alreadyChosen);
-            double[] probs = getComponentProbs(net,node);
+        for (int node : nodeSet) {
+            updateNormalisation(net, alreadyChosen);
+            double[] probs = getComponentProbs(net, node);
             for (double[] weight : likelihoods_.keySet()) {
                 double prob = 0.0;
                 for (int j = 0; j < weight.length; j++) {
-                    prob+=weight[j]*probs[j];
+                    prob += weight[j] * probs[j];
                 }
                 prob *= (net.noNodes_ - alreadyChosen.length);
-                likeRatio.put(weight,likeRatio.get(weight) * prob);
+                likeRatio.put(weight, likeRatio.get(weight) * prob);
             }
-            alreadyChosen = Methods.concatenate(alreadyChosen, new int[] {node});
+            alreadyChosen = Methods.concatenate(alreadyChosen, new int[]{node});
         }
         return likeRatio;
     }

@@ -5,7 +5,6 @@ import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.Link;
 import feta.objectmodels.FullObjectModel;
 import feta.objectmodels.MixedModel;
-import feta.operations.Clone;
 import feta.operations.Operation;
 import feta.operations.OperationModel;
 import feta.writenet.WriteNet;
@@ -41,9 +40,9 @@ public class Grow extends SimpleAction {
 
         // Clear any other links not built in seed network
         network_.linksToBuild_= new ArrayList<Link>();
-        Long time = startTime_;
+        long time = startTime_;
         boolean checkModel = true;
-        while (!stoppingConditionsExceeded_(network_) && time < objectModel_.lastTime_) {
+        while (withinStoppingConditions(network_) && time < objectModel_.lastTime_) {
             if (time > 50) {
                 checkModel=false;
             }
@@ -87,27 +86,18 @@ public class Grow extends SimpleAction {
             }
         }
     }
-
+    /** Gets object model element class from string. Bit of a mouthful */
     public void parseOperationModel() {
-        /** Gets object model element class from string. Bit of a mouthful */
-        OperationModel om = null;
-        String omcClass = (String) "feta.operations."+operationModelJSON_.get("Name");
-        Class <?extends OperationModel> component = null;
+        OperationModel om=null;
+        String omcClass = "feta.operations." +operationModelJSON_.get("Name");
+        Class <?extends OperationModel> component;
 
         try {
             component= Class.forName(omcClass).asSubclass(OperationModel.class);
             Constructor<?> c = component.getConstructor();
             om = (OperationModel) c.newInstance();
             om.parseJSON(operationModelJSON_);
-        } catch (ClassNotFoundException e){
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e){
             e.printStackTrace();
         }
 

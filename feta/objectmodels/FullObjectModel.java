@@ -1,7 +1,6 @@
 package feta.objectmodels;
 
 import feta.TimeInterval;
-import feta.network.Network;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -60,15 +59,15 @@ public class FullObjectModel {
         objectModels_= new ArrayList<MixedModel>(number);
         times_= new ArrayList<TimeInterval>(number);
 
-        for (int i = 0; i< number; i++) {
-            JSONObject om = (JSONObject) model.get(i);
+        for (Object o : model) {
+            JSONObject om = (JSONObject) o;
             JSONArray components = (JSONArray) om.get("Components");
             MixedModel obm = new MixedModel();
             obm.readObjectModelOptions(components);
 
             long start = (Long) om.get("Start");
             long end = (Long) om.get("End");
-            TimeInterval ti = new TimeInterval(start,end);
+            TimeInterval ti = new TimeInterval(start, end);
             times_.add(ti);
             objectModels_.add(obm);
             timeToOM_.put(ti, obm);

@@ -17,9 +17,9 @@ public class Methods {
     public static int[] removeNegativeNumbers(int[] num) {
         int[] output = new int[num.length];
         int k = 0;
-        for(int i = 0; i < num.length; i++) {
-            if(num[i] >= 0) {
-                output[k++] = num[i];
+        for (int j : num) {
+            if (j >= 0) {
+                output[k++] = j;
             }
         }
         return Arrays.copyOfRange(output, 0, k);
@@ -85,9 +85,9 @@ public class Methods {
     }
 
     public static void printArr(int [] arr) {
-        String str = "";
+        StringBuilder str = new StringBuilder();
         for (int i: arr) {
-            str+=i+" ";
+            str.append(i).append(" ");
         }
         System.out.println(str);
     }

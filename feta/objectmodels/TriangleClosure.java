@@ -21,9 +21,7 @@ public class TriangleClosure extends ObjectModelComponent {
         int depth = Math.min(depth_,justChosen_.length);
         for (int i=0; i < depth; i++) {
             int node = justChosen_[justChosen_.length-1-i];
-            for (int n: net.neighbours_.get(node)) {
-                neighbourhood_.add(n);
-            }
+            neighbourhood_.addAll(net.neighbours_.get(node));
         }
         for (int node: removed) {
             neighbourhood_.remove(node);
@@ -38,10 +36,8 @@ public class TriangleClosure extends ObjectModelComponent {
         neighbourhood_= new HashSet<>();
         int depth = Math.min(depth_,justChosen_.length);
         for (int i=0; i < depth; i++) {
-            int node = justChosen_[justChosen_.length - i];
-            for (int n: net.outLinks_.get(node)) {
-                neighbourhood_.add(n);
-            }
+            int node = justChosen_[justChosen_.length - 1 -i];
+            neighbourhood_.addAll(net.outLinks_.get(node));
         }
         for (int node: removed) {
             neighbourhood_.remove(node);

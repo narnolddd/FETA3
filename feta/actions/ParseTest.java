@@ -50,7 +50,7 @@ public class ParseTest extends SimpleAction {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
         long time_=startTime_;
-        while (!stoppingConditionsExceeded_(network_) && network_.linksToBuild_.size()>0) {
+        while (withinStoppingConditions(network_) && network_.linksToBuild_.size()>0) {
             parser_.parseNetwork(time_,time_+interval_);
             time_+=interval_;
         }
