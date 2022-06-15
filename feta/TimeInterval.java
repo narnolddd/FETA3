@@ -22,10 +22,7 @@ public class TimeInterval {
         if (T2.end_ <= start_) {
             return false;
         }
-        if (T2.start_ >= end_) {
-            return false;
-        }
-        return true;
+        return T2.start_ < end_;
     }
 
     public String toString() {
@@ -35,9 +32,7 @@ public class TimeInterval {
     public boolean contains(long time) {
         if (time > end_)
             return false;
-        if (time < start_)
-            return false;
-        return true;
+        return time >= start_;
     }
 
     public boolean equals(Object T2) {

@@ -21,11 +21,6 @@ public class ParseNetUndirected extends ParseNet {
         net_=network;
     }
 
-    public void parseNetwork(UndirectedNetwork net, long start) {
-        ArrayList<Link> links = net.linksToBuild_;
-        net.buildUpTo(start);
-    }
-
     public ArrayList<Operation> parseNewLinks(ArrayList <Link> links, Network net) {
         ArrayList<Operation> newOps = new ArrayList<Operation>();
         if (links.size()==1) {

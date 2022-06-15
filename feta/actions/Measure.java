@@ -2,8 +2,7 @@ package feta.actions;
 
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
-import feta.network.Measurements.Measurement;
-import feta.network.UndirectedNetwork;
+import feta.network.Measurements.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -11,15 +10,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class Measure extends SimpleAction {
 
     private long startTime_=10;
     private long interval_=10;
-    public String measureName_ = "output/measurements.dat";
+    public String outputFile_ = "output/measurements.dat";
     public BufferedWriter bw_ = null;
     // Need to think how this will work alternating between directed and undirected networks.
     private boolean measureDegDist_;
@@ -27,7 +24,7 @@ public class Measure extends SimpleAction {
     private boolean printHeader_;
     private boolean directed_;
 
-    private ArrayList<Measurement> statistics_;
+    private final ArrayList<Measurement> statistics_;
 
     public Measure() {
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -35,8 +32,8 @@ public class Measure extends SimpleAction {
     }
 
     public void execute() {
-        setUpMeasureWriter(measureName_);
-        network_.setUpDegDistWriters(measureName_);
+        setUpMeasureWriter(outputFile_);
+        network_.setUpDegDistWriters(outputFile_);
         network_.trackCluster_=true;
         long time = startTime_;
         network_.buildUpTo(time);
@@ -49,7 +46,7 @@ public class Measure extends SimpleAction {
             }
         }
         try {
-            while (!stoppingConditionsExceeded_(network_) && network_.linksToBuild_.size() > 0) {
+            while (withinStoppingConditions(network_) && network_.linksToBuild_.size() > 0) {
                 network_.buildUpTo(time);
                 if (network_.changed_) {
                     update();
@@ -67,14 +64,14 @@ public class Measure extends SimpleAction {
             bw_.close();
             network_.closeWriters();
         } catch (IOException e) {
-            System.out.println("Problem writing measurements to: "+measureName_);
+            System.out.println("Problem writing measurements to: "+ outputFile_);
             e.printStackTrace();
         }
     }
 
     public void setUpMeasureWriter(String fname) {
         File file= new File(fname);
-        FileWriter fw = null;
+        FileWriter fw;
         try{
             fw = new FileWriter(file);
             bw_= new BufferedWriter(fw);
@@ -98,7 +95,7 @@ public class Measure extends SimpleAction {
         }
         String measureFName = (String) obj.get("FileName");
         if (measureFName != null) {
-            measureName_=measureFName;
+            outputFile_ =measureFName;
         }
         Boolean printHeader = (Boolean) obj.get("PrintHeader");
         if (printHeader != null) {
@@ -113,27 +110,19 @@ public class Measure extends SimpleAction {
     }
 
     public void parseStatistics(JSONArray statistics) {
-        for (int i = 0; i < statistics.size(); i++) {
-            Measurement stat = null;
-            String statClass = (String) "feta.network.Measurements."+statistics.get(i);
-            Class <?extends Measurement> measurement;
-
-            try {
-                measurement = Class.forName(statClass).asSubclass(Measurement.class);
-                Constructor<?> c = measurement.getConstructor();
-                stat = (Measurement) c.newInstance();
-            } catch (ClassNotFoundException e){
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-
+        for (Object statistic : statistics) {
+            Measurement stat = switch (statistic.toString()) {
+                case "Assortativity" -> new Assortativity();
+                case "AverageDegree" -> new AverageDegree();
+                case "Clustering" -> new Clustering();
+                case "MaxDegree" -> new MaxDegree();
+                case "MeanSquaredDegree" -> new MeanSquaredDegree();
+                case "NoLinks" -> new NoLinks();
+                case "NoNodes" -> new NoNodes();
+                case "Singletons" -> new Singletons();
+                case "TriangleCount" -> new TriangleCount();
+                default -> null;
+            };
             statistics_.add(stat);
         }
     }
@@ -155,18 +144,18 @@ public class Measure extends SimpleAction {
     }
 
     public String getHeader() {
-        String header = "Timestamp ";
+        StringBuilder header = new StringBuilder("Timestamp ");
         for (Measurement m: statistics_) {
-            header += m.nameToString()+" ";
+            header.append(m.nameToString()).append(" ");
         }
-        return header+'\n';
+        return header.toString() +'\n';
     }
 
     public String getLine() {
-        String line = "";
+        StringBuilder line = new StringBuilder();
         for (Measurement m: statistics_) {
-            line += m+" ";
+            line.append(m).append(" ");
         }
-        return line+'\n';
+        return line.toString() +'\n';
     }
 }

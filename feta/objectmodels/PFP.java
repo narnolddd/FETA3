@@ -15,9 +15,9 @@ public class PFP extends ObjectModelComponent{
             degSum += Math.pow(network.getDegree(i), 1 + delta_ * Math.log10(network.getDegree(i)));
         }
 
-        for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>=0) {
-                degSum -= Math.pow(network.getDegree(removed[j]), 1 + delta_ * Math.log10(network.getDegree(removed[j])));
+        for (int i : removed) {
+            if (i >= 0) {
+                degSum -= Math.pow(network.getDegree(i), 1 + delta_ * Math.log10(network.getDegree(i)));
             }
         }
         normalisationConstant_=degSum;
@@ -33,12 +33,12 @@ public class PFP extends ObjectModelComponent{
             }
         }
 
-        for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>=0 && useInDegree_) {
-                degSum -= Math.pow(network.getInDegree(removed[j])+1, 1 + delta_*Math.log10(network.getInDegree(removed[j])+1));
+        for (int i : removed) {
+            if (i >= 0 && useInDegree_) {
+                degSum -= Math.pow(network.getInDegree(i) + 1, 1 + delta_ * Math.log10(network.getInDegree(i) + 1));
             }
-            if (removed[j]>=0 && !useInDegree_) {
-                degSum-= Math.pow(network.getOutDegree(removed[j])+1, 1 + delta_*Math.log10(network.getOutDegree(removed[j])+1));
+            if (i >= 0 && !useInDegree_) {
+                degSum -= Math.pow(network.getOutDegree(i) + 1, 1 + delta_ * Math.log10(network.getOutDegree(i) + 1));
             }
         }
         normalisationConstant_=degSum;

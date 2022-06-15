@@ -13,14 +13,12 @@ public class Star extends Operation{
     private int[] leafNodes_;
     private String centreNodeName_;
     private String[] leafNodeNames_;
-    private boolean internal_;
-    private int internalId_;
+    private final boolean internal_;
     private int noExisting_;
-    private int noLeaves_;
+    private final int noLeaves_;
 
     public Star(int noLeaves, boolean internal) {
         internal_=internal;
-        internalId_=internal_ ? 1 : 0;
         noLeaves_=noLeaves;
     }
 
@@ -127,16 +125,16 @@ public class Star extends Operation{
     }
 
     public String toString() {
-        String str = getTime()+" STAR "+centreNodeName_+" LEAVES ";
+        StringBuilder str = new StringBuilder(getTime() + " STAR " + centreNodeName_ + " LEAVES ");
         for (String leaf: leafNodeNames_) {
-            str+=leaf+" ";
+            str.append(leaf).append(" ");
         }
         if (internal_){
-            str += "INTERNAL";
+            str.append("INTERNAL");
         } else {
-            str += "EXTERNAL";
+            str.append("EXTERNAL");
         }
-        str += " " + noExisting_;
-        return str;
+        str.append(" ").append(noExisting_);
+        return str.toString();
     }
 }

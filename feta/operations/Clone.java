@@ -12,7 +12,6 @@ public class Clone extends OperationModel {
     public String fname_;
     public ArrayList<Operation> operations_;
     public BufferedReader br_;
-    public long token_ = 0;
 
     public Clone() {
         operations_= new ArrayList<Operation>();
@@ -22,7 +21,6 @@ public class Clone extends OperationModel {
         File file = new File(fname_);
         try {
             br_ = new BufferedReader(new FileReader(file));
-            String line;
             long time = 0;
             String lastLine="";
             while (time <= startTime_) {
@@ -41,7 +39,7 @@ public class Clone extends OperationModel {
 
     public void parseLine(String line) {
         String [] parts = line.split(" ");
-        Long time = Long.parseLong(parts[0]);
+        long time = Long.parseLong(parts[0]);
         String type_ = parts[1];
         if (type_.equals("STAR")) {
             Star op_;

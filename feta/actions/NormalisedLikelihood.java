@@ -31,7 +31,7 @@ public class NormalisedLikelihood extends SimpleAction {
         if (!options_.isDirectedInput()) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
-        getLike(startTime_, Long.MAX_VALUE);
+        getLike(startTime_);
     }
 
     public void parseActionOptions(JSONObject obj) {
@@ -40,10 +40,10 @@ public class NormalisedLikelihood extends SimpleAction {
             startTime_=start;
     }
 
-    public void getLike(long start, long end) {
+    public void getLike(long start) {
         network_.buildUpTo(start);
-        long time = start;
-        while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
+        long time;
+        while (network_.linksToBuild_.size()>0 && withinStoppingConditions(network_)) {
             ArrayList<Link> links = network_.linksToBuild_;
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
@@ -51,7 +51,7 @@ public class NormalisedLikelihood extends SimpleAction {
             objectModel_.objectModelAtTime(time).calcNormalisation(network_);
             //double[] meanSD_ = objectModel_.objectModelAtTime(time).calcMeanSDLike(network_);
             //System.out.println(meanSD_[0]);
-            for (Operation op: newOps) {
+            for (Operation ignored : newOps) {
                 //op.printMeanLike(meanSD_[0], objectModel_.objectModelAtTime(time),network_);
                 //op.build(network_);
             }

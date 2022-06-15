@@ -44,22 +44,21 @@ public class Assortativity extends Measurement{
             degSqOut+= (1.0/noLinks_)*srcDegOut * srcDegOut;
 
             ArrayList<Integer> links = net.outLinks_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
+            for (int l : links) {
                 if (l < i)
                     continue;
                 int dstDegIn = net.getInDegree(l);
                 int dstDegOut = net.getOutDegree(l);
 
-                assSumInIn += (1.0/noNodes_) * (srcDegIn + dstDegIn);
-                assSumInOut += (1.0/noNodes_) * (srcDegIn + dstDegOut);
-                assSumOutIn += (1.0/noNodes_) * (srcDegOut + dstDegIn);
-                assSumOutOut += (1.0/noNodes_) * (srcDegOut + dstDegOut);
+                assSumInIn += (1.0 / noNodes_) * (srcDegIn + dstDegIn);
+                assSumInOut += (1.0 / noNodes_) * (srcDegIn + dstDegOut);
+                assSumOutIn += (1.0 / noNodes_) * (srcDegOut + dstDegIn);
+                assSumOutOut += (1.0 / noNodes_) * (srcDegOut + dstDegOut);
 
-                assProdInIn += (1.0/noLinks_) * srcDegIn*dstDegIn;
-                assProdInOut += (1.0/noLinks_)* srcDegIn*dstDegOut;
-                assProdOutIn += (1.0/noLinks_) * srcDegOut*dstDegIn;
-                assProdOutOut += (1.0/noLinks_)* srcDegOut*dstDegOut;
+                assProdInIn += (1.0 / noLinks_) * srcDegIn * dstDegIn;
+                assProdInOut += (1.0 / noLinks_) * srcDegIn * dstDegOut;
+                assProdOutIn += (1.0 / noLinks_) * srcDegOut * dstDegIn;
+                assProdOutOut += (1.0 / noLinks_) * srcDegOut * dstDegOut;
             }
         }
 
@@ -89,15 +88,14 @@ public class Assortativity extends Measurement{
 
         for (int i = 0; i < net.noNodes_; i++) {
             ArrayList<Integer> links = net.neighbours_.get(i);
-            for (int j = 0; j < links.size(); j++) {
-                int l = links.get(j);
+            for (int l : links) {
                 if (l < i)
                     continue;
                 int srcDeg = net.getDegree(i);
                 int dstDeg = net.getDegree(l);
-                assSum += 0.5 * (1.0/net.noLinks_) * (srcDeg + dstDeg);
+                assSum += 0.5 * (1.0 / net.noLinks_) * (srcDeg + dstDeg);
                 assProd += srcDeg * dstDeg;
-                assSq += 0.5 * (1.0/net.noLinks_) * (srcDeg*srcDeg + dstDeg*dstDeg);
+                assSq += 0.5 * (1.0 / net.noLinks_) * (srcDeg * srcDeg + dstDeg * dstDeg);
             }
         }
         double assNum = (1.0/net.noLinks_) * assProd - assSum * assSum;

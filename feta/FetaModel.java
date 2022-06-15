@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class FetaModel {
 
-    private FetaOptions options_;
+    private final FetaOptions options_;
     private Network network_;
-    private ArrayList<SimpleAction> actionsToDo_;
+    private final ArrayList<SimpleAction> actionsToDo_;
 
     public FetaModel() {
         options_= new FetaOptions();

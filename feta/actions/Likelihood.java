@@ -19,7 +19,6 @@ import java.util.HashMap;
 public class Likelihood extends SimpleAction {
 
     public long startTime_=10;
-    public long endTime_;
     public FetaOptions options_;
     public FullObjectModel objectModel_;
     public ParseNet parser_;
@@ -60,7 +59,7 @@ public class Likelihood extends SimpleAction {
         network_.buildUpTo(start);
         int noChoices = 0;
         HashMap<double[], Double> c0Values = new HashMap<>();
-        while (network_.linksToBuild_.size()>0 && !stoppingConditionsExceeded_(network_)) {
+        while (network_.linksToBuild_.size()>0 && withinStoppingConditions(network_)) {
             if (network_.latestTime_ > end)
                 break;
             ArrayList<Link> links = network_.linksToBuild_;
@@ -76,8 +75,8 @@ public class Likelihood extends SimpleAction {
         }
 
         // Turn everything into a C0 value
-        double like=0.0;
-        double raw=0.0;
+        double like;
+        double raw;
         HashMap<double[], Double> likelihoods = obm.getLikelihoods();
         raw = likelihoods.get(obm.getWeights());
         like = Math.exp(raw/noChoices);
