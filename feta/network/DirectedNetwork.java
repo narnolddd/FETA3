@@ -1,6 +1,7 @@
 package feta.network;
 
 import feta.Methods;
+import feta.readnet.ReadNet;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -31,7 +32,8 @@ public class DirectedNetwork extends Network {
     private BufferedWriter brIn_=null;
     private BufferedWriter brOut_=null;
 
-    public DirectedNetwork() {
+    public DirectedNetwork(ReadNet reader, boolean isTyped) {
+        super(reader,isTyped);
         inLinks_ = new TreeMap<Integer, ArrayList<Integer>>();
         outLinks_ = new TreeMap<Integer, ArrayList<Integer>>();
 

@@ -44,8 +44,10 @@ public abstract class Network {
     /** Name for new nodes */
     public static final String artificialNodeName= "NODE--NUMBER--";
 
-    /** Initialise an empty network */
-    public Network() {
+    /** Initialise an empty network
+     * @param reader reader type for the edgelist file
+     * @param isTyped whether or not a typed network*/
+    public Network(ReadNet reader, boolean isTyped) {
         noNodes_= 0;
         noLinks_= 0;
         linksToBuild_= new ArrayList<Link>();
@@ -55,6 +57,10 @@ public abstract class Network {
         latestNodeNo_=0;
         latestTime_=0;
         recentlyPickedNodes_= new ArrayList<>();
+        networkReader_=reader;
+        if (isTyped) {
+            nodeTypes = new NodeTypes();
+        }
     }
 
     /** Build network from list of links */
@@ -75,10 +81,10 @@ public abstract class Network {
             String src = link.sourceNode_;
             String dst = link.destNode_;
             if (newNode(src)) {
-                addNodeToList(src);
+                addNode(src);
             }
             if (newNode(dst)) {
-                addNodeToList(dst);
+                addNode(dst);
             }
 
             addLink(src,dst);
@@ -97,14 +103,19 @@ public abstract class Network {
     }
 
     /** Add a new node to all data structures */
-
-    public void addNodeToList(String nodeName) {
+    public void addNode(String nodeName) {
         int nodeNo= latestNodeNo_;
         latestNodeNo_++;
         noNodes_++;
         nodeNumbers_.put(nodeName,nodeNo);
         nodeNames_.put(nodeNo,nodeName);
         addNode(nodeNo);
+    }
+
+    /** Add a typed node to all data structures */
+    public void addNode(String nodeName, String nodeType) {
+        addNode(nodeName);
+        NodeTypes.setNodeType(nodeNumbers_.get(nodeName),nodeType);
     }
 
     /** Calls the addLink method on the integers corresponding to the string nodenames */
@@ -193,7 +204,7 @@ public abstract class Network {
     /** Generates a node name for a node generated from a network model */
     public String generateNodeName() {
         String name = artificialNodeName+noNodes_;
-        addNodeToList(name);
+        addNode(name);
         return name;
     }
 

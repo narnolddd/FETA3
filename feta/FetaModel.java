@@ -29,8 +29,6 @@ public class FetaModel {
     public void execute() {
         parseActionList(options_.actionOps_);
         initialiseNetwork();
-        network_.setNetworkReader(newReader());
-        network_.getLinksFromFile();
         for (SimpleAction act: actionsToDo_) {
             act.setNetwork(network_);
             act.execute();
@@ -48,10 +46,13 @@ public class FetaModel {
     }
 
     public void initialiseNetwork() {
+        ReadNet reader = extractReaderType();
+        boolean typedNet = options_.isTypedNetwork();
         if (options_.isDirectedInput()) {
-            network_= new DirectedNetwork();
-        } else network_= new UndirectedNetwork();
+            network_= new DirectedNetwork(reader,typedNet);
+        } else network_= new UndirectedNetwork(reader,typedNet);
         network_.numRecents_=options_.getNoRecents();
+        network_.getLinksFromFile();
     }
 
     /** Reads from a string the relevant action type */
@@ -77,7 +78,7 @@ public class FetaModel {
     }
 
     /** Sets which network file reader to do the job */
-    private ReadNet newReader() {
+    private ReadNet extractReaderType() {
         ReadNet reader;
         String inputType = options_.getInputType();
         reader = switch (inputType) {

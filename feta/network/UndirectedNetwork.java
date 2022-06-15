@@ -1,6 +1,7 @@
 package feta.network;
 
 import feta.Methods;
+import feta.readnet.ReadNet;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -25,7 +26,8 @@ public class UndirectedNetwork extends Network {
     private int totTri_;
     private BufferedWriter br_;
 
-    public UndirectedNetwork() {
+    public UndirectedNetwork(ReadNet reader, boolean isTyped) {
+        super(reader, isTyped);
         neighbours_= new TreeMap<>();
         degreeDist_= new int[degArraySize_];
         degrees_= new int[maxNodeNumber];

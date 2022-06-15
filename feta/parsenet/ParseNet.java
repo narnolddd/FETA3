@@ -72,13 +72,13 @@ public abstract class ParseNet {
             if (!net.newNode(l.destNode_)) {
                 op.setNoExisting(op.getNoExisting()+1);
             }
-            net.addNodeToList(l.sourceNode_);
+            net.addNode(l.sourceNode_);
         } else if (net.newNode(l.destNode_)) {
             op = new Star(1,false);
             op.setNoExisting(op.getNoExisting()+1);
             op.setCentreNode(l.destNode_);
             op.setLeaves(new String[] {l.sourceNode_});
-            net.addNodeToList(l.destNode_);
+            net.addNode(l.destNode_);
         } else {
             op = new Star(1, true);
             op.setNoExisting(op.getNoExisting()+1);
