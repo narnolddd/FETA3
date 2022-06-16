@@ -27,7 +27,8 @@ public class ReadNetCSV extends ReadNet {
         String node2 = parts[dstColumn_];
 
         long time;
-        if (timeColumn_>=0) {
+        // is there a time column
+        if (parts.length == 3 || parts.length == 5) {
             time = Long.parseLong(parts[timeColumn_]);
         } else {
             time = linkno;
