@@ -1,5 +1,5 @@
 package feta;
-
+import java.lang.reflect.*;
 import feta.actions.*;
 import feta.network.DirectedNetwork;
 import feta.network.Network;
@@ -46,7 +46,13 @@ public class FetaModel {
     }
 
     public void initialiseNetwork() {
-        ReadNet reader = extractReaderType();
+		ReadNet reader;
+		try {
+			reader = extractReaderType();
+        } catch (IllegalArgumentException e) {
+			System.out.println("Can't get reader type."+e);
+			return;
+		}
         boolean typedNet = options_.isTypedNetwork();
         if (options_.isDirectedInput()) {
             network_= new DirectedNetwork(reader,typedNet);
@@ -78,16 +84,54 @@ public class FetaModel {
     }
 
     /** Sets which network file reader to do the job */
-    private ReadNet extractReaderType() {
+    private ReadNet extractReaderType() throws IllegalArgumentException {
         ReadNet reader;
-        String inputType = options_.getInputType();
-        reader = switch (inputType) {
-            case "NNT" -> new ReadNetNNT(options_);
-            case "NN" -> new ReadNetNN(options_);
-            case "CSV" -> new ReadNetCSV(options_);
-            default -> null;
-        };
+        Class <? extends ReadNet> cl= null;
+        
+        try {
+			cl= findClass(options_.getInputType());
+			Constructor <?> c= cl.getConstructor(FetaOptions.class);
+			reader= (ReadNet)c.newInstance(options_);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalArgumentException("Parser specifies unknown reader class "+
+				options_.getInputType());	
+		} catch (Exception e) {
+			System.out.println(e);
+			throw new IllegalArgumentException("Cannot instantiate class "+
+				options_.getInputType());
+		}
+		
         return reader;
     }
+	
+	private Class <? extends ReadNet> findClass(String rawname) throws ClassNotFoundException {
+		Class <? extends ReadNet> cl= null;
+		String cname=rawname;
+		try {
+			cl=Class.forName(cname).asSubclass(ReadNet.class);
+			return cl;
+		} catch (ClassNotFoundException e) {
+		}
+		cname="ReadNet"+rawname;
+		try {
+			cl=Class.forName(cname).asSubclass(ReadNet.class);
+			return cl;
+		} catch (ClassNotFoundException e) {
+		}
+		cname="feta.readnet"+rawname;
+		try {
+			cl=Class.forName(cname).asSubclass(ReadNet.class);
+			return cl;
+		} catch (ClassNotFoundException e) {
+		}
+		cname="feta.readnet.ReadNet"+rawname;
+		try {
+			cl=Class.forName(cname).asSubclass(ReadNet.class);
+			return cl;
+		} catch (ClassNotFoundException e) {
+			throw(e);
+		}
+		
+	}
 
 }
