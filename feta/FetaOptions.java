@@ -17,9 +17,9 @@ public class FetaOptions {
     private String inputType_ = "NNT";
     private boolean directedInput_;
     private String outputType_="NNT";
-    private int sourceColumn=-1;
-    private int dstColumn=-1;
-    private int timeColumn=-1;
+    private int sourceColumn=0;
+    private int dstColumn=1;
+    private int timeColumn=-2;
 
     /** Options related to typed networks */
     private boolean typedNetwork=false;
