@@ -51,7 +51,8 @@ public class FetaModel {
 			reader = extractReaderType();
         } catch (IllegalArgumentException e) {
 			System.out.println("Can't get reader type."+e);
-			return;
+			System.exit(0);
+			return; //Java --- grrr... this prevents compilation error.
 		}
         boolean typedNet = options_.isTypedNetwork();
         if (options_.isDirectedInput()) {
@@ -105,6 +106,9 @@ public class FetaModel {
     }
 	
 	private Class <? extends ReadNet> findClass(String rawname) throws ClassNotFoundException {
+	/** Searches for reader class. Given a class name C it searches 
+	 * in current directory for C.class then for ReadNetC.class
+	 * then it does the same in feta.readnet directory */
 		Class <? extends ReadNet> cl= null;
 		String cname=rawname;
 		try {
