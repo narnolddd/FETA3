@@ -17,6 +17,7 @@ public class FetaOptions {
     private String inputType_ = "NNT";
     private boolean directedInput_;
     private String outputType_="NNT";
+    private boolean includeOutTimestamps = true;
     private int sourceColumn=0;
     private int dstColumn=1;
     private int timeColumn=2;
@@ -134,6 +135,12 @@ public class FetaOptions {
             df.remove("GraphOutputType");
         }
 
+        Boolean includets = (Boolean) df.get("IncludeOutputTimestamps");
+        if (includets != null) {
+            includeOutTimestamps = includets;
+            df.remove("IncludeOutputTimestamps");
+        }
+
         String insep = (String) df.get("InputLineSeparator");
         if (insep != null) {
             inSep_= insep;
@@ -181,6 +188,10 @@ public class FetaOptions {
 
     public String getOutputType() {
         return outputType_;
+    }
+
+    public boolean isIncludeOutTimestamps() {
+        return includeOutTimestamps;
     }
 
     public String getInSep() {

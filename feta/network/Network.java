@@ -186,7 +186,6 @@ public abstract class Network {
     public abstract void removeLinks(String nodeName);
 
     /** For quick switching between node names and numbers */
-
     public int nodeNameToNo(String name)
     {
         return nodeNumbers_.get(name);
@@ -213,5 +212,13 @@ public abstract class Network {
 
     /** Growth */
     public abstract void addNewLink(String src, String dst, long time);
+
+    public HashMap<String, Integer> getNodeNumbers() {
+        return nodeNumbers_;
+    }
+
+    public NodeTypes getNodeTypes() {
+        return nodeTypes;
+    }
 
 }

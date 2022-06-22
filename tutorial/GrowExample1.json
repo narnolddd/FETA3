@@ -3,7 +3,7 @@
     "GraphInputFile": "seed_graphs/loop-5.dat",
     "GraphOutputFile": "tutorial/GrowExample1.dat",
     "GraphInputType": "CSV",
-    "GraphOutputType": "NNT",
+    "GraphOutputType": "CSV",
     "Directed": false
   },
   "Action": {

@@ -8,6 +8,7 @@ import feta.objectmodels.MixedModel;
 import feta.operations.Operation;
 import feta.operations.OperationModel;
 import feta.writenet.WriteNet;
+import feta.writenet.WriteNetCSV;
 import feta.writenet.WriteNetNN;
 import feta.writenet.WriteNetNNT;
 import org.json.simple.JSONObject;
@@ -68,7 +69,14 @@ public class Grow extends SimpleAction {
             writer = new WriteNetNNT(network_.linksBuilt_, options_);
         } else if (outputType.equals("NN")) {
             writer = new WriteNetNN(network_.linksBuilt_, options_);
-        } else throw new IllegalArgumentException("Unrecognised output type "+outputType);
+        } else if (outputType.equals("CSV") || outputType.equals("WriteNetCSV")) {
+            if (options_.isTypedNetwork()) {
+                writer = new WriteNetCSV(network_.getNodeTypes(), network_.getNodeNumbers(), network_.linksBuilt_, options_);
+            } else {
+                writer = new WriteNetCSV(network_.linksBuilt_, options_);
+            }
+        }
+            else throw new IllegalArgumentException("Unrecognised output type "+outputType);
         writer.write(1,Long.MAX_VALUE);
     }
 

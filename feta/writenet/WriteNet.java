@@ -28,8 +28,7 @@ public abstract class WriteNet {
             fw = new FileWriter(networkOutput_);
             bw = new BufferedWriter(fw);
 
-            for (int i = 0; i < linksToWrite_.size(); i++) {
-                Link link = linksToWrite_.get(i);
+            for (Link link : linksToWrite_) {
                 if (link.time_ < startTime) {
                     continue;
                 }
@@ -37,6 +36,7 @@ public abstract class WriteNet {
                     break;
                 }
                 bw.write(linkToString(link));
+                bw.newLine();
             }
             bw.close();
         } catch (IOException e){
