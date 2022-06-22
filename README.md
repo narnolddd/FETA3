@@ -306,7 +306,7 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
       "End": 1000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeWithAgeing",
+          "ComponentName": "feta.objectmodels.components.DegreeWithAgeing",
           "Weight": 1.0,
           "AgeingExponent": 0.8
         }
@@ -317,11 +317,11 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
       "End": 2000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "ComponentName": "feta.objectmodels.components.RandomAttachment",
           "Weight": 0.5
         },
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "feta.objectmodels.components.DegreeModelComponent",
           "Weight": 0.5
         }
       ]
@@ -331,7 +331,7 @@ For the sake of exhaustiveness, I've made it a bit more complicated than is prob
       "End": 3000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.RankPreferentialAttachment",
+          "ComponentName": "feta.objectmodels.components.RankPreferentialAttachment",
           "Weight": 1.0,
           "Alpha": 0.6
         }
@@ -469,10 +469,10 @@ the citations network dataset - see the file `tutorial/CitationsFitMixed.json`:
       "End": 1006492800,
       "Components": [
         {
-          "ComponentName": "DegreeModelComponent",
+          "ComponentName": "DegreeModelComponent"
         },
         {
-          "ComponentName": "RandomAttachment",
+          "ComponentName": "RandomAttachment"
         },
         {
           "ComponentName": "TriangleClosure",
@@ -573,15 +573,15 @@ to those found having the highest likelihood:
       "End": 1006492800,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "feta.objectmodels.components.DegreeModelComponent",
           "Weight": 0.46
         },
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "ComponentName": "feta.objectmodels.components.RandomAttachment",
           "Weight":0.14
         },
         {
-          "ComponentName": "feta.objectmodels.TriangleClosureDegree",
+          "ComponentName": "feta.objectmodels.components.TriangleClosureDegree",
           "Weight":0.4
         }
       ]

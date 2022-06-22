@@ -1,33 +1,33 @@
-package feta.network.Measurements;
+package feta.network.measurements;
 
 import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;
 
-public class NoNodes extends Measurement {
+public class NoLinks extends Measurement{
 
-    int noNodes_;
+    int noLinks_;
 
-    public NoNodes() {
-        nameDirected_=nameUndirected_="NoNodes";
+    public NoLinks() {
+        nameDirected_=nameUndirected_="NoLinks";
     }
 
     @Override
     public void update(DirectedNetwork net) {
-        noNodes_=net.noNodes_;
+        noLinks_= net.noLinks_;
     }
 
     @Override
     public void update(UndirectedNetwork net) {
-        noNodes_=net.noNodes_;
+        noLinks_=net.noLinks_;
     }
 
     @Override
     public String toStringDirected() {
-        return String.format("%d",noNodes_);
+        return String.format("%d",noLinks_);
     }
 
     @Override
     public String toStringUndirected() {
-        return String.format("%d",noNodes_);
+        return String.format("%d",noLinks_);
     }
 }

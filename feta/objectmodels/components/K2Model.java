@@ -1,4 +1,4 @@
-package feta.objectmodels;
+package feta.objectmodels.components;
 
 import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;

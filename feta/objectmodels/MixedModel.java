@@ -2,6 +2,7 @@ package feta.objectmodels;
 
 import feta.Methods;
 import feta.network.Network;
+import feta.objectmodels.components.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -167,33 +168,58 @@ public class MixedModel {
         weights_= new double[componentList.size()];
         for (int i = 0; i< componentList.size(); i++) {
             JSONObject comp = (JSONObject) componentList.get(i);
-            ObjectModelComponent omc;
+            ObjectModelComponent omc = null;
             String omcClass = (String) comp.get("ComponentName");
 
-            omc = switch (omcClass) {
-                case "DegreeModelComponent" -> new DegreeModelComponent();
-                case "DegreePower" -> new DegreePower();
-                case "DegreeWithAgeing" -> new DegreeWithAgeing();
-                case "K2Model" -> new K2Model();
-                case "PFP" -> new PFP();
-                case "RandomAttachment" -> new RandomAttachment();
-                case "RankPreferentialAttachment" -> new RankPreferentialAttachment();
-                case "TriangleClosure" -> new TriangleClosure();
-                case "TriangleClosureDegree" -> new TriangleClosureDegree();
-                case "TriangleClosureInverseDegree" -> new TriangleClosureInverseDegree();
-                case "TriangleClosureV2" -> new TriangleClosureV2();
-                default -> null;
-            };
+            try {
+                omc = instantiateOMC(findOMCClass(omcClass));
+            } catch (ClassNotFoundException e) {
+                System.err.println("Unable to find class "+omcClass);
+                e.printStackTrace();
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                System.err.println("Unable to instantiate class "+omcClass);
+                e.printStackTrace();
+            }
 
             Double weight = (Double) comp.get("Weight");
             if (weight!=null) {
                 weights_[i]=weight;
             }
 
-            if (omc != null) {
+            if (omc!=null) {
                 omc.parseJSON(comp);
             }
             components_.add(omc);
+        }
+    }
+
+    private ObjectModelComponent instantiateOMC(Class <? extends ObjectModelComponent> omcClass) throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+        ObjectModelComponent omc;
+        try {
+            Constructor <?> c = omcClass.getConstructor();
+            omc = (ObjectModelComponent) c.newInstance();
+            return omc;
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            System.err.println("Unable to instantiate Object Model Component Class");
+            throw e;
+        }
+    }
+
+    private Class <? extends ObjectModelComponent > findOMCClass(String rawname) throws ClassNotFoundException {
+        Class <? extends ObjectModelComponent> cl;
+        String cname = rawname;
+        try {
+            cl = Class.forName(cname).asSubclass(ObjectModelComponent.class);
+            return cl;
+        } catch (ClassNotFoundException ignored) {
+        }
+        cname = "feta.objectmodels.components."+rawname;
+        try {
+            cl = Class.forName(cname).asSubclass(ObjectModelComponent.class);
+            return cl;
+        } catch (ClassNotFoundException e) {
+            System.err.println("Unable to find class of name "+rawname+" or "+cname);
+            throw e;
         }
     }
 

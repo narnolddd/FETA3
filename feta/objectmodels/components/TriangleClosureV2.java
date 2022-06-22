@@ -1,4 +1,4 @@
-package feta.objectmodels;
+package feta.objectmodels.components;
 
 import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;
@@ -6,46 +6,46 @@ import feta.network.UndirectedNetwork;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TriangleClosureDegree extends ObjectModelComponent{
+public class TriangleClosureV2 extends ObjectModelComponent{
+
 
     public Set<Integer> neighbourhood_;
 
     public void calcNormalisation(UndirectedNetwork network, int [] removed) {
-        normalisationConstant_=0.0;
-        Set<Integer> recents = new HashSet<Integer>(network.recentlyPickedNodes_);
         neighbourhood_= new HashSet<>();
-        for (Integer r: recents) {
-            neighbourhood_.add(r);
-            neighbourhood_.addAll(network.neighbours_.get(r));
-        }
-        for (int nd: neighbourhood_) {
-            normalisationConstant_ += network.degrees_[nd];
+        if (removed.length==0) {
+            for (int node = 0; node < network.noNodes_; node++) {
+                neighbourhood_.add(node);
+            }
+            normalisationConstant_=network.noNodes_;
+            return;
         }
         for (int node: removed) {
-            if (neighbourhood_.contains(node)){
-                normalisationConstant_-= network.degrees_[node];
-            }
             neighbourhood_.remove(node);
         }
+
+//        String neighbourString="";
+//        for (int node: neighbourhood_){
+//            neighbourString+=node+" ";
+//        }
+//        System.out.println(neighbourString);
+
+        normalisationConstant_=neighbourhood_.size();
     }
 
     public void calcNormalisation(DirectedNetwork net, int[] removed) {
-        normalisationConstant_=0.0;
         Set<Integer> recents = new HashSet<Integer>(net.recentlyPickedNodes_);
         neighbourhood_= new HashSet<>();
         for (Integer r: recents) {
             neighbourhood_.add(r);
-            neighbourhood_.addAll(net.outLinks_.get(r));
-        }
-        for (int nd: neighbourhood_) {
-            normalisationConstant_+=net.getInDegree(nd);
+            for (int n: net.outLinks_.get(r)) {
+                neighbourhood_.add(n);
+            }
         }
         for (int node: removed) {
-            if (neighbourhood_.contains(node)) {
-                normalisationConstant_-= net.getInDegree(node);
-            }
             neighbourhood_.remove(node);
         }
+        normalisationConstant_=neighbourhood_.size();
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
@@ -54,7 +54,7 @@ public class TriangleClosureDegree extends ObjectModelComponent{
             return 1.0/net.noNodes_;
         } else {
             if (neighbourhood_.contains(node)) {
-                return net.getInDegree(node)/normalisationConstant_;
+                return 1.0/normalisationConstant_;
             } else return 0.0;
         }
     }
@@ -65,13 +65,14 @@ public class TriangleClosureDegree extends ObjectModelComponent{
             return 1.0/net.noNodes_;
         } else {
             if (neighbourhood_.contains(node)) {
-                return net.degrees_[node]/normalisationConstant_;
+                return 1.0/normalisationConstant_;
             } else return 0.0;
         }
     }
 
     @Override
     public String toString() {
-        return "TriangleClosureDegree";
+        return "TriangleClosure";
     }
+
 }

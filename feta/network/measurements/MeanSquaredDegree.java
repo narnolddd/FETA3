@@ -1,4 +1,4 @@
-package feta.network.Measurements;
+package feta.network.measurements;
 
 import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;

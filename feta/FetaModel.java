@@ -104,11 +104,11 @@ public class FetaModel {
 		
         return reader;
     }
-	
+
+    /** Searches for reader class. Given a class name C it searches
+     * in current directory for C.class then for ReadNetC.class
+     * then it does the same in feta.readnet directory */
 	private Class <? extends ReadNet> findClass(String rawname) throws ClassNotFoundException {
-	/** Searches for reader class. Given a class name C it searches 
-	 * in current directory for C.class then for ReadNetC.class
-	 * then it does the same in feta.readnet directory */
 		Class <? extends ReadNet> cl= null;
 		String cname=rawname;
 		try {

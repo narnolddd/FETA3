@@ -1,8 +1,10 @@
 package feta.actions;
 
+import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
-import feta.network.Measurements.*;
+import feta.network.measurements.*;
+import feta.readnet.ReadNet;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -10,6 +12,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class Measure extends SimpleAction {
@@ -111,19 +115,38 @@ public class Measure extends SimpleAction {
 
     public void parseStatistics(JSONArray statistics) {
         for (Object statistic : statistics) {
-            Measurement stat = switch (statistic.toString()) {
-                case "Assortativity" -> new Assortativity();
-                case "AverageDegree" -> new AverageDegree();
-                case "Clustering" -> new Clustering();
-                case "MaxDegree" -> new MaxDegree();
-                case "MeanSquaredDegree" -> new MeanSquaredDegree();
-                case "NoLinks" -> new NoLinks();
-                case "NoNodes" -> new NoNodes();
-                case "Singletons" -> new Singletons();
-                case "TriangleCount" -> new TriangleCount();
-                default -> null;
-            };
-            statistics_.add(stat);
+            Measurement measure;
+            Class<? extends Measurement> cl;
+            try {
+                cl = findStatisticClass(statistic.toString());
+                Constructor<?> c= cl.getConstructor();
+                measure= (Measurement) c.newInstance();
+            } catch (ClassNotFoundException e) {
+                System.err.println("No measurement class found with name "+statistic);
+            } catch (NoSuchMethodException e) {
+                System.err.println("No constructor found for class with name "+statistic);
+                e.printStackTrace();
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                System.err.println("Trouble instantiating class "+statistic);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Class<?extends Measurement> findStatisticClass(String rawname) throws ClassNotFoundException {
+        Class <? extends Measurement> stat = null;
+        String sname = rawname;
+        try {
+            stat=Class.forName(sname).asSubclass(Measurement.class);
+            return stat;
+        } catch (ClassNotFoundException e) {
+        }
+        sname="feta.network.measurements."+rawname;
+        try {
+            stat=Class.forName(sname).asSubclass(Measurement.class);
+            return stat;
+        } catch (ClassNotFoundException e) {
+            throw e;
         }
     }
 

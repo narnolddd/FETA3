@@ -1,7 +1,6 @@
-package feta.objectmodels;
+package feta.objectmodels.components;
 
 import feta.network.DirectedNetwork;
-import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import org.json.simple.JSONObject;
 
