@@ -1,4 +1,4 @@
-<project name="FETA3" default="usage" basedir=".">
+ <project name="FETA3" default="usage" basedir=".">
 
 
     <!-- Initializations -->
@@ -32,6 +32,19 @@
         </javac>
 
     </target>
+    
+        <!-- Build -->
+    <target name="builddebug" depends="init">
+        <echo message="------ Compiling application"/>
+        <mkdir dir="${classes}"/>
+        
+        <javac debug="on" srcdir="${sources}"  includeantruntime="false">
+            <include name="feta/**" />
+            <classpath refid="feta.classpath"/>
+            <compilerarg value="-Xlint:unchecked" />
+        </javac>
+
+    </target>
 
     <!-- jar -->
     <target name="jar" depends="build">
@@ -50,7 +63,23 @@
 
     </target>
 
+    <!-- jar -->
+    <target name="jardebug" depends="builddebug">
+        <echo message="------ Building Jar file"/>
 
+        <jar destfile="${basedir}/feta3-${release}.jar"
+             excludes="${basedir}/feta3-${release}.jar"
+        >
+
+            <fileset dir="${basedir}" includes="**" excludes="*.jar" />
+            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="feta.FetaCLI" />
+            </manifest>
+
+        </jar>
+
+    </target>
     <!-- JavaDoc -->
     <target name="javadoc" depends="build">
         <echo message="------ Running JavaDoc"/>

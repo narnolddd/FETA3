@@ -6,39 +6,39 @@ import java.util.*;
 
 public class NodeTypes {
 	private static NodeTypes nt_ =new NodeTypes();
-	private ArrayList <Integer> nodeTypes_;
-	private ArrayList <String> typeNames_;
-	private HashMap <String, Integer> typeNumbers_;
-	private HashMap <Integer, ArrayList<Integer>> nodesByType_;
+	private HashMap <Integer,String> nodeTypes_;
+	// Map returns the type (as string) of given node (integer)
+	private HashMap <String, ArrayList<Integer>> nodesByType_;
+	// Map which turns a type name into a list of integers of that type
 	
 	/** set the type of a given node to be a string */
 	public static void setNodeType(int nodeNo, String nodeType) 
 	{
-		Integer typeNo= nt_.typeNumbers_.get(nodeType);
-		/** If this is a new type add it */
-		if (typeNo == null) {
-			typeNo= addNewType(nodeType);
-			nt_.nodesByType_.put(typeNo, new ArrayList<Integer>());
+		/** Check if this node is added*/
+		String nt= nt_.nodeTypes_.get(nodeNo);
+		if (nt != null) {
+			if (nt.equals(nodeType)) 
+				return;
+			System.out.println("Node "+nodeNo+" is set to type "+nodeType+" and "+nt);
+			System.exit(0);
 		}
-		nt_.nodeTypes_.set(nodeNo,typeNo);
-		nt_.nodesByType_.get(typeNo).add(nodeNo);
-	} 
-	
-	/** Add a new type of node called typeName and return the
-	 * integer representing it*/
-	public static Integer addNewType (String typeName) {
-		nt_.typeNames_.add(typeName);
-		return nt_.typeNames_.size()-1;
+		
+		/** If this is a new type add it */
+		if (nt_.nodesByType_.get(nodeType) == null) {
+			nt_.nodesByType_.put(nodeType, new ArrayList<Integer>());
+		}
+		nt_.nodeTypes_.put(nodeNo,nodeType);
+		nt_.nodesByType_.get(nodeType).add(nodeNo);
 	}
 	
 	public static ArrayList<Integer> getNodesOfType (String type)
 	/** Return numbers of all nodes with a given type*/
 	{
-		return nt_.nodesByType_.get(nt_.typeNumbers_.get(type));
+		return nt_.nodesByType_.get(type);
 	}
 	
-	/**Get the number associated with the type of a given node*/
-	public static int getNodeType(int nodeNo) {
+	/**Get the type of a given node*/
+	public static String getNodeType(int nodeNo) {
 		return nt_.nodeTypes_.get(nodeNo);
 	}
 	

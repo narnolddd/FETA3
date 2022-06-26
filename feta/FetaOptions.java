@@ -119,13 +119,13 @@ public class FetaOptions {
 
         Long srctype = (Long) df.get("SourceType");
         if (srctype != null) {
-            sourceTypeColumn_ = Math.toIntExact(srccol);
+            sourceTypeColumn_ = Math.toIntExact(srctype);
             df.remove("SourceType");
         }
 
         Long dsttype = (Long) df.get("TargetType");
         if (dsttype != null) {
-            dstTypeColumn_ = Math.toIntExact(dstcol);
+            dstTypeColumn_ = Math.toIntExact(dsttype);
             df.remove("TargetType");
         }
 
