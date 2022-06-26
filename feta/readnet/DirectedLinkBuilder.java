@@ -6,7 +6,7 @@ import feta.network.DirectedLink;
 public class DirectedLinkBuilder implements LinkBuilder {
     @Override
     public Link build(String n1, String n2, long time, String n1Type, String n2Type) {
-        return null;
+        return new DirectedLink(n1, n2, n1Type, n2Type, time);
     }
 
     public Link build(String n1, String n2, long time) {

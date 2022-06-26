@@ -1,0 +1,20 @@
+{
+  "Data": {
+    "GraphInputFile": "test/typed_nodes.csv",
+    "GraphInputType": "CSV",
+    "Directed": false,
+    "OutputLineSeparator": " "
+    "Typed": true,
+    "SourceType": 2,
+    "TargetType": 3,
+    "Time": 4
+  },
+  "Action": {
+    "ParseTest": {
+      "Start": 1,
+      "Interval":1,
+      "MaxNodes": 34401,
+      "FileName": "test/TestOut.feta"
+    }
+  }
+}

@@ -6,6 +6,19 @@ public class DirectedLink extends Link implements Comparable<DirectedLink> {
 
         sourceNode_ = src;
         destNode_= dst;
+        sourceNodeType_= null;
+        destNodeType_= null;
+        time_= time;
+    }
+
+    public DirectedLink(String src, String dst, String srcType, String dstType, long time) 
+    /** Creates a directed link with types as well*/
+    {
+
+        sourceNode_ = src;
+        destNode_= dst;
+        sourceNodeType_= srcType;
+        destNodeType_= dstType;
         time_= time;
     }
 

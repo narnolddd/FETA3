@@ -23,9 +23,9 @@ public class FetaOptions {
     private int timeColumn=2;
 
     /** Options related to typed networks */
-    private boolean typedNetwork=false;
-    private int sourceTypeColumn=-1;
-    private int dstTypeColumn=-1;
+    private boolean typedNetwork_=false;
+    private int sourceTypeColumn_=-1;
+    private int dstTypeColumn_=-1;
 
     private String inSep_ = "\\s+";
     private String outSep_= " ";
@@ -113,19 +113,19 @@ public class FetaOptions {
 
         Boolean typed = (Boolean) df.get("Typed");
         if (typed != null) {
-            typedNetwork = typed;
+            typedNetwork_ = typed;
             df.remove("Typed");
         }
 
         Long srctype = (Long) df.get("SourceType");
         if (srctype != null) {
-            sourceTypeColumn = Math.toIntExact(srccol);
+            sourceTypeColumn_ = Math.toIntExact(srccol);
             df.remove("SourceType");
         }
 
         Long dsttype = (Long) df.get("TargetType");
         if (dsttype != null) {
-            dstTypeColumn = Math.toIntExact(dstcol);
+            dstTypeColumn_ = Math.toIntExact(dstcol);
             df.remove("TargetType");
         }
 
@@ -231,14 +231,14 @@ public class FetaOptions {
     }
 
     public boolean isTypedNetwork() {
-        return typedNetwork;
+        return typedNetwork_;
     }
 
     public int getSourceTypeColumn() {
-        return sourceTypeColumn;
+        return sourceTypeColumn_;
     }
 
     public int getDstTypeColumn() {
-        return dstTypeColumn;
+        return dstTypeColumn_;
     }
 }
