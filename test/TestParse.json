@@ -5,8 +5,8 @@
     "Directed": false,
     "OutputLineSeparator": " "
     "Typed": true,
-    "SourceCol":0,
-    "TargetCol":1.
+    "Source":0,
+    "Target":1,
     "SourceType": 2,
     "TargetType": 3,
     "Time": 4

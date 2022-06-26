@@ -1,5 +1,6 @@
 package feta.network;
 
+
 /** Represents an undirected link between two nodes */
 
 public class UndirectedLink extends Link implements Comparable<UndirectedLink> {
@@ -9,6 +10,17 @@ public class UndirectedLink extends Link implements Comparable<UndirectedLink> {
             sourceNode_ = src;
             destNode_ = dst;
             time_ = time;
+            sourceNodeType_= null;
+            destNodeType_= null;
+    }
+    
+    public UndirectedLink(String src, String dst, long time, String srcType, String dstType)
+    {
+            sourceNode_ = src;
+            destNode_ = dst;
+            time_ = time;
+            sourceNodeType_= srcType;
+            destNodeType_= dstType;
     }
 
     public boolean equals(UndirectedLink link) {
