@@ -1,10 +1,8 @@
 package feta.actions;
 
-import feta.FetaOptions;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
 import feta.network.measurements.*;
-import feta.readnet.ReadNet;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -23,7 +21,6 @@ public class Measure extends SimpleAction {
     public String outputFile_ = "output/measurements.dat";
     public BufferedWriter bw_ = null;
     // Need to think how this will work alternating between directed and undirected networks.
-    private boolean measureDegDist_;
     private boolean printDegVector_;
     private boolean printHeader_;
     private boolean directed_;
@@ -56,8 +53,6 @@ public class Measure extends SimpleAction {
                     update();
                 }
                 String measurements = time+" "+getLine();
-                //network_.calcMeasurements();
-                //System.out.println(measurements);
                 bw_.write(measurements);
                 if (printDegVector_) {
                     System.out.println(network_.degreeVectorToString());
@@ -115,7 +110,7 @@ public class Measure extends SimpleAction {
 
     public void parseStatistics(JSONArray statistics) {
         for (Object statistic : statistics) {
-            Measurement measure;
+            Measurement measure=null;
             Class<? extends Measurement> cl;
             try {
                 cl = findStatisticClass(statistic.toString());
@@ -130,11 +125,12 @@ public class Measure extends SimpleAction {
                 System.err.println("Trouble instantiating class "+statistic);
                 e.printStackTrace();
             }
+            statistics_.add(measure);
         }
     }
 
     public Class<?extends Measurement> findStatisticClass(String rawname) throws ClassNotFoundException {
-        Class <? extends Measurement> stat = null;
+        Class <? extends Measurement> stat;
         String sname = rawname;
         try {
             stat=Class.forName(sname).asSubclass(Measurement.class);
