@@ -1,0 +1,33 @@
+{
+  "Data": {
+    "GraphInputFile": "seed_graphs/clique-5.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "GraphOutputFile": "trials/baTest.dat",
+    "NoRecents": 1,
+    "Directed": false
+  },
+  "Action": {
+    "Grow": {
+      "Start": 1,
+      "Interval": 1,
+      "MaxNodes": 1000
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 1,
+      "End": 100000,
+      "Components": [
+        {
+          "ComponentName": "DegreeModelComponent",
+          "Weight": 1.0
+        }
+      ]
+    }],
+  "OperationModel":
+  {
+    "Name": "PreferentialAttachment",
+    "InitialDegree": 3
+  }
+}

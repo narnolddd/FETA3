@@ -2,6 +2,7 @@ package feta.network;
 
 import feta.Methods;
 import feta.readnet.ReadNet;
+import feta.objectmodels.components.ObjectModelComponent;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -242,6 +243,10 @@ public class DirectedNetwork extends Network {
 
     public void addNewLink(String src, String dst, long time) {
         linksToBuild_.add(new DirectedLink(src, dst, time));
+    }
+
+    public double calcProbability(ObjectModelComponent omc, int node) {
+        return omc.calcProbability(this, node);
     }
 
 }

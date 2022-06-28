@@ -34,14 +34,6 @@ public class RandomAttachment extends ObjectModelComponent {
         return 1.0/tempConstant_;
     }
 
-    @Override
-    public void updateNormalisation(UndirectedNetwork net, int[] removed) {
-        if (removed.length==0) {
-            tempConstant_=normalisationConstant_;
-            return;
-        }
-        tempConstant_-= 1;
-    }
 
     @Override
     public String toString() {

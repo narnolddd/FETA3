@@ -35,14 +35,14 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
         return Math.pow(node + 1, - alpha_)/tempConstant_;
     }
 
-    @Override
     public void updateNormalisation(UndirectedNetwork net, int[] removed) {
         if (removed.length==0) {
             tempConstant_=normalisationConstant_;
             return;
         }
         int node = removed[removed.length-1];
-        tempConstant_-= Math.pow(node + 1, - alpha_);
+        if (node >= 0)
+            tempConstant_-= Math.pow(node + 1, - alpha_);
     }
 
     public void parseJSON(JSONObject params) {

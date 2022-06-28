@@ -1,0 +1,38 @@
+{
+  "Data": {
+    "GraphInputFile": "output/triangleTest.dat",
+    "GraphInputType": "NNT",
+    "GraphOutputType": "NNT",
+    "Directed": false
+  },
+  "Action": {
+    "Likelihood": {
+      "Start": 10,
+      "Interval": 10,
+      "MaxNodes": 1000,
+      "OrderedData": false
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 10,
+      "End": 100000,
+      "Components": [
+        {
+          "ComponentName": "RandomAttachment",
+          "Weight": 0.39
+        },
+        {
+          "ComponentName": "TriangleClosure",
+          "Weight": 0.61,
+          "Depth": 1
+        }
+      ]
+    }
+  ],
+  "OperationModel":
+  {
+    "Name": "Email",
+    "NoRecipients": 3
+  }
+}

@@ -65,7 +65,8 @@ public class DegreePower extends ObjectModelComponent {
             return;
         }
         int node = removed[removed.length-1];
-        tempConstant_-= Math.pow(net.getDegree(node), power_);
+        if (node >= 0)
+            tempConstant_-= Math.pow(net.getDegree(node), power_);
     }
 
     public void parseJSON(JSONObject params) {

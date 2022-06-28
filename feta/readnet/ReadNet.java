@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class ReadNet {
 
@@ -14,11 +15,16 @@ public abstract class ReadNet {
     public String sep_;
     String networkInput_;
     boolean removeDuplicates_=true;
+    boolean sampled_;
+    double samplingProp_=0.0;
 
     public ReadNet(FetaOptions options){
         links_= new ArrayList<Link>();
         sep_=options.getInSep();
         networkInput_=options.getNetInputFile();
+
+        sampled_ = options.netInputSampled_;
+        samplingProp_= options.sampleProp_;
 
         if (options.isDirectedInput()) {
             lb_= new DirectedLinkBuilder();
@@ -37,13 +43,18 @@ public abstract class ReadNet {
                 if (line.length() == 0)
                     continue;
                 Link link = parseLine(line, linkno);
-                // aint got time for loops
+                // remove self-loops
                 if (link.sourceNode_.equals(link.destNode_)) {
                     System.out.println("Self Loop at time "+link.time_+"!");
                     continue;
                 }
 //               if (removeDuplicates_ && links_.contains(link))
 //                    continue;
+                if (sampled_) {
+                    Random rg = new Random();
+                    if (rg.nextDouble() > samplingProp_)
+                        continue;
+                }
                 links_.add(link);
             }
         } catch (FileNotFoundException e) {

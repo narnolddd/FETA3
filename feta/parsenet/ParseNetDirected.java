@@ -35,7 +35,7 @@ public class ParseNetDirected extends ParseNet{
                 leaves.add(links.get(j).destNode_);
             }
             if (intersect_.size()==0){
-                System.out.println("Processing events as links for this time "+links.get(0).time_);
+                //System.out.println("Processing events as links for this time "+links.get(0).time_);
                 for (Link l1: links) {
                     newOps.add(processAsLink(l1,net));
                 }

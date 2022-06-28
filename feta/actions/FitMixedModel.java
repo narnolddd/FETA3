@@ -15,6 +15,7 @@ import feta.parsenet.ParseNetUndirected;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.json.simple.JSONObject;
 
@@ -29,6 +30,9 @@ public class FitMixedModel extends SimpleAction {
     public int noComponents_;
     public long startTime_=10;
     private boolean orderedData_ = false;
+
+    private Random random_;
+    private boolean debugMode_=false;
 
     public FitMixedModel(FetaOptions options){
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -72,14 +76,30 @@ public class FitMixedModel extends SimpleAction {
         if (!options_.isDirectedInput()) {
             parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser_= new ParseNetDirected((DirectedNetwork) network_);
+        if (debugMode_) {
+            random_= new Random(42);
+        } else {
+            random_= new Random();
+        }
+        int noChanges = objectModel_.objectModels_.size()-1;
+        System.out.println("{\"changepoints\": "+noChanges+", \"intervals\": [");
+        int[] totalChoices = new int[1];
+        double[] runningLike = new double[1];
         for (int j = 0; j < objectModel_.objectModels_.size(); j++) {
             long start = objectModel_.times_.get(j).start_;
             long end = objectModel_.times_.get(j).end_;
-            getLikelihoods(start,end);
+            String line = getLikelihoods(start, end, totalChoices, runningLike);
+            if (j != objectModel_.objectModels_.size()-1)
+                line+=",";
+            else
+                line+="],";
+            System.out.println(line);
         }
+        double finalC0 = Math.exp(runningLike[0]/totalChoices[0]);
+        System.out.println("\"finalc0\": "+finalC0+", \"finalraw\": "+runningLike[0]+", \"finalchoices\": "+totalChoices[0]+"}");
     }
 
-    public void getLikelihoods(long start, long end) {
+    public String getLikelihoods(long start, long end, int[] totalChoices, double[] runningLike) {
         MixedModel obm = objectModel_.objectModelAtTime(start);
         noComponents_ = obm.components_.size();
         configs_=generatePartitions(granularity_,noComponents_);
@@ -100,7 +120,10 @@ public class FitMixedModel extends SimpleAction {
                 long time = op.getTime();
                 obm.calcNormalisation(network_);
                 updateLikelihoods(op, obm);
-                noChoices+=op.getNoChoices();
+                // debug line
+                //if (op.getNoChoices() <= 5) {
+                    noChoices+=op.getNoChoices();
+                //}
                 network_.buildUpTo(time);
             }
         }
@@ -120,15 +143,29 @@ public class FitMixedModel extends SimpleAction {
                 bestConfig=weights;
             }
         }
+        runningLike[0] += bestRaw;
+        totalChoices[0] += noChoices;
 
-        System.out.println("Max c0 : "+maxLike+" max like "+bestRaw+" choices "+noChoices);
+        String toPrint = "{\"start\":"+start+", \"c0max\" : "+maxLike+
+                ", \"raw\": "+bestRaw+", \"choices\": "+noChoices+", \"models\": ";
+
+        String[] models = new String[bestConfig.length];
         for (int i = 0; i < bestConfig.length; i++) {
-            System.out.println(bestConfig[i]+" "+obm.components_.get(i));
+            models[i]="{\""+obm.components_.get(i)+"\": "+bestConfig[i]+"}";
         }
+        toPrint += "["+String.join(",",models)+"]}";
+        return toPrint;
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {
+        op.setRandom(random_);
         op.setNodeChoices(orderedData_);
+
+        //debugging line, remember to comment out
+//        if (op.getNoChoices() > 5) {
+//            return;
+//        }
+
         ArrayList<int[]> nc = op.getNodeOrders();
         obm.updateLikelihoods(network_,nc);
     }
@@ -142,5 +179,8 @@ public class FitMixedModel extends SimpleAction {
         Boolean ordereddata = (Boolean) obj.get("OrderedData");
         if (ordereddata != null)
             orderedData_=ordereddata;
+        Boolean debug = (Boolean) obj.get("DebugMode");
+        if (debug != null)
+            debugMode_=debug;
     }
 }

@@ -62,7 +62,8 @@ public class DegreeModelComponent extends ObjectModelComponent{
             return;
         }
         int node = removed[removed.length-1];
-        tempConstant_ -= net.getDegree(node);
+        if (node >= 0) 
+            tempConstant_ -= net.getDegree(node);
     }
 
     @Override

@@ -12,24 +12,27 @@ import org.json.simple.parser.ParseException;
 public class FetaOptions {
 
     /** Default options related to the data input and output files */
-    private String netInputFile_="seed_graphs/clique-5.dat";
-    private String netOutputFile_;
-    private String inputType_ = "NNT";
-    private boolean directedInput_;
-    private String outputType_="NNT";
-    private boolean includeOutTimestamps = true;
+    public String netInputFile_="seed_graphs/clique-5.dat";
+    public String inputType_ = "NNT";
+    private String inSep_ = "\\s+";
+    public boolean directedInput_;
+    public boolean netInputSampled_;
+    public double sampleProp_= 1.0;
     private int sourceColumn=0;
     private int dstColumn=1;
     private int timeColumn=2;
+    private int noRecents_=10;
 
     /** Options related to typed networks */
     private boolean typedNetwork_=false;
     private int sourceTypeColumn_=-1;
     private int dstTypeColumn_=-1;
 
-    private String inSep_ = "\\s+";
+    /** Net output options */
+    public String netOutputFile_;
     private String outSep_= " ";
-    private int noRecents_=10;
+    public String outputType_="NNT";
+    private boolean includeOutTimestamps = true;
 
     /** Type of action. Everything else related to the action will be parsed in the relevant action class */
     JSONObject actionOps_;
@@ -91,6 +94,18 @@ public class FetaOptions {
         if (in != null) {
             inputType_ = in;
             df.remove("GraphInputType");
+        }
+
+        Boolean insample = (Boolean) df.get("SampleIncomingGraph");
+        if (insample != null) {
+            netInputSampled_= insample;
+            df.remove("SampleIncomingGraph");
+        }
+
+        Double sampleProp = (Double) df.get("SampleProportion");
+        if (sampleProp != null) {
+            sampleProp_=sampleProp;
+            df.remove("SampleProportion");
         }
 
         Long srccol = (Long) df.get("Source");

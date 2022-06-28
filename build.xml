@@ -25,7 +25,7 @@
         <echo message="------ Compiling application"/>
         <mkdir dir="${classes}"/>
         
-        <javac debug="off" srcdir="${sources}"  includeantruntime="false">
+        <javac debug="on" srcdir="${sources}"  includeantruntime="false">
             <include name="feta/**" />
             <classpath refid="feta.classpath"/>
             <compilerarg value="-Xlint:unchecked" />

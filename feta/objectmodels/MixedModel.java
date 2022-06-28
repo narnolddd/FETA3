@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,18 +72,18 @@ public class MixedModel {
     public double[] getComponentProbs(Network net, int node) {
         double[] probs = new double[components_.size()];
         for (int i = 0; i < components_.size(); i++) {
-            probs[i] = components_.get(i).calcProbability(net, node);
+            probs[i] = net.calcProbability(components_.get(i), node);
         }
         return probs;
     }
 
     /** Having calculated normalisation, get node probability */
     public double calcProbability(Network net, int node) {
-        double probability_=0.0;
+        double probability=0.0;
         for (int i = 0; i < components_.size(); i++) {
-            probability_+= weights_[i]*components_.get(i).calcProbability(net, node);
+            probability+= weights_[i]*net.calcProbability(components_.get(i), node);
         }
-        return probability_;
+        return probability;
     }
 
     /** Draw a single node without replacement */
@@ -105,6 +106,7 @@ public class MixedModel {
         else {
             // This part does the sampling.
             updateNormalisation(net, chosen);
+            // checkUpdatedNorm(net,chosen);
             double r = Math.random();
             double weightSoFar = 0.0;
             int l;
@@ -156,6 +158,20 @@ public class MixedModel {
         calcNormalisation(net);
         for (int node = 0; node < net.noNodes_; node++) {
             sum += calcProbability(net, node);
+        }
+        if (Math.abs(sum - 1.0) > 0.0005) {
+            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);
+            System.exit(-1);
+        }
+    }
+
+    public void checkUpdatedNorm(Network net, int[] from) {
+        double sum = 0.0;
+        for (int node = 0; node < net.noNodes_; node++) {
+            sum += calcProbability(net, node);
+        }
+        for (int node : from) {
+            sum -= calcProbability(net,node);
         }
         if (Math.abs(sum - 1.0) > 0.0005) {
             System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);
@@ -272,49 +288,72 @@ public class MixedModel {
 
     public void updateLikelihoods(Network net, ArrayList<int[]> nodeOrders) {
         int noOrders = nodeOrders.size();
-        HashMap<double[], Double> opLikeRatio = new HashMap<>();
+        double[] opLikeRatio = new double[likelihoods_.size()];
 
-        for (double[] weight : likelihoods_.keySet()) {
-            opLikeRatio.put(weight, 0.0);
+        for (int i = 0; i < opLikeRatio.length; i++) {
+            opLikeRatio[i] = -1 * Double.POSITIVE_INFINITY;
         }
 
         for (int[] order : nodeOrders) {
-            HashMap<double[], Double> updated = updateIndividualLikelihoods(net, order, new int[0]);
-            for (double[] weight : likelihoods_.keySet())
-                opLikeRatio.put(weight, opLikeRatio.get(weight) + updated.get(weight));
+            updateIndividualLikelihoods(net, order, new int[0], opLikeRatio);
         }
 
+        int i=0;
         for (double [] weight: likelihoods_.keySet()) {
-            double like = opLikeRatio.get(weight);
-            if (like == 0.0 || noOrders == 0) {
+            double like = opLikeRatio[i];
+            if (noOrders == 0) {
                 return;
             }
-            double logLike = Math.log(like) - Math.log(noOrders);
+            double logLike = like - Math.log(noOrders);
             likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
+            i++;
         }
 
 
     }
 
-    public HashMap<double[], Double> updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen) {
-        HashMap<double[], Double> likeRatio = new HashMap<>();
-        for (double[] weight : likelihoods_.keySet()) {
-            likeRatio.put(weight,1.0);
-        }
-        for (int node : nodeSet) {
-            updateNormalisation(net, alreadyChosen);
-            double[] probs = getComponentProbs(net, node);
+    public void updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen,
+                                                                 double[] opLikeRatio) {
+        double[] likeRatio = new double[likelihoods_.size()];
+
+        for (int i = 0; i < nodeSet.length; i++) {
+            int node = nodeSet[i];
+            updateNormalisation(net,alreadyChosen);
+            double[] probs = getComponentProbs(net,node);
+            int k = 0;
             for (double[] weight : likelihoods_.keySet()) {
                 double prob = 0.0;
                 for (int j = 0; j < weight.length; j++) {
                     prob += weight[j] * probs[j];
                 }
                 prob *= (net.noNodes_ - alreadyChosen.length);
-                likeRatio.put(weight, likeRatio.get(weight) * prob);
+//                if (prob > 10.0) {
+//                    // System.out.println("BIG");
+//                    // There's a product in here that gets pretty huge, the following code is to avoid double overflow.
+//                    prob /=10.0;
+//                    opLikeRatio[k]/=10.0;
+//                    counters[k]++;
+//                }
+                likeRatio[k] += Math.log(prob);
+                k++;
             }
             alreadyChosen = Methods.concatenate(alreadyChosen, new int[]{node});
         }
-        return likeRatio;
+
+        for (int i = 0; i < likeRatio.length; i++) {
+            //System.out.println(opLikeRatio[i]);
+            double tmp = addLogs(opLikeRatio[i],likeRatio[i]);
+            opLikeRatio[i] = tmp;
+            //System.out.println(likeRatio[i]+" "+opLikeRatio[i]);
+        }
+    }
+
+    public double addLogs( double logA, double logB ) {
+        // returns log(A + B)
+        double maxLog = Math.max(logA,logB);
+        double minLog = Math.min(logA,logB);
+
+        return Math.log(1 + Math.exp(minLog - maxLog)) + maxLog;
     }
 
 }

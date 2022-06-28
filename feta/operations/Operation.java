@@ -7,6 +7,7 @@ import feta.objectmodels.MixedModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Random;
 
 public abstract class Operation {
 
@@ -14,6 +15,7 @@ public abstract class Operation {
     ArrayList <int[]> nodeOrders_;
     private long time_;
     private int noChoices_=0;
+    private Random generator_;
 
     /** updates network with the new nodes and links that occur in this operation
      alternative is for this to happen in the Network interface */
@@ -32,6 +34,9 @@ public abstract class Operation {
     public void setTime(long time) {
         time_=time;
     }
+
+    /** Set random generator */
+    public void setRandom(Random rg) {generator_=rg;}
 
     public int getNoChoices() {return noChoices_;}
 
@@ -76,7 +81,7 @@ public abstract class Operation {
                 listOfLists.add(Methods.generatePerms(0,arr,new ArrayList<int[]>()));
             }
             else {
-                listOfLists.add(Methods.generateRandomShuffles(arr, 50));
+                listOfLists.add(Methods.generateRandomShuffles(arr, 200, generator_));
             }
         }
         return generatePossibleSequences(listOfLists);

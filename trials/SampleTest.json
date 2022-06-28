@@ -1,0 +1,19 @@
+{
+  "Data": {
+    "GraphInputFile": "trials/baTest.dat",
+    "GraphInputType": "NNT",
+    "Directed": false,
+    "SampleIncomingGraph": false,
+    "SampleProportion": 0.3
+  },
+  "Action": {
+    "Measure": {
+      "Start": 10,
+      "Interval":10,
+      "MaxNodes": 3000,
+      "Statistics": ["NoNodes", "NoLinks", "AverageDegree", "MaxDegree","Singletons","MeanSquaredDegree", "Assortativity", "Clustering", "TriangleCount"],
+      "PrintHeader": true,
+      "FileName": "trials/sampleOutput.dat"
+    }
+  }
+}
