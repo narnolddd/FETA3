@@ -23,7 +23,7 @@ public abstract class Network {
     public boolean allowDuplicates_=true;
 
     /** Data structures mapping node names to their index and vice versa */
-    private ArrayList<Integer> nodeList_;
+    private final ArrayList<Integer> nodeList_;
     private final HashMap <String, Integer> nodeNumbers_;
     private final HashMap <Integer, String> nodeNames_;
 
@@ -160,11 +160,6 @@ public abstract class Network {
     public abstract void writeDegDist();
     public abstract void closeWriters() throws IOException;
 
-    /** Set which reader to use */
-    public void setNetworkReader(ReadNet rn) {
-        networkReader_=rn;
-    }
-
     /** Add node (implemented by relevant network class */
     public abstract void addNode(int nodeno);
 
@@ -226,10 +221,6 @@ public abstract class Network {
 
     public NodeTypes getNodeTypes() {
         return nodeTypes;
-    }
-
-    interface NodeSelector {
-        int[] getNodes();
     }
 
     public abstract double calcProbability(ObjectModelComponent omc, int node);

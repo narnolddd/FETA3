@@ -31,8 +31,9 @@ public abstract class ReadNet {
         } else lb_= new UndirectedLinkBuilder();
     }
 
-    public final void readNetwork(){
+    public final ArrayList<Link>  readNetwork(){
         int linkno = 1;
+        links_= new ArrayList<Link>();
         try {
             FileInputStream fstream = new FileInputStream(networkInput_);
             DataInputStream dstream = new DataInputStream(fstream);
@@ -63,6 +64,7 @@ public abstract class ReadNet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return links_;
     }
 
     public abstract Link parseLine(String line, long linkno);

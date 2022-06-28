@@ -3,7 +3,7 @@
     "GraphInputFile": "test/typed_nodes.csv",
     "GraphInputType": "CSV",
     "Directed": false,
-    "OutputLineSeparator": " "
+    "OutputLineSeparator": " ",
     "Typed": true,
     "Source":0,
     "Target":1,
