@@ -23,6 +23,7 @@ public abstract class Network {
     public boolean allowDuplicates_=true;
 
     /** Data structures mapping node names to their index and vice versa */
+    private ArrayList<Integer> nodeList_;
     private final HashMap <String, Integer> nodeNumbers_;
     private final HashMap <Integer, String> nodeNames_;
 
@@ -52,6 +53,7 @@ public abstract class Network {
         noLinks_= 0;
         linksToBuild_= new ArrayList<Link>();
         linksBuilt_=new ArrayList<Link>();
+        nodeList_ = new ArrayList<>();
         nodeNumbers_= new HashMap <String, Integer> ();
         nodeNames_= new HashMap <Integer, String>();
         latestNodeNo_=0;
@@ -110,6 +112,7 @@ public abstract class Network {
         nodeNumbers_.put(nodeName,nodeNo);
         nodeNames_.put(nodeNo,nodeName);
         addNode(nodeNo);
+        nodeList_.add(nodeNo);
     }
 
     /** Add a typed node to all data structures */
@@ -213,12 +216,21 @@ public abstract class Network {
     /** Growth */
     public abstract void addNewLink(String src, String dst, long time);
 
+    /** Return a copy of the node list */
+    public ArrayList<Integer> getNodeListCopy() {
+        return new ArrayList<>(nodeList_);
+    }
+
     public HashMap<String, Integer> getNodeNumbers() {
         return nodeNumbers_;
     }
 
     public NodeTypes getNodeTypes() {
         return nodeTypes;
+    }
+
+    interface NodeSelector {
+        int[] getNodes();
     }
 
 }
