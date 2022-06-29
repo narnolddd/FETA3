@@ -4,6 +4,8 @@ import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;
 import org.json.simple.JSONObject;
 
+import java.util.HashSet;
+
 public class DegreeWithAgeing extends ObjectModelComponent{
 
     public double ageingExponent_=0.5;
@@ -17,6 +19,16 @@ public class DegreeWithAgeing extends ObjectModelComponent{
         if (useInDegree_) {
             return Math.pow(net.age(node), - ageingExponent_) * net.getInDegree(node);
         } else return Math.pow(net.age(node), - ageingExponent_) * net.getOutDegree(node);
+    }
+
+    @Override
+    public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+
+    }
+
+    @Override
+    public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
+
     }
 
     public void calcNormalisation(UndirectedNetwork net, int[] removed) {

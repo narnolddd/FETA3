@@ -18,6 +18,7 @@ public class FetaModel {
     private final ArrayList<SimpleAction> actionsToDo_;
 
     public FetaModel() {
+        System.out.println("Launching FETA");
         options_= new FetaOptions();
         actionsToDo_= new ArrayList<SimpleAction>();
     }

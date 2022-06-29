@@ -4,10 +4,22 @@ import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;
 import org.json.simple.JSONObject;
 
+import java.util.HashSet;
+
 public class DegreePower extends ObjectModelComponent {
 
     public double power_=1.0;
     public boolean useInDegree_=true;
+
+    @Override
+    public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+
+    }
+
+    @Override
+    public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
+
+    }
 
     public void calcNormalisation(UndirectedNetwork network, int [] removed) {
         double degSum = 0.0;

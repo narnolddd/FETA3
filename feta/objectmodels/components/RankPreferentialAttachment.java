@@ -5,6 +5,8 @@ import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import org.json.simple.JSONObject;
 
+import java.util.HashSet;
+
 public class RankPreferentialAttachment extends ObjectModelComponent {
 
     public double alpha_= 0.5;
@@ -22,6 +24,16 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
         }
         normalisationConstant_=rankSum;
         tempConstant_=normalisationConstant_;
+    }
+
+    @Override
+    public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+
+    }
+
+    @Override
+    public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
+
     }
 
     public void calcNormalisation(UndirectedNetwork net, int[] removed){}

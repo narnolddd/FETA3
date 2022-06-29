@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class MixedModel {
 
@@ -58,6 +59,13 @@ public class MixedModel {
         }
     }
 
+    /** For calculating the normalisation constant for the first time */
+    public void calcNormalisation(Network net, HashSet<Integer> availableNodes) {
+        for (ObjectModelComponent omc : components_) {
+            omc.calcNormalisation(net, availableNodes);
+        }
+    }
+
     public void calcNormalisation(Network net) {
         calcNormalisation(net, new int[0]);
     }
@@ -66,6 +74,12 @@ public class MixedModel {
     public void updateNormalisation(Network net, int [] removed) {
         for (ObjectModelComponent omc: components_) {
             omc.updateNormalisation(net, removed);
+        }
+    }
+
+    public void updateNormalisation(Network net, HashSet<Integer> availableNodes, int node) {
+        for (ObjectModelComponent omc: components_) {
+            omc.updateNormalisation(net, availableNodes, node);
         }
     }
 
@@ -122,6 +136,23 @@ public class MixedModel {
         return node;
     }
 
+    public final int nodeDrawWithoutReplacement(Network net, HashSet<Integer> availableNodes, int seedNode) {
+        if (seedNode == -1) {
+            calcNormalisation(net, availableNodes);
+        } else {
+        updateNormalisation(net, availableNodes, seedNode);}
+        double r = Math.random();
+        double weightSoFar = 0.0;
+        for (int node: availableNodes) {
+            weightSoFar += calcProbability(net, node);
+            if (weightSoFar > r)
+                return node;
+        }
+        System.err.println("No nodes left to choose from");
+        System.exit(-1);
+        return -1;
+    }
+
     public int nodeDrawWithReplacement(Network net) {
         return nodeDrawWithoutReplacement(net, new int[0]);
     }
@@ -139,6 +170,22 @@ public class MixedModel {
             removedFromSample[alreadyChosen.length + i]=chosenNode;
         }
         return Methods.removeNegativeNumbers(chosenNodes);
+    }
+
+    public int[] drawMultipleNodesWithoutReplacement(Network net, int seedNode, int sampleSize, HashSet<Integer> availableNodes) {
+        int[] chosenNodes = new int[sampleSize];
+        if (sampleSize > availableNodes.size()) {
+            System.err.println("Desired sample size ("+sampleSize+") is larger than nodes available ("+availableNodes.size()+")");
+            System.exit(-1);
+        }
+        calcNormalisation(net, availableNodes);
+        for (int i = 0; i<sampleSize; i++) {
+            int node = nodeDrawWithoutReplacement(net, availableNodes, seedNode);
+            availableNodes.remove(node);
+            chosenNodes[i] = node;
+            seedNode = node;
+        }
+        return chosenNodes;
     }
 
     public int[] drawMultipleNodesWithReplacement(Network net, int sampleSize, int[] alreadyChosen) {
@@ -289,13 +336,10 @@ public class MixedModel {
     public void updateLikelihoods(Network net, ArrayList<int[]> nodeOrders) {
         int noOrders = nodeOrders.size();
         double[] opLikeRatio = new double[likelihoods_.size()];
-
-        for (int i = 0; i < opLikeRatio.length; i++) {
-            opLikeRatio[i] = -1 * Double.POSITIVE_INFINITY;
-        }
+        Arrays.fill(opLikeRatio, -1 * Double.POSITIVE_INFINITY);
 
         for (int[] order : nodeOrders) {
-            updateIndividualLikelihoods(net, order, new int[0], opLikeRatio);
+            updateIndividualLikelihoods(net, order, net.getNodeListCopy(), opLikeRatio);
         }
 
         int i=0;
@@ -310,6 +354,43 @@ public class MixedModel {
         }
 
 
+    }
+
+    public void updateIndividualLikelihoods(Network net, int[] nodeSet, HashSet<Integer> availableNodes, double[] opLikeRatio) {
+        double[] likeRatio = new double[likelihoods_.size()];
+        for (int i = 0; i < nodeSet.length; i++) {
+            int node = nodeSet[i];
+            if (i == 0 || node == -1) {
+                calcNormalisation(net, availableNodes);
+            } else {
+                updateNormalisation(net, availableNodes, nodeSet[i-1]);
+            }
+            double[] probs = getComponentProbs(net,node);
+            int k = 0;
+            for (double[] weight : likelihoods_.keySet()) {
+                double prob = 0.0;
+                for (int j = 0; j < weight.length; j++) {
+                    prob += weight[j] * probs[j];
+                }
+                prob *= (availableNodes.size());
+//                if (prob > 10.0) {
+//                    // System.out.println("BIG");
+//                    // There's a product in here that gets pretty huge, the following code is to avoid double overflow.
+//                    prob /=10.0;
+//                    opLikeRatio[k]/=10.0;
+//                    counters[k]++;
+//                }
+                likeRatio[k] += Math.log(prob);
+                k++;
+            }
+            availableNodes.remove(node);
+        }
+        for (int i = 0; i < likeRatio.length; i++) {
+            //System.out.println(opLikeRatio[i]);
+            double tmp = addLogs(opLikeRatio[i],likeRatio[i]);
+            opLikeRatio[i] = tmp;
+            //System.out.println(likeRatio[i]+" "+opLikeRatio[i]);
+        }
     }
 
     public void updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen,

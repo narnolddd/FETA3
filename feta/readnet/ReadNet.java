@@ -32,6 +32,7 @@ public abstract class ReadNet {
     }
 
     public final ArrayList<Link>  readNetwork(){
+        System.out.println("Reading network file "+networkInput_);
         int linkno = 1;
         links_= new ArrayList<Link>();
         try {

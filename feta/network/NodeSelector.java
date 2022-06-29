@@ -1,12 +1,13 @@
 package feta.network;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /** Interface for selection of available nodes */
 public interface NodeSelector {
 
     /** Pick nodes from the network */
-    public ArrayList<Integer> getAvailableNodes(Network net, ArrayList<Integer> selectedNodes);
+    public HashSet<Integer> getAvailableNodes(Network net, ArrayList<Integer> selectedNodes);
 
 
 }
@@ -14,9 +15,11 @@ public interface NodeSelector {
 class UntypedNodeSelector implements NodeSelector {
 
     @Override
-    public ArrayList<Integer> getAvailableNodes(Network net, ArrayList<Integer> selectedNodes) {
-        ArrayList<Integer> fullList = net.getNodeListCopy();
-        fullList.removeAll(selectedNodes);
+    public HashSet<Integer> getAvailableNodes(Network net, ArrayList<Integer> selectedNodes) {
+        HashSet<Integer> fullList = net.getNodeListCopy();
+        for (int node: selectedNodes) {
+            fullList.remove(node);
+        }
         return fullList;
     }
 }

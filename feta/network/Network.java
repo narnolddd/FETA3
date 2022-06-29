@@ -23,7 +23,7 @@ public abstract class Network {
     public boolean allowDuplicates_=true;
 
     /** Data structures mapping node names to their index and vice versa */
-    private final ArrayList<Integer> nodeList_;
+    private final HashSet<Integer> nodeList_;
     private final HashMap <String, Integer> nodeNumbers_;
     private final HashMap <Integer, String> nodeNames_;
 
@@ -53,7 +53,7 @@ public abstract class Network {
         noLinks_= 0;
         linksToBuild_= new ArrayList<Link>();
         linksBuilt_=new ArrayList<Link>();
-        nodeList_ = new ArrayList<>();
+        nodeList_ = new HashSet<>();
         nodeNumbers_= new HashMap <String, Integer> ();
         nodeNames_= new HashMap <Integer, String>();
         latestNodeNo_=0;
@@ -211,8 +211,8 @@ public abstract class Network {
     public abstract void addNewLink(String src, String dst, long time);
 
     /** Return a copy of the node list */
-    public ArrayList<Integer> getNodeListCopy() {
-        return new ArrayList<>(nodeList_);
+    public HashSet<Integer> getNodeListCopy() {
+        return new HashSet<>(nodeList_);
     }
 
     public HashMap<String, Integer> getNodeNumbers() {

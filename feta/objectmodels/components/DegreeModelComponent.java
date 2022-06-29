@@ -4,15 +4,45 @@ import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;
 import org.json.simple.JSONObject;
 
+import java.util.HashSet;
+
 public class DegreeModelComponent extends ObjectModelComponent{
 
     public boolean useInDegree_=true;
+    private boolean random_=false;
+
+    @Override
+    public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        int total = 0;
+        for (int node: availableNodes) {
+            total+=net.getDegree(node);
+        }
+
+        if (total > 0) {
+            normalisationConstant_ = total;
+        } else {
+            random_=true;
+            normalisationConstant_=availableNodes.size();
+        }
+        tempConstant_=normalisationConstant_;
+    }
+
+    @Override
+    public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
+        if (!random_) {
+            tempConstant_-=net.getDegree(chosenNode);
+        }
+        if (random_ || tempConstant_==0) {
+            random_=true;
+            tempConstant_=availableNodes.size();
+        }
+    }
 
     public void calcNormalisation(UndirectedNetwork network, int [] removed) {
         int degSum = 0;
-        for (int i = 0; i < removed.length; i++) {
-            if (removed[i]>=0) {
-                degSum += network.getDegree(removed[i]);
+        for (int j : removed) {
+            if (j >= 0) {
+                degSum += network.getDegree(j);
             }
         }
         normalisationConstant_ = 2*network.noLinks_ - degSum;

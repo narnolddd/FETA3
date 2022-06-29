@@ -6,6 +6,7 @@ import feta.network.UndirectedNetwork;
 import feta.objectmodels.MixedModel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Star extends Operation{
 
@@ -68,7 +69,7 @@ public class Star extends Operation{
     public void pickCentreNode(Network net, MixedModel obm) {
         if (internal_) {
             obm.calcNormalisation(net);
-            centreNode_ = obm.nodeDrawWithoutReplacement(net, new int[0]);
+            centreNode_ = obm.nodeDrawWithoutReplacement(net, net.getNodeListCopy(), -1);
             centreNodeName_=net.nodeNoToName(centreNode_);
         }
         else {
@@ -78,6 +79,8 @@ public class Star extends Operation{
     }
 
     public void pickLeafNodes(Network net, MixedModel obm) {
+        HashSet<Integer> availableNodes = net.getNodeListCopy();
+        availableNodes.remove(centreNode_);
         // Add new nodes
         int noNew = noLeaves_ - noExisting_;
         int[] newLeaves= new int[noNew];
@@ -87,14 +90,18 @@ public class Star extends Operation{
         }
         int[] internalLeaves;
         if (internal_) {
-            int [] chosen_ = new int[1+net.getOutLinks(centreNode_).length];
-            chosen_[0] = centreNode_;
-            for (int n = 0; n < net.getOutLinks(centreNode_).length; n++) {
-                chosen_[n+1] = net.getOutLinks(centreNode_)[n];
+//            int [] chosen_ = new int[1+net.getOutLinks(centreNode_).length];
+//            chosen_[0] = centreNode_;
+//            for (int n = 0; n < net.getOutLinks(centreNode_).length; n++) {
+//                chosen_[n+1] = net.getOutLinks(centreNode_)[n];
+//            }
+//            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
+            for (int node: net.getOutLinks(centreNode_)) {
+                availableNodes.remove(node);
             }
-            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
+            internalLeaves = obm.drawMultipleNodesWithoutReplacement(net,centreNode_,noExisting_,availableNodes);
         } else {
-            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, new int[]{centreNode_});
+            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,-1,noExisting_,availableNodes);
         }
         leafNodes_= Methods.concatenate(internalLeaves,newLeaves);
         nodesToNames(net);

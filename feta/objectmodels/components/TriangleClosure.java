@@ -2,18 +2,73 @@ package feta.objectmodels.components;
 
 import feta.network.DirectedNetwork;
 import feta.network.UndirectedNetwork;
-import org.json.simple.JSONObject;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public class TriangleClosure extends ObjectModelComponent {
 
     private int[] occurrences_;
     private boolean random_;
 
+    @Override
+    public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        occurrences_ = new int[net.noNodes_+2];
+        random_=false;
+        // this is a hack in place for if the node is a new node
+        if (sourceNode == -1) {
+            random_=true;
+            normalisationConstant_ = availableNodes.size();
+        } else {
+            // count open wedges from the source node that can be closed
+            for (int n1: net.neighbours_.get(sourceNode)) {
+                for (int n2: net.neighbours_.get(n1)) {
+                    occurrences_[n2]++;
+                }
+            }
+
+            // go through available nodes to add to normalisation const.
+            int total = 0;
+            for (int node: availableNodes) {
+                total+=occurrences_[node];
+            }
+
+            // check for edge case of no triangles to be closed
+            if (total == 0) {
+                random_=true;
+                normalisationConstant_ = availableNodes.size();
+            } else {
+                normalisationConstant_=total;
+            }
+            tempConstant_=normalisationConstant_;
+        }
+    }
+
+    @Override
+    public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
+
+        for (int n1 : net.neighbours_.get(chosenNode)) {
+            if (n1 == chosenNode)
+                continue;
+            occurrences_[n1]++;
+
+        }
+
+        int total = 0;
+        for (int node : availableNodes) {
+            total += occurrences_[node];
+        }
+
+        if (total == 0) {
+            random_ = true;
+            tempConstant_ = availableNodes.size();
+        } else {
+            tempConstant_ = total;
+        }
+
+    }
+
     public void calcNormalisation (UndirectedNetwork net, int[] removed) {
-        // make an array logging the number of triangles an edge could could close if each node is selected.
+        // make an array logging the number of triangles an edge could close if each node is selected.
         // This model assumes all links are coming from a newly added node
         occurrences_ = new int[net.noNodes_+2];
         random_=false;

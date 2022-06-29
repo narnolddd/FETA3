@@ -4,6 +4,8 @@ import feta.network.DirectedNetwork;
 import feta.network.Network;
 import feta.network.UndirectedNetwork;
 
+import java.util.HashSet;
+
 public class RandomAttachment extends ObjectModelComponent {
 
 
@@ -16,6 +18,12 @@ public class RandomAttachment extends ObjectModelComponent {
             normalisationConstant_= (double) net.noNodes_-removed.length;
         }
         tempConstant_=normalisationConstant_;
+    }
+
+    @Override
+    public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        normalisationConstant_ = availableNodes.size();
+        tempConstant_= normalisationConstant_;
     }
 
     public void calcNormalisation(UndirectedNetwork net, int[] removed){}
