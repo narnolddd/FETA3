@@ -13,6 +13,8 @@ public abstract class ObjectModelComponent {
     double normalisationConstant_;
     double tempConstant_;
 
+    protected boolean random_ = false;
+
     /** Methods relating to Object Model */
 
 //    public double calcProbability(Network net, int node) {
@@ -56,6 +58,7 @@ public abstract class ObjectModelComponent {
     }
 
     public final void updateNormalisation(Network net, HashSet<Integer> availableNodes, int chosenNode) {
+        random_=false;
         if (net.getClass() == UndirectedNetwork.class) {
             updateNormalisation((UndirectedNetwork) net, availableNodes, chosenNode);
         }

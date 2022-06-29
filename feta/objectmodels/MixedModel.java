@@ -157,21 +157,6 @@ public class MixedModel {
         return nodeDrawWithoutReplacement(net, new int[0]);
     }
 
-    public int[] drawMultipleNodesWithoutReplacement(Network net, int sampleSize, int[] alreadyChosen) {
-        int[] chosenNodes = new int[sampleSize];
-        for (int j = 0; j<sampleSize; j++) {
-            chosenNodes[j] = -1;
-        }
-        int [] removedFromSample= Methods.concatenate(alreadyChosen,chosenNodes);
-        calcNormalisation(net, Methods.removeNegativeNumbers(removedFromSample));
-        for (int i = 0; i < sampleSize; i++) {
-            int chosenNode = nodeDrawWithoutReplacement(net, removedFromSample);
-            chosenNodes[i]=chosenNode;
-            removedFromSample[alreadyChosen.length + i]=chosenNode;
-        }
-        return Methods.removeNegativeNumbers(chosenNodes);
-    }
-
     public int[] drawMultipleNodesWithoutReplacement(Network net, int seedNode, int sampleSize, HashSet<Integer> availableNodes) {
         int[] chosenNodes = new int[sampleSize];
         if (sampleSize > availableNodes.size()) {
@@ -352,8 +337,6 @@ public class MixedModel {
             likelihoods_.put(weight, likelihoods_.get(weight) + logLike);
             i++;
         }
-
-
     }
 
     public void updateIndividualLikelihoods(Network net, int[] nodeSet, HashSet<Integer> availableNodes, double[] opLikeRatio) {
@@ -373,54 +356,11 @@ public class MixedModel {
                     prob += weight[j] * probs[j];
                 }
                 prob *= (availableNodes.size());
-//                if (prob > 10.0) {
-//                    // System.out.println("BIG");
-//                    // There's a product in here that gets pretty huge, the following code is to avoid double overflow.
-//                    prob /=10.0;
-//                    opLikeRatio[k]/=10.0;
-//                    counters[k]++;
-//                }
                 likeRatio[k] += Math.log(prob);
                 k++;
             }
             availableNodes.remove(node);
         }
-        for (int i = 0; i < likeRatio.length; i++) {
-            //System.out.println(opLikeRatio[i]);
-            double tmp = addLogs(opLikeRatio[i],likeRatio[i]);
-            opLikeRatio[i] = tmp;
-            //System.out.println(likeRatio[i]+" "+opLikeRatio[i]);
-        }
-    }
-
-    public void updateIndividualLikelihoods(Network net, int [] nodeSet, int[] alreadyChosen,
-                                                                 double[] opLikeRatio) {
-        double[] likeRatio = new double[likelihoods_.size()];
-
-        for (int i = 0; i < nodeSet.length; i++) {
-            int node = nodeSet[i];
-            updateNormalisation(net,alreadyChosen);
-            double[] probs = getComponentProbs(net,node);
-            int k = 0;
-            for (double[] weight : likelihoods_.keySet()) {
-                double prob = 0.0;
-                for (int j = 0; j < weight.length; j++) {
-                    prob += weight[j] * probs[j];
-                }
-                prob *= (net.noNodes_ - alreadyChosen.length);
-//                if (prob > 10.0) {
-//                    // System.out.println("BIG");
-//                    // There's a product in here that gets pretty huge, the following code is to avoid double overflow.
-//                    prob /=10.0;
-//                    opLikeRatio[k]/=10.0;
-//                    counters[k]++;
-//                }
-                likeRatio[k] += Math.log(prob);
-                k++;
-            }
-            alreadyChosen = Methods.concatenate(alreadyChosen, new int[]{node});
-        }
-
         for (int i = 0; i < likeRatio.length; i++) {
             //System.out.println(opLikeRatio[i]);
             double tmp = addLogs(opLikeRatio[i],likeRatio[i]);

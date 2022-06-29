@@ -45,7 +45,7 @@ public class TriangleClosure extends ObjectModelComponent {
 
     @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
-
+        random_=false;
         for (int n1 : net.neighbours_.get(chosenNode)) {
             if (n1 == chosenNode)
                 continue;

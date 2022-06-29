@@ -13,12 +13,30 @@ public class DegreePower extends ObjectModelComponent {
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        double degSum = 0.0;
+        for (int node: availableNodes) {
+            degSum += Math.pow(net.getDegree(node), power_);
+        }
 
+        if (degSum == 0.0) {
+            random_=true;
+            normalisationConstant_=availableNodes.size();
+        }
+        else {
+            normalisationConstant_ = degSum;
+        }
+        tempConstant_ = normalisationConstant_;
     }
 
     @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
-
+        if (!random_) {
+            tempConstant_-= Math.pow(net.getDegree(chosenNode), power_);
+        }
+        if (random_ || tempConstant_==0) {
+            random_=true;
+            tempConstant_=availableNodes.size();
+        }
     }
 
     public void calcNormalisation(UndirectedNetwork network, int [] removed) {

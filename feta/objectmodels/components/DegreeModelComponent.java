@@ -9,7 +9,6 @@ import java.util.HashSet;
 public class DegreeModelComponent extends ObjectModelComponent{
 
     public boolean useInDegree_=true;
-    private boolean random_=false;
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
