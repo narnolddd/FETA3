@@ -23,9 +23,13 @@ public class DirectedLink extends Link implements Comparable<DirectedLink> {
     }
 
     public boolean equals(DirectedLink link) {
-        if (link.sourceNode_.equals(sourceNode_) & link.destNode_.equals(destNode_)) {
-            return true;
+        if (link.sourceNode_.equals(sourceNode_) && link.destNode_.equals(destNode_)) {
+			if (link.sourceNodeType_ == null)
+				return true;
+			if (link.sourceNodeType_.equals(sourceNodeType_) && link.destNodeType_.equals(destNodeType_))
+				return true;
         }
+     
         return false;
     }
 

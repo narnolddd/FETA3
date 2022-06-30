@@ -45,9 +45,9 @@ public class ParseNetDirected extends ParseNet{
             String sourceNode= intersect_.iterator().next();
             Star op;
             if (net.newNode(sourceNode)) {
-                op = new Star(leaves.size(), false);
+                op = new Star(leaves.size(), null,null, false);
             } else {
-                op= new Star(leaves.size(), true);
+                op= new Star(leaves.size(), null,null,true);
             }
 
             int noExisting = 0;

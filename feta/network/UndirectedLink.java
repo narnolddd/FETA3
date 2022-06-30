@@ -25,9 +25,15 @@ public class UndirectedLink extends Link implements Comparable<UndirectedLink> {
 
     public boolean equals(UndirectedLink link) {
         if (link.sourceNode_.equals(sourceNode_) & link.destNode_ .equals(destNode_)) {
-            return true;
+			if (link.sourceNodeType_ == null)
+				return true;
+			if (link.sourceNodeType_.equals(sourceNodeType_) && link.destNodeType_.equals(destNodeType_))
+				return true;
         } else if (link.sourceNode_.equals(destNode_) & link.destNode_.equals(sourceNode_)) {
-            return true;
+			if (link.sourceNodeType_ == null)
+				return true;
+			if (link.sourceNodeType_.equals(destNodeType_) && link.destNodeType_.equals(sourceNodeType_))
+				return true;
         }
         return false;
     }

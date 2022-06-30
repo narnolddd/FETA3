@@ -17,11 +17,24 @@ public class Star extends Operation{
     private final boolean internal_;
     private int noExisting_;
     private final int noLeaves_;
+    private String centreType_;
+    private String leafType_;
 
-    public Star(int noLeaves, boolean internal) {
-        internal_=internal;
+    //public Star(int noLeaves, boolean internal) {
+        //internal_=internal;
+        //noLeaves_=noLeaves;
+        //centreType_= null;
+        //leafType_= null;
+    //}
+    
+    public Star (int noLeaves, String centreType, String leafType, boolean internal)
+    /** centreType and leafType will be null for untyped networks*/
+    {
+	    internal_=internal;
         noLeaves_=noLeaves;
-    }
+        centreType_= centreType;
+        leafType_= leafType;	
+	}
 
     public void bufferLinks(Network net) {
         for (String leaf: leafNodeNames_) {
