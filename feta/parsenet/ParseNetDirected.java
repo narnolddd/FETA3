@@ -28,11 +28,20 @@ public class ParseNetDirected extends ParseNet{
             Set<String> leaves= new HashSet<String>();
             intersect_.add(l.sourceNode_);
             leaves.add(l.destNode_);
+            String sourceType= l.sourceNodeType_;
+            String destType= l.destNodeType_;
             for (int j=1; j < links.size(); j++) {
                 Set<String> src = new HashSet<String>();
                 src.add(links.get(j).sourceNode_);;
                 intersect_.retainAll(src);
                 leaves.add(links.get(j).destNode_);
+                if (sourceType != null) {
+					if (!sourceType.equals(links.get(j).sourceNodeType_) ||
+						!destType.equals(links.get(j).destNodeType_)) {
+							System.err.println("In ParseNetDirected star has incompatible types");
+							System.exit(-1);
+						}
+				}
             }
             if (intersect_.size()==0){
                 //System.out.println("Processing events as links for this time "+links.get(0).time_);
@@ -45,9 +54,9 @@ public class ParseNetDirected extends ParseNet{
             String sourceNode= intersect_.iterator().next();
             Star op;
             if (net.newNode(sourceNode)) {
-                op = new Star(leaves.size(), null,null, false);
+                op = new Star(leaves.size(), sourceType,destType, false);
             } else {
-                op= new Star(leaves.size(), null,null,true);
+                op= new Star(leaves.size(), sourceType,destType,true);
             }
 
             int noExisting = 0;
