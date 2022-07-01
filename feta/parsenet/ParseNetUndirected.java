@@ -27,6 +27,10 @@ public class ParseNetUndirected extends ParseNet {
             newOps.add(processAsLink(links.get(0),net));
         } else {
             Link l = links.get(0);
+            if (l.sourceNodeType_ != null) {
+				System.out.println("Typed nodes with undirected networks not yet implemented");
+				System.exit(-1);
+			}
             Set<String> intersect_ = new HashSet<String>();
             Set<String> leaves= new LinkedHashSet<String>();
             intersect_.add(l.sourceNode_);
