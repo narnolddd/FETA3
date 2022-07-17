@@ -47,10 +47,6 @@ public abstract class ObjectModelComponent {
     public abstract double calcProbability(UndirectedNetwork net, int node);
     public abstract double calcProbability(DirectedNetwork net, int node);
 
-    public final void calcNormalisation(Network net) {
-        calcNormalisation(net, new int[0]);
-    }
-
     public final void updateNormalisation(Network net, int [] removed) {
         if (net.getClass() == UndirectedNetwork.class) {
             updateNormalisation((UndirectedNetwork) net,removed);

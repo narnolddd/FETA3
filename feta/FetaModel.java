@@ -30,10 +30,15 @@ public class FetaModel {
     public void execute() {
         parseActionList(options_.actionOps_);
         initialiseNetwork();
+        long startTime = System.currentTimeMillis();
         for (SimpleAction act: actionsToDo_) {
             act.setNetwork(network_);
             act.execute();
+            long curTime = System.currentTimeMillis();
+            System.out.println("Action "+act+ " completed in "+(curTime - startTime)+" milliseconds.");
         }
+        long endTime = System.currentTimeMillis();
+        System.out.println("Job completed in "+(endTime-startTime)+" milliseconds.");
     }
     public void parseActionList(JSONObject actionList) {
 

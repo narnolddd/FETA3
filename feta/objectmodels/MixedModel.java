@@ -100,42 +100,6 @@ public class MixedModel {
         return probability;
     }
 
-    /** Draw a single node without replacement */
-    public final int nodeDrawWithoutReplacement(Network net, int[] alreadyChosenNodes) {
-        ArrayList<Integer> nodeList = new ArrayList<Integer>();
-        int [] chosen = Methods.removeNegativeNumbers(alreadyChosenNodes);
-        int node;
-        for (int j = 0; j < net.noNodes_; j++) {
-            nodeList.add(j);
-        }
-
-        // Removes already chosen nodes from the sample space
-        for (int i : chosen) {
-            nodeList.remove((Integer) i);
-        }
-
-        if (nodeList.isEmpty()) {
-            node = -1;
-        }
-        else {
-            // This part does the sampling.
-            updateNormalisation(net, chosen);
-            // checkUpdatedNorm(net,chosen);
-            double r = Math.random();
-            double weightSoFar = 0.0;
-            int l;
-            for (l = 0; l < nodeList.size(); l++) {
-                weightSoFar += calcProbability(net, nodeList.get(l));
-                if (weightSoFar > r)
-                    break;
-            }
-            if (l == nodeList.size())
-                l--;
-            node = nodeList.get(l);
-        }
-        return node;
-    }
-
     public final int nodeDrawWithoutReplacement(Network net, HashSet<Integer> availableNodes, int seedNode) {
         if (seedNode == -1) {
             calcNormalisation(net, availableNodes);
@@ -153,9 +117,9 @@ public class MixedModel {
         return -1;
     }
 
-    public int nodeDrawWithReplacement(Network net) {
-        return nodeDrawWithoutReplacement(net, new int[0]);
-    }
+//    public int nodeDrawWithReplacement(Network net) {
+//        return nodeDrawWithoutReplacement(net, new int[0]);
+//    }
 
     public int[] drawMultipleNodesWithoutReplacement(Network net, int seedNode, int sampleSize, HashSet<Integer> availableNodes) {
         int[] chosenNodes = new int[sampleSize];
@@ -173,16 +137,16 @@ public class MixedModel {
         return chosenNodes;
     }
 
-    public int[] drawMultipleNodesWithReplacement(Network net, int sampleSize, int[] alreadyChosen) {
-        int[] chosenNodes = new int[sampleSize];
-        for (int j = 0; j<sampleSize; j++) {
-            chosenNodes[j] = -1;
-        }
-        for (int i = 0; i < sampleSize; i++) {
-            chosenNodes[i] = nodeDrawWithoutReplacement(net,alreadyChosen);
-        }
-        return Methods.removeNegativeNumbers(chosenNodes);
-    }
+//    public int[] drawMultipleNodesWithReplacement(Network net, int sampleSize, int[] alreadyChosen) {
+//        int[] chosenNodes = new int[sampleSize];
+//        for (int j = 0; j<sampleSize; j++) {
+//            chosenNodes[j] = -1;
+//        }
+//        for (int i = 0; i < sampleSize; i++) {
+//            chosenNodes[i] = nodeDrawWithoutReplacement(net,alreadyChosen);
+//        }
+//        return Methods.removeNegativeNumbers(chosenNodes);
+//    }
 
     /** Performs check that normalisation is correct */
     public void checkNorm(Network net) {

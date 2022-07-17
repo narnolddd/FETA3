@@ -20,12 +20,12 @@ public class Star extends Operation{
     private String centreType_;
     private String leafType_;
 
-    //public Star(int noLeaves, boolean internal) {
-        //internal_=internal;
-        //noLeaves_=noLeaves;
-        //centreType_= null;
-        //leafType_= null;
-    //}
+    public Star(int noLeaves, boolean internal) {
+        internal_=internal;
+        noLeaves_=noLeaves;
+        centreType_= null;
+        leafType_= null;
+    }
     
     public Star (int noLeaves, String centreType, String leafType, boolean internal)
     /** centreType and leafType will be null for untyped networks*/

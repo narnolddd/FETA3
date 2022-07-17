@@ -48,7 +48,7 @@ public class NormalisedLikelihood extends SimpleAction {
             ArrayList<Link> lset = parser_.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
             time = newOps.get(0).getTime();
-            objectModel_.objectModelAtTime(time).calcNormalisation(network_);
+            objectModel_.objectModelAtTime(time).calcNormalisation(network_, network_.getNodeListCopy());
             //double[] meanSD_ = objectModel_.objectModelAtTime(time).calcMeanSDLike(network_);
             //System.out.println(meanSD_[0]);
             for (Operation ignored : newOps) {
