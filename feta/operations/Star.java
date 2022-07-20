@@ -146,7 +146,11 @@ public class Star extends Operation{
     }
 
     public String toString() {
-        StringBuilder str = new StringBuilder(getTime() + " STAR " + centreNodeName_ + " LEAVES ");
+        StringBuilder str = new StringBuilder(getTime() + " STAR " + centreNodeName_);
+        if (centreType_ != null) {
+			str.append(" TYPES "+centreType_+" "+leafType_);
+		}
+		str.append(" LEAVES ");
         for (String leaf: leafNodeNames_) {
             str.append(leaf).append(" ");
         }
