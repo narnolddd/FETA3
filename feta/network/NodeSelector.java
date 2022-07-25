@@ -25,8 +25,8 @@ class UntypedNodeSelector implements NodeSelector {
 }
 
 class TypedNodeSelector extends UntypedNodeSelector {
-    public ArrayList<Integer> getAvailableNodes(Network net, ArrayList<Integer> selectedNodes, String nodeType) {
-        ArrayList<Integer> fullList = NodeTypes.getNodesOfType(nodeType);
+    public HashSet<Integer> getAvailableNodes(Network net, ArrayList<Integer> selectedNodes, String nodeType) {
+        HashSet<Integer> fullList = NodeTypes.getNodesOfType(nodeType);
         fullList.removeAll(selectedNodes);
         return fullList;
     }

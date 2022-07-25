@@ -167,7 +167,7 @@ public class FitMixedModel extends SimpleAction {
 //        }
 
         ArrayList<int[]> nc = op.getNodeOrders();
-        obm.updateLikelihoods(network_,nc);
+        op.updateLikelihoods(obm,network_);
     }
 
     public void parseActionOptions(JSONObject obj) {

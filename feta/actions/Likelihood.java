@@ -111,7 +111,7 @@ public class Likelihood extends SimpleAction {
         op.setRandom(random_);
         op.setNodeChoices(orderedData_);
         ArrayList<int[]> nc = op.getNodeOrders();
-        obm.updateLikelihoods(network_,nc);
+        op.updateLikelihoods(obm,network_);
     }
 
 //    public void getLogLike(long start, long end) {

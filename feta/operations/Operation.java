@@ -4,6 +4,7 @@ import feta.Methods;
 import feta.network.Network;
 import feta.objectmodels.MixedModel;
 
+import java.time.chrono.MinguoEra;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -96,6 +97,10 @@ public abstract class Operation {
             noChoices_+=copy.length;
         }
         nodeChoices_=newChoices;
+    }
+
+    public void updateLikelihoods(MixedModel obm, Network net) {
+
     }
 
 }

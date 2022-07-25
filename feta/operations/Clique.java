@@ -5,6 +5,8 @@ import feta.objectmodels.MixedModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+
 public class Clique extends Operation {
 
     String[] members_;

@@ -8,7 +8,7 @@ public class NodeTypes {
 	private static NodeTypes nt_ =new NodeTypes();
 	private HashMap <Integer,String> nodeTypes_;
 	// Map returns the type (as string) of given node (integer)
-	private HashMap <String, ArrayList<Integer>> nodesByType_;
+	private HashMap <String, HashSet<Integer>> nodesByType_;
 	// Map which turns a type name into a list of integers of that type
 	
 	/** set the type of a given node to be a string */
@@ -25,13 +25,13 @@ public class NodeTypes {
 		
 		/** If this is a new type add it */
 		if (nt_.nodesByType_.get(nodeType) == null) {
-			nt_.nodesByType_.put(nodeType, new ArrayList<Integer>());
+			nt_.nodesByType_.put(nodeType, new HashSet<>());
 		}
 		nt_.nodeTypes_.put(nodeNo,nodeType);
 		nt_.nodesByType_.get(nodeType).add(nodeNo);
 	}
 	
-	public static ArrayList<Integer> getNodesOfType (String type)
+	public static HashSet<Integer> getNodesOfType (String type)
 	/** Return numbers of all nodes with a given type*/
 	{
 		return nt_.nodesByType_.get(type);

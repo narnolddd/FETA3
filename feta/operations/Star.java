@@ -2,10 +2,12 @@ package feta.operations;
 
 import feta.Methods;
 import feta.network.Network;
+import feta.network.NodeTypes;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.MixedModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class Star extends Operation{
@@ -49,9 +51,9 @@ public class Star extends Operation{
 
     public void setNodeChoices(boolean orderedData) {
         nodeChoices_= new ArrayList<int[]>();
-        if (internal_) {
-            nodeChoices_.add(new int[] {centreNode_});
-        }
+//        if (internal_) {
+//            nodeChoices_.add(new int[] {centreNode_});
+//        }
         if (orderedData) {
             for (int node: leafNodes_) {
                 nodeChoices_.add(new int[] {node});
@@ -77,6 +79,37 @@ public class Star extends Operation{
 
     public void setNoExisting(int noExisting) {
         noExisting_=noExisting;
+    }
+
+    public void updateLikelihoods(MixedModel obm, Network net) {
+        if (!internal_) {
+            HashSet<Integer> availableNodes;
+            if (centreType_!=null) {
+                availableNodes = NodeTypes.getNodesOfType(leafType_);
+            } else {
+                availableNodes = net.getNodeListCopy();
+            }
+            obm.updateLikelihoods(net, availableNodes, nodeOrders_);
+        } else {
+            HashSet<Integer> availableSourceNodes;
+            HashSet<Integer> availableTargetNodes;
+            if (centreType_!=null) {
+                availableSourceNodes = NodeTypes.getNodesOfType(centreType_);
+                availableTargetNodes = NodeTypes.getNodesOfType(leafType_);
+            } else {
+                availableSourceNodes = net.getNodeListCopy();
+                availableTargetNodes = net.getNodeListCopy();
+            }
+            ArrayList<int[]> sourceNodeChoice = new ArrayList<>();
+            sourceNodeChoice.add(new int[] {centreNode_});
+            obm.updateLikelihoods(net, availableSourceNodes, sourceNodeChoice);
+
+            availableTargetNodes.remove(centreNode_);
+            for (int node: net.getOutLinks(centreNode_)) {
+                availableTargetNodes.remove(node);
+            }
+            obm.updateLikelihoods(net,availableTargetNodes,nodeOrders_);
+        }
     }
 
     public void pickCentreNode(Network net, MixedModel obm) {
@@ -148,7 +181,7 @@ public class Star extends Operation{
     public String toString() {
         StringBuilder str = new StringBuilder(getTime() + " STAR " + centreNodeName_);
         if (centreType_ != null) {
-			str.append(" TYPES "+centreType_+" "+leafType_);
+			str.append(" TYPES ").append(centreType_).append(" ").append(leafType_);
 		}
 		str.append(" LEAVES ");
         for (String leaf: leafNodeNames_) {

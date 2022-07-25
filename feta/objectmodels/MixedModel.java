@@ -26,7 +26,6 @@ public class MixedModel {
     public HashMap<double[], Double> getLikelihoods () {
         return likelihoods_;
     }
-
     public double[] getWeights() {return weights_;}
 
     /** Checks object model prescribed is valid */
@@ -68,13 +67,6 @@ public class MixedModel {
 
     public void calcNormalisation(Network net) {
         calcNormalisation(net, new int[0]);
-    }
-
-    /** For updating the normalisation constant after sampling nodes in removed */
-    public void updateNormalisation(Network net, int [] removed) {
-        for (ObjectModelComponent omc: components_) {
-            omc.updateNormalisation(net, removed);
-        }
     }
 
     public void updateNormalisation(Network net, HashSet<Integer> availableNodes, int node) {
@@ -282,13 +274,13 @@ public class MixedModel {
         initialiseLikelihoods(list);
     }
 
-    public void updateLikelihoods(Network net, ArrayList<int[]> nodeOrders) {
+    public void updateLikelihoods(Network net, HashSet<Integer> availableNodes, ArrayList<int[]> nodeOrders) {
         int noOrders = nodeOrders.size();
         double[] opLikeRatio = new double[likelihoods_.size()];
         Arrays.fill(opLikeRatio, -1 * Double.POSITIVE_INFINITY);
 
         for (int[] order : nodeOrders) {
-            updateIndividualLikelihoods(net, order, net.getNodeListCopy(), opLikeRatio);
+            updateIndividualLikelihoods(net, order, availableNodes, opLikeRatio);
         }
 
         int i=0;
