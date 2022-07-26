@@ -1,9 +1,6 @@
 package feta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Methods {
@@ -73,6 +70,18 @@ public class Methods {
             ind++;
         }
         return intArray;
+    }
+
+    public static String mapToString(HashMap map) {
+        StringBuilder mapAsString = new StringBuilder("{");
+        for (Object key: map.keySet()) {
+            mapAsString.append(key).append(":").append(map.get(key)).append(",");
+        }
+        if (map.keySet().size() > 0) {
+            mapAsString.delete(mapAsString.length() - 2, mapAsString.length()).append("}");
+            return mapAsString.toString();
+        }
+        return "{}";
     }
 
     public static String[] toStringArray(Set<String> set) {

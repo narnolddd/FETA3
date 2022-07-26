@@ -82,11 +82,15 @@ public abstract class Network {
             }
             String src = link.sourceNode_;
             String dst = link.destNode_;
+
+            String srcType = link.sourceNodeType_;
+            String dstType = link.destNodeType_;
+
             if (newNode(src)) {
-                addNode(src);
+                addNode(src, srcType);
             }
             if (newNode(dst)) {
-                addNode(dst);
+                addNode(dst, dstType);
             }
 
             addLink(src,dst);
@@ -118,7 +122,8 @@ public abstract class Network {
     /** Add a typed node to all data structures */
     public void addNode(String nodeName, String nodeType) {
         addNode(nodeName);
-        NodeTypes.setNodeType(nodeNumbers_.get(nodeName),nodeType);
+        if (nodeType != null)
+            NodeTypes.setNodeType(nodeNumbers_.get(nodeName),nodeType);
     }
 
     /** Calls the addLink method on the integers corresponding to the string nodenames */

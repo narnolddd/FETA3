@@ -19,27 +19,30 @@ public class NodeTypes {
 	/** set the type of a given node to be a string */
 	public static void setNodeType(int nodeNo, String nodeType) 
 	{
-		/** Check if this node is added*/
+		/* Check if this node is added*/
 		String nt= nt_.nodeTypes_.get(nodeNo);
 		if (nt != null) {
 			if (nt.equals(nodeType)) 
 				return;
-			System.out.println("Node "+nodeNo+" is set to type "+nodeType+" and "+nt);
-			System.exit(0);
+			System.err.println("Node "+nodeNo+" is set to type "+nodeType+" and "+nt);
+			System.exit(-1);
 		}
-		
-		/** If this is a new type add it */
-		if (nt_.nodesByType_.get(nodeType) == null) {
-			nt_.nodesByType_.put(nodeType, new HashSet<>());
-		}
+
+		/* If this is a new type add it */
+		nt_.nodesByType_.computeIfAbsent(nodeType, k -> new HashSet<>());
 		nt_.nodeTypes_.put(nodeNo,nodeType);
 		nt_.nodesByType_.get(nodeType).add(nodeNo);
 	}
-	
-	public static HashSet<Integer> getNodesOfType (String type)
+
 	/** Return numbers of all nodes with a given type*/
+	public static HashSet<Integer> getNodesOfType (String type)
 	{
 		return nt_.nodesByType_.get(type);
+	}
+
+	/** Get current list of types */
+	public static Set<String> getTypes() {
+		return nt_.nodesByType_.keySet();
 	}
 	
 	/**Get the type of a given node*/
