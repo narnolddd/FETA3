@@ -10,7 +10,12 @@ public class NodeTypes {
 	// Map returns the type (as string) of given node (integer)
 	private HashMap <String, HashSet<Integer>> nodesByType_;
 	// Map which turns a type name into a list of integers of that type
-	
+
+	public NodeTypes() {
+		nodeTypes_ = new HashMap <Integer,String>();
+		nodesByType_ = new HashMap <String, HashSet<Integer>>();
+	}
+
 	/** set the type of a given node to be a string */
 	public static void setNodeType(int nodeNo, String nodeType) 
 	{
