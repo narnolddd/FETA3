@@ -50,4 +50,37 @@ public class NodeTypes {
 		return nt_.nodeTypes_.get(nodeNo);
 	}
 	
+	public static boolean sameTypes(Link l, String sourceType, String destType)
+	/** Check link has the same types as two types*/
+	{
+		return sameTypes(l.sourceNodeType_,l.destNodeType_, sourceType, destType);
+	}
+	
+	public static boolean SameTypes(Link l1, Link l2)
+	/** Check two links have same type*/
+	{
+		return sameTypes(l1.sourceNodeType_,l1.destNodeType_, 
+			l2.sourceNodeType_,l2.destNodeType_);
+	}
+	
+	public static boolean sameTypes(String sourceType1, String destType1, 
+		String sourceType2, String destType2)
+	/** Check two sets of source/dest types are the same*/
+	{
+		if (sourceType1 == null) {
+			if (sourceType2 != null) 
+				return false;
+		} else {
+			if (!sourceType1.equals(sourceType2))
+				return false;
+		}
+		if (destType1 == null) {
+			if (destType2 != null) 
+				return false;
+		} else {
+			if (!destType1.equals(destType2))
+				return false;
+		}
+		return true;
+	}
 }

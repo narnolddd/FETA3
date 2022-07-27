@@ -184,6 +184,9 @@ public class Star extends Operation{
 			str.append(" TYPES ").append(centreType_).append(" ").append(leafType_);
 		}
 		str.append(" LEAVES ");
+		if (leafNodeNames_ == null) {
+			System.out.println("leafNodeNames should not be null");
+		}
         for (String leaf: leafNodeNames_) {
             str.append(leaf).append(" ");
         }

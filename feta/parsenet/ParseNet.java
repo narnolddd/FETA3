@@ -15,9 +15,10 @@ public abstract class ParseNet {
     Network net_;
     BufferedWriter bw_;
 
-    public ArrayList<Operation> operations_;
-
+	ArrayList<Operation> operations_;
+	
     public void parseNetwork(long start, long end) {
+		
         net_.buildUpTo(start);
         while (true) {
             ArrayList<Link> links = net_.linksToBuild_;
@@ -29,6 +30,7 @@ public abstract class ParseNet {
                 break;
             for (Operation op: parseNewLinks(linkSet,net_)) {
                 operations_.add(op);
+              
             }
             net_.buildUpTo(time);
         }
