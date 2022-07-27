@@ -34,6 +34,7 @@ public class UndirectedNetwork extends Network {
         degrees_= new int[maxNodeNumber];
         maxDeg_=0;
         triCount_= new int[maxNodeNumber];
+        this.getLinksFromFile();
     }
 
     /** Adds undirected link to data structures */

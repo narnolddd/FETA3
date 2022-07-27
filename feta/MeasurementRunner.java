@@ -13,7 +13,7 @@ import feta.readnet.ReadNetCSV;
 
 import java.util.ArrayList;
 
-public class FetaRunner {
+public class MeasurementRunner {
 
     public static void main( String[] args) {
         ReadNet reader = new ReadNetCSV("data/cit-HepPh-new.txt"," ",false,0,1,2);

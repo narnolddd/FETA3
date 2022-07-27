@@ -29,6 +29,11 @@ public class ReadNetCSV extends ReadNet {
         timeColumn_=timeCol;
         sourceTypeColumn_= srcTypeCol;
         dstTypeColumn_= dstTypeCol;
+        if (directed) {
+            lb_ = new DirectedLinkBuilder();
+        } else {
+            lb_ = new UndirectedLinkBuilder();
+        }
     }
 
     /** Basic default for untyped networks */
