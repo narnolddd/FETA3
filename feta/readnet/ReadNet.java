@@ -18,6 +18,10 @@ public abstract class ReadNet {
     boolean sampled_;
     double samplingProp_=0.0;
 
+    public ReadNet() {
+        links_= new ArrayList<Link>();
+    }
+
     public ReadNet(FetaOptions options){
         links_= new ArrayList<Link>();
         sep_=options.getInSep();

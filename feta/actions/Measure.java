@@ -1,7 +1,9 @@
 package feta.actions;
 
+import feta.actions.stoppingconditions.MaxTimeExceeded;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
+import feta.network.Network;
 import feta.network.measurements.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,6 +32,17 @@ public class Measure extends SimpleAction {
     public Measure() {
         stoppingConditions_= new ArrayList<StoppingCondition>();
         statistics_= new ArrayList<Measurement>();
+    }
+
+    public Measure(Network net, ArrayList<Measurement> statistics, String outputFile, long startTime, long endTime, long interval) {
+        setNetwork(net);
+        statistics_=statistics;
+        stoppingConditions_= new ArrayList<StoppingCondition>() { {
+            add(new MaxTimeExceeded(endTime));
+        }};
+        outputFile_=outputFile;
+        startTime_=startTime;
+        interval_=interval;
     }
 
     public void execute() {
