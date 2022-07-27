@@ -51,11 +51,13 @@ public abstract class ParseNet {
         return linkSet;
     }
 
-    public void writeToFile(String fname) {
+    public void writeToFile(String fname, boolean censored) {
         try {
             FileWriter fw = new FileWriter(fname);
             bw_ = new BufferedWriter(fw);
             for (Operation op: operations_) {
+				if (censored) 
+					op.censor();
                 bw_.write(op+"\n");
                 // Print for debugging: System.out.println(op);
             }

@@ -17,6 +17,7 @@ public abstract class Operation {
     private long time_;
     private int noChoices_=0;
     private Random generator_;
+    private boolean censored_= false;
 
     /** updates network with the new nodes and links that occur in this operation
      alternative is for this to happen in the Network interface */
@@ -44,6 +45,16 @@ public abstract class Operation {
     public ArrayList<int[]> getNodeOrders() {
         return nodeOrders_;
     }
+    
+    /** When output, details should be limited*/
+    public boolean isCensored(){
+		return censored_;
+	}
+	
+	/** limit details output*/
+	public void censor() {
+		censored_= true;
+	}
 
     /** Helper methods */
 

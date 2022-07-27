@@ -188,7 +188,11 @@ public class Star extends Operation{
 			System.out.println("leafNodeNames should not be null");
 		}
         for (String leaf: leafNodeNames_) {
-            str.append(leaf).append(" ");
+            if (isCensored()) {
+				str.append("ANON ");
+			} else {
+				str.append(leaf).append(" ");
+			}
         }
         if (internal_){
             str.append("INTERNAL");

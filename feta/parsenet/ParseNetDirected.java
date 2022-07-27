@@ -64,7 +64,7 @@ public class ParseNetDirected extends ParseNet{
 			//System.out.println("Intersect Processing events as links for this time "+links.get(0).time_);
 			for (Link l1: links) {
 				opsSoFar.add(processAsLink(l1,net));
-				System.out.println("Added op");
+				//System.out.println("Added op");
 			}
 			return opsSoFar;
 		}
