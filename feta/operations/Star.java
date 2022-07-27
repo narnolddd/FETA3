@@ -110,7 +110,6 @@ public class Star extends Operation{
             }
             obm.updateLikelihoods(net,availableTargetNodes,nodeOrders_);
         }
-        System.out.println(this);
     }
 
     public void pickCentreNode(Network net, MixedModel obm) {
