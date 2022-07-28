@@ -13,7 +13,7 @@
   },
   "Action": {
     "ParseTest": {
-	  "Censored" : true,
+	  "Censored" : false,
       "Start": 1,
       "Interval":1,
       "MaxNodes": 34401,

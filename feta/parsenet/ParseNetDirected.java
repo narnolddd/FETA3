@@ -90,7 +90,27 @@ public class ParseNetDirected extends ParseNet{
 		opsSoFar.add(op);
         return opsSoFar;
     }
-		
+
+    public Operation processAsLink(Link l, Network net) {
+        Star op;
+        if (net.newNode(l.sourceNode_)) {
+            op = new Star(1,l.sourceNodeType_,l.destNodeType_,false);
+            op.setCentreNode(l.sourceNode_);
+            op.setLeaves(new String[] {l.destNode_});
+            if (!net.newNode(l.destNode_)) {
+                op.setNoExisting(op.getNoExisting()+1);
+            }
+            net.addNode(l.sourceNode_);
+        } else {
+            op = new Star(1,l.sourceNodeType_,l.destNodeType_,true);
+            op.setNoExisting(op.getNoExisting()+1);
+            op.setCentreNode(l.sourceNode_);
+            op.setLeaves(new String[] {l.destNode_});
+        }
+        op.setTime(l.time_);
+        op.namesToNodes(net);
+        return op;
+    }		
             
 
 
