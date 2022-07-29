@@ -16,6 +16,11 @@ public class TriangleClosureInverseDegree extends ObjectModelComponent {
     }
 
     @Override
+    public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+
+    }
+
+    @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
 
     }

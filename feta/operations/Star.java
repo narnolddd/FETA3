@@ -40,7 +40,7 @@ public class Star extends Operation{
 
     public void bufferLinks(Network net) {
         for (String leaf: leafNodeNames_) {
-            net.addNewLink(centreNodeName_,leaf,getTime());
+            net.addNewLink(centreNodeName_,leaf, centreType_, leafType_, getTime());
         }
     }
 
@@ -83,11 +83,17 @@ public class Star extends Operation{
 
     public void updateLikelihoods(MixedModel obm, Network net) {
         if (!internal_) {
+            if (noExisting_==0)
+                return;
             HashSet<Integer> availableNodes;
             if (centreType_!=null) {
                 availableNodes = NodeTypes.getNodesOfType(leafType_);
             } else {
                 availableNodes = net.getNodeListCopy();
+            }
+            if (availableNodes.isEmpty()) {
+                System.err.println("No available target nodes to choose from! Operation "+this);
+                System.exit(-1);
             }
             obm.updateLikelihoods(net, availableNodes, nodeOrders_);
         } else {
@@ -100,6 +106,17 @@ public class Star extends Operation{
                 availableSourceNodes = net.getNodeListCopy();
                 availableTargetNodes = net.getNodeListCopy();
             }
+
+            if (availableSourceNodes.isEmpty()) {
+                System.err.println("No available source nodes to choose from! Operation "+this);
+                System.exit(-1);
+            }
+
+            if (availableTargetNodes.isEmpty()) {
+                System.err.println("No available target nodes to choose from! Operation "+this);
+                System.exit(-1);
+            }
+
             ArrayList<int[]> sourceNodeChoice = new ArrayList<>();
             sourceNodeChoice.add(new int[] {centreNode_});
             obm.updateLikelihoods(net, availableSourceNodes, sourceNodeChoice);
@@ -114,24 +131,33 @@ public class Star extends Operation{
 
     public void pickCentreNode(Network net, MixedModel obm) {
         if (internal_) {
-            obm.calcNormalisation(net);
-            centreNode_ = obm.nodeDrawWithoutReplacement(net, net.getNodeListCopy(), -1);
+            HashSet<Integer> availableNodes;
+            if (centreType_ != null) {
+                availableNodes = NodeTypes.getNodesOfType(centreType_);
+            } else {
+                availableNodes = net.getNodeListCopy();
+            }
+            centreNode_ = obm.nodeDrawWithoutReplacement(net, availableNodes, -1);
             centreNodeName_=net.nodeNoToName(centreNode_);
         }
         else {
-            centreNodeName_ = net.generateNodeName();
+            centreNodeName_ = net.generateNodeName(centreType_);
             centreNode_=net.nodeNameToNo(centreNodeName_);
         }
     }
 
     public void pickLeafNodes(Network net, MixedModel obm) {
-        HashSet<Integer> availableNodes = net.getNodeListCopy();
-        availableNodes.remove(centreNode_);
+        HashSet<Integer> availableNodes;
+        if (leafType_ != null) {
+            availableNodes = NodeTypes.getNodesOfType(leafType_);
+        } else {
+            availableNodes = net.getNodeListCopy();
+        }
         // Add new nodes
         int noNew = noLeaves_ - noExisting_;
         int[] newLeaves= new int[noNew];
         for (int i = 0; i < noNew; i++) {
-            String newName = net.generateNodeName();
+            String newName = net.generateNodeName(leafType_);
             newLeaves[i]=net.nodeNameToNo(newName);
         }
         int[] internalLeaves;
@@ -142,6 +168,7 @@ public class Star extends Operation{
 //                chosen_[n+1] = net.getOutLinks(centreNode_)[n];
 //            }
 //            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
+            availableNodes.remove(centreNode_);
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }

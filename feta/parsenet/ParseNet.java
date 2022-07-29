@@ -9,17 +9,27 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public abstract class ParseNet {
 
     Network net_;
     BufferedWriter bw_;
 
-	ArrayList<Operation> operations_;
+	protected ArrayList<Operation> operations_;
+
+    /* List of processed nodes to check if given node is new */
+    protected HashSet<String> processedNodes_;
 	
     public void parseNetwork(long start, long end) {
-		
+		processedNodes_=new HashSet<>();
+
+        /* Get string set of already processed nodes */
         net_.buildUpTo(start);
+        for (int node: net_.getNodeListCopy()) {
+            processedNodes_.add(net_.nodeNoToName(node));
+        }
+
         while (true) {
             ArrayList<Link> links = net_.linksToBuild_;
             if (links.size() == 0)
@@ -28,10 +38,7 @@ public abstract class ParseNet {
             long time = linkSet.get(0).time_;
             if (time>end)
                 break;
-            for (Operation op: parseNewLinks(linkSet,net_)) {
-                operations_.add(op);
-              
-            }
+            operations_.addAll(parseNewLinks(linkSet, net_));
             net_.buildUpTo(time);
         }
     }
@@ -70,9 +77,11 @@ public abstract class ParseNet {
     /** A link is "only" a link not part of a star or anything else */
     public abstract Operation processAsLink (Link l, Network net);
 
-  
-
     /** To be processed by directed/undirected parser - not much difference between the two */
     public abstract ArrayList<Operation> parseNewLinks(ArrayList<Link> links, Network net);
+
+    protected boolean newNode(String node) {
+        return !processedNodes_.contains(node);
+    }
 
 }

@@ -32,44 +32,31 @@ public abstract class ObjectModelComponent {
     public void calcNormalisation(Network network, HashSet<Integer> availableNodes) {
         if (network.getClass() == UndirectedNetwork.class) {
             calcNormalisation((UndirectedNetwork) network, -1, availableNodes);
-        }
+        } else calcNormalisation((DirectedNetwork) network, -1, availableNodes);
         tempConstant_=normalisationConstant_;
     }
 
     public abstract void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes);
-    public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
-        calcNormalisation(net,-1,availableNodes);
-    }
+    public abstract void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes);
 
-    public abstract void calcNormalisation(UndirectedNetwork net, int [] removed);
-    public abstract void calcNormalisation(DirectedNetwork net, int[] removed);
+    public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
+        calcNormalisation(net,chosenNode,availableNodes);
+    }
+    public void updateNormalisation(DirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
+        calcNormalisation(net,chosenNode,availableNodes);
+    }
 
     public abstract double calcProbability(UndirectedNetwork net, int node);
     public abstract double calcProbability(DirectedNetwork net, int node);
-
-    public final void updateNormalisation(Network net, int [] removed) {
-        if (net.getClass() == UndirectedNetwork.class) {
-            updateNormalisation((UndirectedNetwork) net,removed);
-        } else updateNormalisation((DirectedNetwork) net, removed);
-    }
 
     public final void updateNormalisation(Network net, HashSet<Integer> availableNodes, int chosenNode) {
         random_=false;
         if (net.getClass() == UndirectedNetwork.class) {
             updateNormalisation((UndirectedNetwork) net, availableNodes, chosenNode);
         }
-    }
-
-    /**For if an object  */
-    public void updateNormalisation(UndirectedNetwork net, int [] removed) {
-        if (removed.length!=0) {
-            calcNormalisation((Network) net, removed);
+        else {
+            updateNormalisation((DirectedNetwork) net, availableNodes, chosenNode);
         }
-        tempConstant_=normalisationConstant_;
-    }
-
-    public void updateNormalisation(DirectedNetwork net, int [] removed) {
-        calcNormalisation(net,removed);
     }
 
     /** Parse JSON for parameters when necessary */

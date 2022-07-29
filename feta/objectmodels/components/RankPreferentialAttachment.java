@@ -28,7 +28,22 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        double rankSum = 0.0;
+        for (int node: availableNodes) {
+            rankSum+= Math.pow(node+1, - alpha_);
+        }
+        normalisationConstant_=rankSum;
+        tempConstant_=normalisationConstant_;
+    }
 
+    @Override
+    public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        double rankSum = 0.0;
+        for (int node: availableNodes) {
+            rankSum+= Math.pow(node+1, - alpha_);
+        }
+        normalisationConstant_=rankSum;
+        tempConstant_=normalisationConstant_;
     }
 
     @Override

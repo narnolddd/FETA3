@@ -27,6 +27,26 @@ public class DegreeModelComponent extends ObjectModelComponent{
     }
 
     @Override
+    public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        int total = 0;
+        for (int node: availableNodes) {
+            if (useInDegree_) {
+                total += net.getInDegree(node);
+            } else {
+                total += net.getOutDegree(node);
+            }
+        }
+
+        if (total > 0) {
+            normalisationConstant_ = total;
+        } else {
+            random_=true;
+            normalisationConstant_=availableNodes.size();
+        }
+        tempConstant_=normalisationConstant_;
+    }
+
+    @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
         if (!random_) {
             tempConstant_-=net.getDegree(chosenNode);
@@ -83,16 +103,6 @@ public class DegreeModelComponent extends ObjectModelComponent{
         if (useInDeg!= null) {
             useInDegree_=useInDeg;
         }
-    }
-
-    public void updateNormalisation(UndirectedNetwork net, int[] removed) {
-        if (removed.length==0) {
-            tempConstant_=normalisationConstant_;
-            return;
-        }
-        int node = removed[removed.length-1];
-        if (node >= 0) 
-            tempConstant_ -= net.getDegree(node);
     }
 
     @Override

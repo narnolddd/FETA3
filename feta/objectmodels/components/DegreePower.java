@@ -29,6 +29,27 @@ public class DegreePower extends ObjectModelComponent {
     }
 
     @Override
+    public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        double degSum = 0.0;
+        for (int node: availableNodes) {
+            if (useInDegree_) {
+                degSum += Math.pow(net.getInDegree(node), power_);
+            } else {
+                degSum += Math.pow(net.getOutDegree(node), power_);
+            }
+        }
+
+        if (degSum == 0.0) {
+            random_=true;
+            normalisationConstant_=availableNodes.size();
+        }
+        else {
+            normalisationConstant_ = degSum;
+        }
+        tempConstant_ = normalisationConstant_;
+    }
+
+    @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
         if (!random_) {
             tempConstant_-= Math.pow(net.getDegree(chosenNode), power_);
@@ -37,41 +58,6 @@ public class DegreePower extends ObjectModelComponent {
             random_=true;
             tempConstant_=availableNodes.size();
         }
-    }
-
-    public void calcNormalisation(UndirectedNetwork network, int [] removed) {
-        double degSum = 0.0;
-        for (int i = 0; i < network.noNodes_; i++) {
-            degSum += Math.pow(network.getDegree(i), power_);
-        }
-
-        for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>=0) {
-                degSum -= Math.pow(network.getDegree(removed[j]),power_);
-            }
-        }
-        normalisationConstant_=degSum;
-    }
-
-    public void calcNormalisation(DirectedNetwork network, int [] removed) {
-        double degSum = 0.0;
-        for (int i = 0; i < network.noNodes_; i++) {
-            if (useInDegree_) {
-                degSum+= Math.pow(network.getInDegree(i)+1,power_);
-            } else {
-                degSum+= Math.pow(network.getOutDegree(i),power_);
-            }
-        }
-
-        for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>=0 && useInDegree_) {
-                degSum -= Math.pow(network.getInDegree(removed[j])+1,power_);
-            }
-            if (removed[j]>=0 && !useInDegree_) {
-                degSum-= Math.pow(network.getOutDegree(removed[j])+1, power_);
-            }
-        }
-        normalisationConstant_=degSum;
     }
 
     public double calcProbability(UndirectedNetwork net, int node) {
@@ -86,17 +72,6 @@ public class DegreePower extends ObjectModelComponent {
         if (useInDegree_)
             return Math.pow(net.getInDegree(node)+1,power_)/tempConstant_;
         return Math.pow(net.getOutDegree(node)+1,power_)/tempConstant_;
-    }
-
-    @Override
-    public void updateNormalisation(UndirectedNetwork net, int[] removed) {
-        if (removed.length==0) {
-            tempConstant_=normalisationConstant_;
-            return;
-        }
-        int node = removed[removed.length-1];
-        if (node >= 0)
-            tempConstant_-= Math.pow(net.getDegree(node), power_);
     }
 
     public void parseJSON(JSONObject params) {

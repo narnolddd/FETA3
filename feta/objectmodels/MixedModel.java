@@ -49,15 +49,6 @@ public class MixedModel {
         }
     }
 
-    /** Functions for probability calculation */
-
-    /** For calculating the normalisation constant for the first time */
-    public void calcNormalisation(Network net, int [] alreadySampled) {
-        for (ObjectModelComponent omc : components_) {
-            omc.calcNormalisation(net, alreadySampled);
-        }
-    }
-
     /** For calculating the normalisation constant for the first time */
     public void calcNormalisation(Network net, HashSet<Integer> availableNodes) {
         for (ObjectModelComponent omc : components_) {
@@ -66,7 +57,7 @@ public class MixedModel {
     }
 
     public void calcNormalisation(Network net) {
-        calcNormalisation(net, new int[0]);
+        calcNormalisation(net, net.getNodeListCopy());
     }
 
     public void updateNormalisation(Network net, HashSet<Integer> availableNodes, int node) {
@@ -115,14 +106,17 @@ public class MixedModel {
 
     public int[] drawMultipleNodesWithoutReplacement(Network net, int seedNode, int sampleSize, HashSet<Integer> availableNodes) {
         int[] chosenNodes = new int[sampleSize];
-        if (sampleSize > availableNodes.size()) {
-            System.err.println("Desired sample size ("+sampleSize+") is larger than nodes available ("+availableNodes.size()+")");
+        if (sampleSize == 0)
+            return chosenNodes;
+        HashSet<Integer> nodesCopy = new HashSet<Integer>(availableNodes);
+        if (sampleSize > nodesCopy.size()) {
+            System.err.println("Desired sample size ("+sampleSize+") is larger than nodes available ("+nodesCopy.size()+")");
             System.exit(-1);
         }
         calcNormalisation(net, availableNodes);
         for (int i = 0; i<sampleSize; i++) {
-            int node = nodeDrawWithoutReplacement(net, availableNodes, seedNode);
-            availableNodes.remove(node);
+            int node = nodeDrawWithoutReplacement(net, nodesCopy, seedNode);
+            nodesCopy.remove(node);
             chosenNodes[i] = node;
             seedNode = node;
         }
@@ -242,20 +236,6 @@ public class MixedModel {
         return Arrays.hashCode(weights_);
     }
 
-    public String toString() {
-        StringBuilder str= new StringBuilder();
-        for (int i = 0; i < components_.size(); i++) {
-            str.append(weights_[i]).append(" ").append(components_.get(i)).append("\n");
-        }
-        return str.toString();
-    }
-
-    public MixedModel copy() {
-        MixedModel obm = new MixedModel();
-        obm.components_=components_;
-        return obm;
-    }
-
     /** For assigning weights at runtime */
     public void setWeights(double[] weights) {
         weights_=weights;
@@ -296,13 +276,14 @@ public class MixedModel {
     }
 
     public void updateIndividualLikelihoods(Network net, int[] nodeSet, HashSet<Integer> availableNodes, double[] opLikeRatio) {
+        HashSet<Integer> sampleSpace = new HashSet<>(availableNodes);
         double[] likeRatio = new double[likelihoods_.size()];
         for (int i = 0; i < nodeSet.length; i++) {
             int node = nodeSet[i];
             if (i == 0 || node == -1) {
-                calcNormalisation(net, availableNodes);
+                calcNormalisation(net, sampleSpace);
             } else {
-                updateNormalisation(net, availableNodes, nodeSet[i-1]);
+                updateNormalisation(net, sampleSpace, nodeSet[i-1]);
             }
             double[] probs = getComponentProbs(net,node);
             int k = 0;
@@ -315,22 +296,22 @@ public class MixedModel {
                 likeRatio[k] += Math.log(prob);
                 k++;
             }
-            availableNodes.remove(node);
+            sampleSpace.remove(node);
         }
         for (int i = 0; i < likeRatio.length; i++) {
             //System.out.println(opLikeRatio[i]);
-            double tmp = addLogs(opLikeRatio[i],likeRatio[i]);
+            double tmp = Methods.addLogs(opLikeRatio[i],likeRatio[i]);
             opLikeRatio[i] = tmp;
             //System.out.println(likeRatio[i]+" "+opLikeRatio[i]);
         }
     }
 
-    public double addLogs( double logA, double logB ) {
-        // returns log(A + B)
-        double maxLog = Math.max(logA,logB);
-        double minLog = Math.min(logA,logB);
-
-        return Math.log(1 + Math.exp(minLog - maxLog)) + maxLog;
+    public String toString() {
+        StringBuilder str= new StringBuilder();
+        for (int i = 0; i < components_.size(); i++) {
+            str.append(weights_[i]).append(" ").append(components_.get(i)).append("\n");
+        }
+        return str.toString();
     }
 
 }

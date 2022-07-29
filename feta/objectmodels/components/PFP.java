@@ -17,6 +17,11 @@ public class PFP extends ObjectModelComponent{
     }
 
     @Override
+    public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+
+    }
+
+    @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
 
     }
@@ -70,7 +75,6 @@ public class PFP extends ObjectModelComponent{
         return Math.pow(net.getOutDegree(node)+1, 1 + delta_*Math.log10(net.getInDegree(node)+1))/normalisationConstant_;
     }
 
-    @Override
     public void updateNormalisation(UndirectedNetwork net, int [] removed) {
         int node = removed[removed.length-1];
         if (node >= 0)

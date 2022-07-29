@@ -241,8 +241,12 @@ public class DirectedNetwork extends Network {
         return degs+"\n";
     }
 
-    public void addNewLink(String src, String dst, long time) {
-        linksToBuild_.add(new DirectedLink(src, dst, time));
+    public void addNewLink(String src, String dst, String srcType, String dstType, long time) {
+        if (srcType!=null) {
+            linksToBuild_.add(new DirectedLink(src,dst,srcType,dstType,time));
+        } else {
+            linksToBuild_.add(new DirectedLink(src, dst, time));
+        }
     }
 
     public double calcProbability(ObjectModelComponent omc, int node) {
