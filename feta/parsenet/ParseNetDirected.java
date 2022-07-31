@@ -86,8 +86,9 @@ public class ParseNetDirected extends ParseNet{
 		}
 		op.setNoExisting(noExisting);
 		op.setCentreNode(sourceNode);
-		op.setTime(links.get(0).time_);
 		op.setLeaves(Methods.toStringArray(leaves));
+		op.namesToNodes(net);
+		op.setTime(links.get(0).time_);
 		opsSoFar.add(op);
         return opsSoFar;
     }
