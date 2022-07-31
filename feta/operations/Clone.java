@@ -38,7 +38,7 @@ public class Clone extends OperationModel {
     }
 
     public void parseLine(String line) {
-        String [] parts = line.split("\s+");
+        String [] parts = line.split(" ");
         long time = Long.parseLong(parts[0]);
         String type_ = parts[1];
         if (type_.equals("STAR")) {
