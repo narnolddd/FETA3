@@ -95,6 +95,7 @@ public class Star extends Operation{
                 System.err.println("No available target nodes to choose from! Operation "+this);
                 System.exit(-1);
             }
+            availableNodes.remove(centreNode_);
             obm.updateLikelihoods(net, availableNodes, nodeOrders_);
         } else {
             HashSet<Integer> availableSourceNodes;
@@ -161,6 +162,7 @@ public class Star extends Operation{
             newLeaves[i]=net.nodeNameToNo(newName);
         }
         int[] internalLeaves;
+        availableNodes.remove(centreNode_);
         if (internal_) {
 //            int [] chosen_ = new int[1+net.getOutLinks(centreNode_).length];
 //            chosen_[0] = centreNode_;
@@ -168,7 +170,6 @@ public class Star extends Operation{
 //                chosen_[n+1] = net.getOutLinks(centreNode_)[n];
 //            }
 //            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
-            availableNodes.remove(centreNode_);
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }
