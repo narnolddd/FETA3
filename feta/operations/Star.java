@@ -217,7 +217,7 @@ public class Star extends Operation{
 		}
         for (String leaf: leafNodeNames_) {
             if (isCensored()) {
-				str.append("ANON ");
+				str.append(" ANON ");
 			} else {
 				str.append(leaf).append(" ");
 			}
