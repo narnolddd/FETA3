@@ -37,7 +37,10 @@ public class NodeTypes {
 	/** Return numbers of all nodes with a given type*/
 	public static HashSet<Integer> getNodesOfType (String type)
 	{
-		return new HashSet<Integer>(nt_.nodesByType_.get(type));
+        HashSet<Integer> nodes= nt_.nodesByType_.get(type);
+        if (nodes == null)
+            return null;
+		return new HashSet<Integer>(nodes);
 	}
 
 	/** Get current list of types */
