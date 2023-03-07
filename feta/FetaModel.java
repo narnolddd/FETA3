@@ -66,7 +66,6 @@ public class FetaModel {
             network_= new DirectedNetwork(reader,typedNet);
         } else network_= new UndirectedNetwork(reader,typedNet);
         network_.numRecents_=options_.getNoRecents();
-        network_.getLinksFromFile();
     }
 
     /** Reads from a string the relevant action type */
