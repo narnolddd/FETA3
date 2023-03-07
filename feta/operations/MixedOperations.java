@@ -71,10 +71,10 @@ public class MixedOperations extends OperationModel{
             }
             System.out.println("Defined "+intStar+" "+extStar+" "+occur+" "+centreType+" "+leafType);
             if (occur == 0) {
-                specialOps_.add(new Star(3,true));
+                specialOps_.add(new Star((int)intStar,(int)extStar,centreType,leafType));
             } else {
                 for (int j= 0; j < occur; j++) {
-                    ops_.add(new Star(3, true));
+                    ops_.add(new Star((int)intStar,(int)extStar,centreType,leafType));
                 }
             }
         }

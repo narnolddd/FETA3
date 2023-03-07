@@ -16,14 +16,41 @@ public class Star extends Operation{
     private int[] leafNodes_;
     private String centreNodeName_;
     private String[] leafNodeNames_;
-    private final boolean internal_;
+    private final boolean internal_; // Remove this variable ?    
     private int noExisting_;
-    private final int noLeaves_;
+    private final int noLeaves_;  // Remove this variable ?
+    private int noExternalLeaves_;
+    private int noInternalLeaves_;
     private String centreType_;
     private String leafType_;
 
+    public Star(int noInternal, int noExternal, String centre, String leaves) {
+        noInternalLeaves_= noInternal;
+        noExternalLeaves_= noExternal;
+        internal_ = true; // This is not needed
+        noLeaves_ = noInternal+noExternal;
+        if (centre != null && centre.length() > 0) {
+            centreType_= centre;
+        } else {
+            centreType_= null;
+        }
+        if (leaves != null && leaves.length() > 0) {
+            leafType_= leaves;
+        } else {
+            leafType_= null;
+        }
+        
+    }
+
     public Star(int noLeaves, boolean internal) {
         internal_=internal;
+        if (internal) {
+            noInternalLeaves_ = noLeaves;
+            noExternalLeaves_= 0;
+        } else {
+            noExternalLeaves_= noLeaves;
+            noInternalLeaves_= 0;
+        }
         noLeaves_=noLeaves;
         centreType_= null;
         leafType_= null;
@@ -33,6 +60,13 @@ public class Star extends Operation{
     /** centreType and leafType will be null for untyped networks*/
     {
 	    internal_=internal;
+        if (internal) {
+            noInternalLeaves_ = noLeaves;
+            noExternalLeaves_= 0;
+        } else {
+            noExternalLeaves_= noLeaves;
+            noInternalLeaves_= 0;
+        }
         noLeaves_=noLeaves;
         centreType_= centreType;
         leafType_= leafType;	
