@@ -198,12 +198,6 @@ public class Star extends Operation{
         int[] internalLeaves;
         availableNodes.remove(centreNode_);
         if (internal_) {
-//            int [] chosen_ = new int[1+net.getOutLinks(centreNode_).length];
-//            chosen_[0] = centreNode_;
-//            for (int n = 0; n < net.getOutLinks(centreNode_).length; n++) {
-//                chosen_[n+1] = net.getOutLinks(centreNode_)[n];
-//            }
-//            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }

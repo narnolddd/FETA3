@@ -108,31 +108,18 @@ public class MixedModel {
         int[] chosenNodes = new int[sampleSize];
         if (sampleSize == 0)
             return chosenNodes;
-        HashSet<Integer> nodesCopy = new HashSet<Integer>(availableNodes);
-        if (sampleSize > nodesCopy.size()) {
-            System.err.println("Desired sample size ("+sampleSize+") is larger than nodes available ("+nodesCopy.size()+")");
+        if (sampleSize > availableNodes.size()) {
+            System.err.println("Desired sample size ("+sampleSize+") is larger than nodes available ("+availableNodes.size()+")");
             System.exit(-1);
         }
-        calcNormalisation(net, availableNodes);
         for (int i = 0; i<sampleSize; i++) {
-            int node = nodeDrawWithoutReplacement(net, nodesCopy, seedNode);
-            nodesCopy.remove(node);
+            int node = nodeDrawWithoutReplacement(net, availableNodes, seedNode);
+            availableNodes.remove(node);
             chosenNodes[i] = node;
             seedNode = node;
         }
         return chosenNodes;
     }
-
-//    public int[] drawMultipleNodesWithReplacement(Network net, int sampleSize, int[] alreadyChosen) {
-//        int[] chosenNodes = new int[sampleSize];
-//        for (int j = 0; j<sampleSize; j++) {
-//            chosenNodes[j] = -1;
-//        }
-//        for (int i = 0; i < sampleSize; i++) {
-//            chosenNodes[i] = nodeDrawWithoutReplacement(net,alreadyChosen);
-//        }
-//        return Methods.removeNegativeNumbers(chosenNodes);
-//    }
 
     /** Performs check that normalisation is correct */
     public void checkNorm(Network net) {
