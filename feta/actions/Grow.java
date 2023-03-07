@@ -112,4 +112,5 @@ public class Grow extends SimpleAction {
         operationModel_=om;
     }
 
+    public String toString() {return "Grow";}
 }

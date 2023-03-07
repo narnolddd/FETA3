@@ -63,4 +63,9 @@ public class ParseTest extends SimpleAction {
         }
         parser_.writeToFile(fileName_,censored_);
     }
+
+    @Override
+    public String toString() {
+        return "ParseOperations";
+    }
 }

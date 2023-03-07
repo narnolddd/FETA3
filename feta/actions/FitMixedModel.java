@@ -178,4 +178,6 @@ public class FitMixedModel extends SimpleAction {
         if (debug != null)
             debugMode_=debug;
     }
+
+    public String toString() { return "FitMixedModel"; }
 }
