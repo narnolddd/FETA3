@@ -57,6 +57,20 @@ public class DegreeModelComponent extends ObjectModelComponent{
         }
     }
 
+    public void updateNormalisation(DirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
+        if (!random_) {
+            if (useInDegree_) {
+                tempConstant_ -= net.getInDegree(chosenNode);
+            } else {
+                tempConstant_ -= net.getOutDegree(chosenNode);
+            }
+        }
+        if (random_ || tempConstant_==0) {
+            random_=true;
+            tempConstant_=availableNodes.size();
+        }
+    }
+
     public void calcNormalisation(UndirectedNetwork network, int [] removed) {
         int degSum = 0;
         for (int j : removed) {
