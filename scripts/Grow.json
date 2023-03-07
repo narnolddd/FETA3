@@ -19,7 +19,7 @@
       "End": 100000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.TriangleClosure",
+          "ComponentName": "TriangleClosure",
           "Weight": 1.0,
           "Depth": 1
         }
@@ -27,7 +27,7 @@
     }],
     "OperationModel":
       {
-        "Name": "feta.operations.PreferentialAttachment",
+        "Name": "PreferentialAttachment",
         "InitialDegree": 4
       }
 }

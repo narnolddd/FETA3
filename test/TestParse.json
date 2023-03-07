@@ -2,7 +2,7 @@
   "Data": {
     "GraphInputFile": "test/typed_nodes.csv",
     "GraphInputType": "CSV",
-    "Directed": false,
+    "Directed": true,
     "OutputLineSeparator": " ",
     "Typed": true,
     "Source":0,
@@ -13,6 +13,7 @@
   },
   "Action": {
     "ParseTest": {
+	  "Censored" : false,
       "Start": 1,
       "Interval":1,
       "MaxNodes": 34401,

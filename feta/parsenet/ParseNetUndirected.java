@@ -18,6 +18,7 @@ public class ParseNetUndirected extends ParseNet {
 
     public ParseNetUndirected(UndirectedNetwork network) {
         operations_= new ArrayList<Operation>();
+        processedNodes_= new HashSet<>();
         net_=network;
     }
 
@@ -76,4 +77,32 @@ public class ParseNetUndirected extends ParseNet {
         return newOps;
     }
 
+
+    public Operation processAsLink(Link l, Network net) {
+        Star op;
+        if (newNode(l.sourceNode_)) {
+            op = new Star(1,l.sourceNodeType_,l.destNodeType_,false);
+            op.setCentreNode(l.sourceNode_);
+            op.setLeaves(new String[] {l.destNode_});
+//            net.addNode(l.sourceNode_);
+        } else if (newNode(l.destNode_)) {
+			op = new Star(1,l.destNodeType_,l.sourceNodeType_,false);
+            op.setCentreNode(l.destNode_);
+            op.setLeaves(new String[] {l.sourceNode_});
+//            net.addNode(l.destNode_);
+        } else {
+            op = new Star(1,l.sourceNodeType_,l.destNodeType_,true);
+            op.setCentreNode(l.sourceNode_);
+            op.setLeaves(new String[] {l.destNode_});
+        }
+        if (!newNode(l.destNode_)) {
+            op.setNoExisting(op.getNoExisting()+1);
+        }
+        processedNodes_.add(l.sourceNode_);
+        processedNodes_.add(l.destNode_);
+        op.setTime(l.time_);
+        op.namesToNodes(net);
+        System.out.println(op);
+        return op;
+    }
 }

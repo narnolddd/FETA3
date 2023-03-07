@@ -209,11 +209,17 @@ public abstract class Network {
         return name;
     }
 
+    public String generateNodeName(String type) {
+        String name = artificialNodeName+noNodes_;
+        addNode(name, type);
+        return name;
+    }
+
     /** Get measurements */
     public abstract String degreeVectorToString();
 
     /** Growth */
-    public abstract void addNewLink(String src, String dst, long time);
+    public abstract void addNewLink(String src, String dst, String srcType, String dstType, long time);
 
     /** Return a copy of the node list */
     public HashSet<Integer> getNodeListCopy() {

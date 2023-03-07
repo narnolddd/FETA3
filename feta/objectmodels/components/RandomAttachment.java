@@ -26,6 +26,12 @@ public class RandomAttachment extends ObjectModelComponent {
         tempConstant_= normalisationConstant_;
     }
 
+    @Override
+    public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        normalisationConstant_ = availableNodes.size();
+        tempConstant_= normalisationConstant_;
+    }
+
     public void calcNormalisation(UndirectedNetwork net, int[] removed){}
     public void calcNormalisation(DirectedNetwork net, int[] removed){}
 

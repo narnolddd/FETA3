@@ -161,11 +161,6 @@ public class FitMixedModel extends SimpleAction {
         op.setRandom(random_);
         op.setNodeChoices(orderedData_);
 
-        //debugging line, remember to comment out
-//        if (op.getNoChoices() > 5) {
-//            return;
-//        }
-
         ArrayList<int[]> nc = op.getNodeOrders();
         op.updateLikelihoods(obm,network_);
     }

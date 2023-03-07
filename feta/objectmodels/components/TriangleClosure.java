@@ -44,6 +44,39 @@ public class TriangleClosure extends ObjectModelComponent {
     }
 
     @Override
+    public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        occurrences_ = new int[net.noNodes_+2];
+        random_=false;
+        // this is a hack in place for if the node is a new node
+        if (sourceNode == -1) {
+            random_=true;
+            normalisationConstant_ = availableNodes.size();
+        } else {
+            // count open wedges from the source node that can be closed
+            for (int n1: net.outLinks_.get(sourceNode)) {
+                for (int n2: net.outLinks_.get(n1)) {
+                    occurrences_[n2]++;
+                }
+            }
+
+            // go through available nodes to add to normalisation const.
+            int total = 0;
+            for (int node: availableNodes) {
+                total+=occurrences_[node];
+            }
+
+            // check for edge case of no triangles to be closed
+            if (total == 0) {
+                random_=true;
+                normalisationConstant_ = availableNodes.size();
+            } else {
+                normalisationConstant_=total;
+            }
+            tempConstant_=normalisationConstant_;
+        }
+    }
+
+    @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
         random_=false;
         for (int n1 : net.neighbours_.get(chosenNode)) {

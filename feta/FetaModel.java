@@ -6,6 +6,7 @@ import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import feta.readnet.*;
 import org.json.simple.JSONObject;
+import feta.actions.ParseTest;
 
 import java.util.ArrayList;
 
@@ -76,8 +77,8 @@ public class FetaModel {
             return new Grow(options_);
         } else if (name.equals("Translate")) {
             return new Translate(options_);
-        } else if (name.equals("ParseTest") & !options_.isDirectedInput()) {
-            return new ParseTest(options_.isDirectedInput());
+        } else if (name.equals("ParseTest")) {
+            return new ParseTest(true);
         } else if (name.equals("Likelihood")) {
             return new Likelihood(options_);
         } else if (name.equals("NormalisedLikelihood")) {

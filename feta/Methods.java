@@ -61,6 +61,14 @@ public class Methods {
         return shuffles;
     }
 
+    public static double addLogs( double logA, double logB ) {
+        // returns log(A + B)
+        double maxLog = Math.max(logA,logB);
+        double minLog = Math.min(logA,logB);
+
+        return Math.log(1 + Math.exp(minLog - maxLog)) + maxLog;
+    }
+
     public static int[] toIntArray(ArrayList<Integer> set) {
         int[] intArray = new int[set.size()];
         int ind = 0;
@@ -77,7 +85,7 @@ public class Methods {
             mapAsString.append(key).append(":").append(map.get(key)).append(",");
         }
         if (map.keySet().size() > 0) {
-            mapAsString.delete(mapAsString.length() - 2, mapAsString.length()).append("}");
+            mapAsString.delete(mapAsString.length() - 1, mapAsString.length()).append("}");
             return mapAsString.toString();
         }
         return "{}";

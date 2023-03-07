@@ -18,6 +18,7 @@ public class ParseTest extends SimpleAction {
 
     boolean directed_;
     ParseNet parser_;
+    public boolean censored_;
 
     public ParseTest(boolean directed) {
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -29,6 +30,12 @@ public class ParseTest extends SimpleAction {
         if (start != null)
             startTime_=start;
 
+		Boolean cens= (Boolean)obj.get("Censored");
+		if (cens != null) {
+			censored_= cens;
+		} else {
+			censored_= false;
+		}
         Long interval = (Long) obj.get("Interval");
         if (interval != null) {
             if (interval >= 0) {
@@ -54,6 +61,6 @@ public class ParseTest extends SimpleAction {
             parser_.parseNetwork(time_,time_+interval_);
             time_+=interval_;
         }
-        parser_.writeToFile(fileName_);
+        parser_.writeToFile(fileName_,censored_);
     }
 }
