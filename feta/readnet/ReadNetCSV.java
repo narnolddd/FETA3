@@ -20,6 +20,32 @@ public class ReadNetCSV extends ReadNet {
         dstTypeColumn_= options.getDstTypeColumn();
     }
 
+    /** Full constructor for runner classes */
+    public ReadNetCSV(String fileName, String sep, boolean directed, int srcCol, int dstCol, int timeCol, int srcTypeCol, int dstTypeCol) {
+        networkInput_ = fileName;
+        sep_=sep;
+        sourceColumn_=srcCol;
+        dstColumn_=dstCol;
+        timeColumn_=timeCol;
+        sourceTypeColumn_= srcTypeCol;
+        dstTypeColumn_= dstTypeCol;
+        if (directed) {
+            lb_ = new DirectedLinkBuilder();
+        } else {
+            lb_ = new UndirectedLinkBuilder();
+        }
+    }
+
+    /** Basic default for untyped networks */
+    public ReadNetCSV(String fileName, String sep, boolean directed, int srcCol, int dstCol, int timeCol) {
+        this(fileName,sep,directed,srcCol,dstCol,timeCol,-1,-1);
+    }
+
+    /** Ultimate lazy option for basic csv untyped files */
+    public ReadNetCSV(String fileName, String sep, boolean directed) {
+        this(fileName,sep,directed,0,1,2,-1,-1);
+    }
+
     @Override
     public Link parseLine(String line, long linkno) {
         String[] parts = line.split(sep_);
