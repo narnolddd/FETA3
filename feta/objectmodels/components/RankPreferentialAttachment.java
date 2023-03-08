@@ -12,21 +12,6 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
     public double alpha_= 0.5;
 
     @Override
-    public void calcNormalisation(Network net, int[] removed) {
-        double rankSum = 0.0;
-        for (int i = 0; i < net.noNodes_; i++) {
-            rankSum+= Math.pow(i+1, - alpha_);
-        }
-        for (int i : removed) {
-            if (i >= 0) {
-                rankSum -= Math.pow(i + 1, -alpha_);
-            }
-        }
-        normalisationConstant_=rankSum;
-        tempConstant_=normalisationConstant_;
-    }
-
-    @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
         double rankSum = 0.0;
         for (int node: availableNodes) {
@@ -48,7 +33,13 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
 
     @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
-
+        if (!random_) {
+            tempConstant_-=Math.pow(chosenNode+1,-alpha_);
+        }
+        if (random_ || tempConstant_==0) {
+            random_=true;
+            tempConstant_=availableNodes.size();
+        }
     }
 
     public void calcNormalisation(UndirectedNetwork net, int[] removed){}
@@ -60,16 +51,6 @@ public class RankPreferentialAttachment extends ObjectModelComponent {
 
     public double calcProbability(DirectedNetwork net, int node) {
         return Math.pow(node + 1, - alpha_)/tempConstant_;
-    }
-
-    public void updateNormalisation(UndirectedNetwork net, int[] removed) {
-        if (removed.length==0) {
-            tempConstant_=normalisationConstant_;
-            return;
-        }
-        int node = removed[removed.length-1];
-        if (node >= 0)
-            tempConstant_-= Math.pow(node + 1, - alpha_);
     }
 
     public void parseJSON(JSONObject params) {

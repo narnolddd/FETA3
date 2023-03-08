@@ -23,17 +23,47 @@ public class DegreeWithAgeing extends ObjectModelComponent{
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        double degSum = 0.0;
+        for (int node: availableNodes) {
+            degSum += ageingFunction(node,net);
+        }
 
+        if (degSum == 0.0) {
+            random_=true;
+            normalisationConstant_=availableNodes.size();
+        }
+        else {
+            normalisationConstant_ = degSum;
+        }
+        tempConstant_ = normalisationConstant_;
     }
 
     @Override
     public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        double degSum = 0.0;
+        for (int node: availableNodes) {
+            degSum += ageingFunction(node,net);
+        }
 
+        if (degSum == 0.0) {
+            random_=true;
+            normalisationConstant_=availableNodes.size();
+        }
+        else {
+            normalisationConstant_ = degSum;
+        }
+        tempConstant_ = normalisationConstant_;
     }
 
     @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
-
+        if (!random_) {
+            tempConstant_-= ageingFunction(chosenNode,net);
+        }
+        if (random_ || tempConstant_==0) {
+            random_=true;
+            tempConstant_=availableNodes.size();
+        }
     }
 
     public void calcNormalisation(UndirectedNetwork net, int[] removed) {
@@ -63,11 +93,11 @@ public class DegreeWithAgeing extends ObjectModelComponent{
     }
 
     public double calcProbability(UndirectedNetwork net, int node) {
-        return ageingFunction(node,net)/normalisationConstant_;
+        return ageingFunction(node,net)/tempConstant_;
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
-        return ageingFunction(node,net)/normalisationConstant_;
+        return ageingFunction(node,net)/tempConstant_;
     }
 
     public void parseJSON(JSONObject params) {

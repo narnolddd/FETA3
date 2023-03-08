@@ -10,17 +10,6 @@ public class RandomAttachment extends ObjectModelComponent {
 
 
     @Override
-    public void calcNormalisation(Network net, int[] removed) {
-        if (removed.length >= net.noNodes_) {
-            normalisationConstant_=0.0;
-        }
-        else {
-            normalisationConstant_= (double) net.noNodes_-removed.length;
-        }
-        tempConstant_=normalisationConstant_;
-    }
-
-    @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
         normalisationConstant_ = availableNodes.size();
         tempConstant_= normalisationConstant_;

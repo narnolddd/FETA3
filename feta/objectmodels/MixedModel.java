@@ -88,6 +88,7 @@ public class MixedModel {
             calcNormalisation(net, availableNodes);
         } else {
         updateNormalisation(net, availableNodes, seedNode);}
+//        checkUpdatedNorm(net,availableNodes);
         double r = Math.random();
         double weightSoFar = 0.0;
         for (int node: availableNodes) {
@@ -95,16 +96,13 @@ public class MixedModel {
             if (weightSoFar > r)
                 return node;
         }
-        System.err.println("No nodes left to choose from");
+        System.err.println("No nodes left to choose from. Total weight: "+weightSoFar+", random float "+r);
         System.exit(-1);
         return -1;
     }
 
-//    public int nodeDrawWithReplacement(Network net) {
-//        return nodeDrawWithoutReplacement(net, new int[0]);
-//    }
-
     public int[] drawMultipleNodesWithoutReplacement(Network net, int seedNode, int sampleSize, HashSet<Integer> availableNodes) {
+//        checkNorm(net);
         int[] chosenNodes = new int[sampleSize];
         if (sampleSize == 0)
             return chosenNodes;
@@ -128,22 +126,19 @@ public class MixedModel {
         for (int node = 0; node < net.noNodes_; node++) {
             sum += calcProbability(net, node);
         }
-        if (Math.abs(sum - 1.0) > 0.0005) {
-            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);
+        if (Math.abs(sum - 1.0) > 0.000005) {
+            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum+" with "+net.noNodes_+" nodes.");
             System.exit(-1);
         }
     }
 
-    public void checkUpdatedNorm(Network net, int[] from) {
+    public void checkUpdatedNorm(Network net, HashSet<Integer> availableNodes) {
         double sum = 0.0;
-        for (int node = 0; node < net.noNodes_; node++) {
+        for (int node : availableNodes) {
             sum += calcProbability(net, node);
         }
-        for (int node : from) {
-            sum -= calcProbability(net,node);
-        }
-        if (Math.abs(sum - 1.0) > 0.0005) {
-            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum);
+        if (Math.abs(sum - 1.0) > 0.000005) {
+            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum+" with "+availableNodes.size()+" nodes.");
             System.exit(-1);
         }
     }
