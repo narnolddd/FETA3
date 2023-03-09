@@ -88,7 +88,7 @@ public class MixedModel {
             calcNormalisation(net, availableNodes);
         } else {
         updateNormalisation(net, availableNodes, seedNode);}
-//        checkUpdatedNorm(net,availableNodes);
+        checkUpdatedNorm(net,availableNodes);
         double r = Math.random();
         double weightSoFar = 0.0;
         for (int node: availableNodes) {
@@ -102,7 +102,7 @@ public class MixedModel {
     }
 
     public int[] drawMultipleNodesWithoutReplacement(Network net, int seedNode, int sampleSize, HashSet<Integer> availableNodes) {
-//        checkNorm(net);
+        checkNorm(net);
         int[] chosenNodes = new int[sampleSize];
         if (sampleSize == 0)
             return chosenNodes;

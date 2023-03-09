@@ -183,29 +183,35 @@ public class Star extends Operation{
 
     public void pickLeafNodes(Network net, MixedModel obm) {
         HashSet<Integer> availableNodes;
+        leafNodes_ = new int[noLeaves_];
+
+        // Add new nodes according to number of external leaves
+        int noNew = noLeaves_ - noExisting_;
+        for (int i = 0; i < noNew; i++) {
+            String newName = net.generateNodeName(leafType_);
+            leafNodes_[i]=net.nodeNameToNo(newName);
+        }
+
+        // Check which nodes are in the sample space for the existing nodes
         if (leafType_ != null) {
             availableNodes = NodeTypes.getNodesOfType(leafType_);
         } else {
             availableNodes = net.getNodeListCopy();
         }
-        // Add new nodes
-        int noNew = noLeaves_ - noExisting_;
-        int[] newLeaves= new int[noNew];
-        for (int i = 0; i < noNew; i++) {
-            String newName = net.generateNodeName(leafType_);
-            newLeaves[i]=net.nodeNameToNo(newName);
-        }
-        int[] internalLeaves;
         availableNodes.remove(centreNode_);
+
+        // Internal or external star.
+        int[] internalLeaves;
         if (internal_) {
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }
-            internalLeaves = obm.drawMultipleNodesWithoutReplacement(net,centreNode_,noExisting_,availableNodes);
+            internalLeaves = obm.drawMultipleNodesWithoutReplacement(net,-1,noExisting_,availableNodes);
         } else {
             internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,-1,noExisting_,availableNodes);
         }
-        leafNodes_= Methods.concatenate(internalLeaves,newLeaves);
+
+        if (noExisting_ >= 0) System.arraycopy(internalLeaves, 0, leafNodes_, noNew, noExisting_);
         nodesToNames(net);
     }
 

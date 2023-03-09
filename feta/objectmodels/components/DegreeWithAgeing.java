@@ -66,32 +66,6 @@ public class DegreeWithAgeing extends ObjectModelComponent{
         }
     }
 
-    public void calcNormalisation(UndirectedNetwork net, int[] removed) {
-        double sum = 0.0;
-        for (int i = 0; i < net.noNodes_; i++) {
-            sum += ageingFunction(i, net);
-        }
-        for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>=0) {
-                sum-= ageingFunction(removed[j], net);
-            }
-        }
-        normalisationConstant_=sum;
-    }
-
-    public void calcNormalisation(DirectedNetwork net, int[] removed) {
-        double sum = 0.0;
-        for (int i = 0; i < net.noNodes_; i++) {
-            sum += ageingFunction(i, net);
-        }
-        for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>=0) {
-                sum-= ageingFunction(removed[j], net);
-            }
-        }
-        normalisationConstant_=sum;
-    }
-
     public double calcProbability(UndirectedNetwork net, int node) {
         return ageingFunction(node,net)/tempConstant_;
     }
