@@ -101,7 +101,7 @@ public class MixedModel {
         return -1;
     }
 
-    public int[] drawMultipleNodesWithoutReplacement(Network net, int seedNode, int sampleSize, HashSet<Integer> availableNodes) {
+    public int[] drawMultipleNodesWithoutReplacement(Network net, int sampleSize, HashSet<Integer> availableNodes) {
         checkNorm(net);
         int[] chosenNodes = new int[sampleSize];
         if (sampleSize == 0)
@@ -110,6 +110,7 @@ public class MixedModel {
             System.err.println("Desired sample size ("+sampleSize+") is larger than nodes available ("+availableNodes.size()+")");
             System.exit(-1);
         }
+        int seedNode=-1;
         for (int i = 0; i<sampleSize; i++) {
             int node = nodeDrawWithoutReplacement(net, availableNodes, seedNode);
             availableNodes.remove(node);

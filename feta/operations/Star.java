@@ -206,9 +206,9 @@ public class Star extends Operation{
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }
-            internalLeaves = obm.drawMultipleNodesWithoutReplacement(net,-1,noExisting_,availableNodes);
+            internalLeaves = obm.drawMultipleNodesWithoutReplacement(net,noExisting_,availableNodes);
         } else {
-            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,-1,noExisting_,availableNodes);
+            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,noExisting_,availableNodes);
         }
 
         if (noExisting_ >= 0) System.arraycopy(internalLeaves, 0, leafNodes_, noNew, noExisting_);
