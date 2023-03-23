@@ -24,7 +24,6 @@ public class ParseNetDirected extends ParseNet{
         ArrayList<Operation> newOps = new ArrayList<Operation>();
         if (links.size()==1) {
             newOps.add(processAsLink(links.get(0),net));
-            //System.out.println("Processing as link");
             return newOps;
         } 
         while (links.size() > 0) {

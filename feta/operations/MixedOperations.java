@@ -33,22 +33,29 @@ public class MixedOperations extends OperationModel{
         }
         for (int i = 0, size = arr.size(); i < size; i++){
             JSONObject o= (JSONObject)arr.get(i);
+            boolean internal=false;
             long intStar=0;
             long extStar=0;
             long occur=0;
             String centreType= null;
             String leafType= null;
             try {
-                intStar= (Long)o.get("Internal");
+                internal = (Boolean)o.get("Internal");
             } catch (Exception e) {
                 System.err.println(e);
-                System.err.println("Mixed Operations stars must define Internal as int");
+                System.err.println("Mixed Operations stars must define Internal as boolean");
+            }
+            try {
+                intStar= (Long)o.get("NoInternal");
+            } catch (Exception e) {
+                System.err.println(e);
+                System.err.println("Mixed Operations stars must define NoInternal as int");
                 System.exit(0);               
             }
             try {
-                extStar= (Long)o.get("External");
+                extStar= (Long)o.get("NoExternal");
             } catch (Exception e) {
-                System.err.println("Mixed Operations stars must define External as int");
+                System.err.println("Mixed Operations stars must define NoExternal as int");
                 System.exit(0);               
             }
             try {
@@ -71,10 +78,10 @@ public class MixedOperations extends OperationModel{
             }
             System.out.println("Defined "+intStar+" "+extStar+" "+occur+" "+centreType+" "+leafType);
             if (occur == 0) {
-                specialOps_.add(new Star((int)intStar,(int)extStar,centreType,leafType));
+                specialOps_.add(new Star(internal, (int)intStar,(int)extStar,centreType,leafType));
             } else {
                 for (int j= 0; j < occur; j++) {
-                    ops_.add(new Star((int)intStar,(int)extStar,centreType,leafType));
+                    ops_.add(new Star(internal, (int)intStar,(int)extStar,centreType,leafType));
                 }
             }
         }

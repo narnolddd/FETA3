@@ -21,7 +21,7 @@
         {
           "ComponentName": "DegreeWithAgeing",
           "Weight": 1.0,
-          "AgeingExponent": 0.8
+          "AgeingExponent": 0.3
         }
       ]
     },

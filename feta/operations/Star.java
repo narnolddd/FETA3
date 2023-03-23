@@ -24,18 +24,18 @@ public class Star extends Operation{
     private String centreType_;
     private String leafType_;
 
-    public Star(int noInternal, int noExternal, String centre, String leaves) {
+    public Star(boolean sourceInternal, int noInternal, int noExternal, String centreType, String leafType) {
         noInternalLeaves_= noInternal;
         noExternalLeaves_= noExternal;
         internal_ = true; // This is not needed
         noLeaves_ = noInternal+noExternal;
-        if (centre != null && centre.length() > 0) {
-            centreType_= centre;
+        if (centreType != null && centreType.length() > 0) {
+            centreType_= centreType;
         } else {
             centreType_= null;
         }
-        if (leaves != null && leaves.length() > 0) {
-            leafType_= leaves;
+        if (leafType != null && leafType.length() > 0) {
+            leafType_= leafType;
         } else {
             leafType_= null;
         }
@@ -242,6 +242,11 @@ public class Star extends Operation{
 
     public String toString() {
         StringBuilder str = new StringBuilder(getTime() + " STAR " + centreNodeName_);
+        if (isCensored()) {
+            str.append("ANON");
+        } else {
+            str.append(centreNodeName_);
+        }
         if (centreType_ != null) {
 			str.append(" TYPES ").append(centreType_).append(" ").append(leafType_);
 		}
