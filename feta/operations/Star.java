@@ -241,7 +241,7 @@ public class Star extends Operation{
     }
 
     public String toString() {
-        StringBuilder str = new StringBuilder(getTime() + " STAR " + centreNodeName_);
+        StringBuilder str = new StringBuilder(getTime() + " STAR ");
         if (isCensored()) {
             str.append("ANON");
         } else {
