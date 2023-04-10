@@ -78,12 +78,12 @@ public class MixedOperations extends OperationModel{
                 System.err.println("Mixed Operations stars must define LeafType as String");
                 System.exit(0);               
             }
-            System.out.println("Defined "+intStar+" "+extStar+" "+occur+" "+centreType+" "+leafType);
+            //System.out.println("Defined "+intStar+" "+extStar+" "+occur+" "+centreType+" "+leafType);
             if (occur == 0) {
-                specialOps_.add(new Star(internal, (int)intStar,(int)extStar,centreType,leafType));
+                specialOps_.add(new Star((int)intStar,(int)extStar,centreType,leafType,internal));
             } else {
                 for (int j= 0; j < occur; j++) {
-                    ops_.add(new Star(internal, (int)intStar,(int)extStar,centreType,leafType));
+                    ops_.add(new Star((int)intStar,(int)extStar,centreType,leafType,internal));
                 }
             }
         }
