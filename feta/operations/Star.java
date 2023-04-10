@@ -145,9 +145,11 @@ public class Star extends Operation{
             HashSet<Integer> availableNodes;
             if (centreType_ != null) {
                 availableNodes = NodeTypes.getNodesOfType(centreType_);
+                System.out.println("Getting nodes of type "+centreType_+ " found "+availableNodes);
             } else {
                 availableNodes = net.getNodeListCopy();
             }
+            
             centreNode_ = obm.nodeDrawWithoutReplacement(net, availableNodes, -1);
             centreNodeName_=net.nodeNoToName(centreNode_);
         }

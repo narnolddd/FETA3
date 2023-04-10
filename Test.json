@@ -1,0 +1,57 @@
+{
+  "Data": {
+    "GraphInputFile": "test.dat",
+    "GraphInputType": "CSV",
+    "GraphOutputType": "CSV",
+    "GraphOutputFile": "typeTest.dat",
+    "Directed": false
+  },
+  "Action": {
+    "Grow": {
+      "Start": 10,
+      "Interval": 1,
+      "MaxNodes": 10000
+    }
+  },
+  "ObjectModel": [
+    {
+      "Start": 10,
+      "End": 10000,
+      "Components": [
+        {
+          "ComponentName": "DegreeModelComponent",
+          "Weight": 0.4
+        },
+        {
+          "ComponentName": "RandomAttachment",
+          "Weight":0.6
+        }
+      ]
+    }
+  ],
+
+    "OperationModel":
+      {
+        "Name": "MixedOperations",
+        "Stars": [
+            {"Internal":true,
+             "NoInternal":1,
+             "NoExternal":1,
+             "CentreType":"System",
+             "LeafType":"Function",
+             "Occurrence":15},
+            {"Internal":true,
+             "NoInternal":0,
+             "NoExternal":4,
+             "CentreType":"Function",
+             "LeafType":"Entity",
+             "Occurrence":12},
+            {"Internal":false,
+            "NoInternal":1,
+             "NoExternal":2,
+             "CentreType":"System",
+             "LeafType":"Function",
+             "Occurrence":20}
+        ]
+      }
+}
