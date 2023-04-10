@@ -39,6 +39,9 @@ public abstract class Operation {
 
     /** Set random generator */
     public void setRandom(Random rg) {generator_=rg;}
+    
+    /** Return random generator*/
+    public Random getRandom() {return generator_;}
 
     public int getNoChoices() {return noChoices_;}
 

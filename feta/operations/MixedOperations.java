@@ -1,6 +1,7 @@
 package feta.operations;
 import java.util.ArrayList;
 import org.json.simple.*;
+import java.util.Random;
 
 public class MixedOperations extends OperationModel{
     
@@ -8,13 +9,14 @@ public class MixedOperations extends OperationModel{
     ArrayList <Operation>specialOps_= null;
     
     public Operation nextOperation() {
-        double r = Math.random();
         //System.err.println("No Recipients "+noRecipients_);
         if (ops_.size() != 0) {
-            return ops_.remove(0);
+            int j= getRandom().nextInt(ops_.size());
+            return ops_.remove(j);
         }
         if (specialOps_.size() != 0) {
-            return specialOps_.remove(0);
+            int j= getRandom().nextInt(specialOps_.size());
+            return specialOps_.remove(j);
         }
         return null;
     }
