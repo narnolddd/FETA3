@@ -190,4 +190,6 @@ public class Measure extends SimpleAction {
         }
         return line.toString() +'\n';
     }
+
+    public String toString() { return "Measure"; }
 }

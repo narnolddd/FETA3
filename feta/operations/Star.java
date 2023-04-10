@@ -24,18 +24,18 @@ public class Star extends Operation{
     private String centreType_;
     private String leafType_;
 
-    public Star(int noInternal, int noExternal, String centre, String leaves) {
+    public Star(boolean sourceInternal, int noInternal, int noExternal, String centreType, String leafType) {
         noInternalLeaves_= noInternal;
         noExternalLeaves_= noExternal;
         internal_ = true; // This is not needed
         noLeaves_ = noInternal+noExternal;
-        if (centre != null && centre.length() > 0) {
-            centreType_= centre;
+        if (centreType != null && centreType.length() > 0) {
+            centreType_= centreType;
         } else {
             centreType_= null;
         }
-        if (leaves != null && leaves.length() > 0) {
-            leafType_= leaves;
+        if (leafType != null && leafType.length() > 0) {
+            leafType_= leafType;
         } else {
             leafType_= null;
         }
@@ -183,35 +183,35 @@ public class Star extends Operation{
 
     public void pickLeafNodes(Network net, MixedModel obm) {
         HashSet<Integer> availableNodes;
+        leafNodes_ = new int[noLeaves_];
+
+        // Add new nodes according to number of external leaves
+        int noNew = noLeaves_ - noExisting_;
+        for (int i = 0; i < noNew; i++) {
+            String newName = net.generateNodeName(leafType_);
+            leafNodes_[i]=net.nodeNameToNo(newName);
+        }
+
+        // Check which nodes are in the sample space for the existing nodes
         if (leafType_ != null) {
             availableNodes = NodeTypes.getNodesOfType(leafType_);
         } else {
             availableNodes = net.getNodeListCopy();
         }
-        // Add new nodes
-        int noNew = noLeaves_ - noExisting_;
-        int[] newLeaves= new int[noNew];
-        for (int i = 0; i < noNew; i++) {
-            String newName = net.generateNodeName(leafType_);
-            newLeaves[i]=net.nodeNameToNo(newName);
-        }
-        int[] internalLeaves;
         availableNodes.remove(centreNode_);
+
+        // Internal or external star.
+        int[] internalLeaves;
         if (internal_) {
-//            int [] chosen_ = new int[1+net.getOutLinks(centreNode_).length];
-//            chosen_[0] = centreNode_;
-//            for (int n = 0; n < net.getOutLinks(centreNode_).length; n++) {
-//                chosen_[n+1] = net.getOutLinks(centreNode_)[n];
-//            }
-//            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net, noExisting_, chosen_);
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }
-            internalLeaves = obm.drawMultipleNodesWithoutReplacement(net,centreNode_,noExisting_,availableNodes);
+            internalLeaves = obm.drawMultipleNodesWithoutReplacement(net,noExisting_,availableNodes);
         } else {
-            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,-1,noExisting_,availableNodes);
+            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,noExisting_,availableNodes);
         }
-        leafNodes_= Methods.concatenate(internalLeaves,newLeaves);
+
+        if (noExisting_ >= 0) System.arraycopy(internalLeaves, 0, leafNodes_, noNew, noExisting_);
         nodesToNames(net);
     }
 
@@ -241,7 +241,12 @@ public class Star extends Operation{
     }
 
     public String toString() {
-        StringBuilder str = new StringBuilder(getTime() + " STAR " + centreNodeName_);
+        StringBuilder str = new StringBuilder(getTime() + " STAR ");
+        if (isCensored()) {
+            str.append("ANON");
+        } else {
+            str.append(centreNodeName_);
+        }
         if (centreType_ != null) {
 			str.append(" TYPES ").append(centreType_).append(" ").append(leafType_);
 		}

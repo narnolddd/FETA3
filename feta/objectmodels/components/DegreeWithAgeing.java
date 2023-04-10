@@ -23,51 +23,55 @@ public class DegreeWithAgeing extends ObjectModelComponent{
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        double degSum = 0.0;
+        for (int node: availableNodes) {
+            degSum += ageingFunction(node,net);
+        }
 
+        if (degSum == 0.0) {
+            random_=true;
+            normalisationConstant_=availableNodes.size();
+        }
+        else {
+            normalisationConstant_ = degSum;
+        }
+        tempConstant_ = normalisationConstant_;
     }
 
     @Override
     public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        double degSum = 0.0;
+        for (int node: availableNodes) {
+            degSum += ageingFunction(node,net);
+        }
 
+        if (degSum == 0.0) {
+            random_=true;
+            normalisationConstant_=availableNodes.size();
+        }
+        else {
+            normalisationConstant_ = degSum;
+        }
+        tempConstant_ = normalisationConstant_;
     }
 
     @Override
     public void updateNormalisation(UndirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
-
-    }
-
-    public void calcNormalisation(UndirectedNetwork net, int[] removed) {
-        double sum = 0.0;
-        for (int i = 0; i < net.noNodes_; i++) {
-            sum += ageingFunction(i, net);
+        if (!random_) {
+            tempConstant_-= ageingFunction(chosenNode,net);
         }
-        for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>=0) {
-                sum-= ageingFunction(removed[j], net);
-            }
+        if (random_ || tempConstant_==0) {
+            random_=true;
+            tempConstant_=availableNodes.size();
         }
-        normalisationConstant_=sum;
-    }
-
-    public void calcNormalisation(DirectedNetwork net, int[] removed) {
-        double sum = 0.0;
-        for (int i = 0; i < net.noNodes_; i++) {
-            sum += ageingFunction(i, net);
-        }
-        for (int j = 0; j < removed.length; j++) {
-            if (removed[j]>=0) {
-                sum-= ageingFunction(removed[j], net);
-            }
-        }
-        normalisationConstant_=sum;
     }
 
     public double calcProbability(UndirectedNetwork net, int node) {
-        return ageingFunction(node,net)/normalisationConstant_;
+        return ageingFunction(node,net)/tempConstant_;
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
-        return ageingFunction(node,net)/normalisationConstant_;
+        return ageingFunction(node,net)/tempConstant_;
     }
 
     public void parseJSON(JSONObject params) {

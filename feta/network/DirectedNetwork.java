@@ -42,7 +42,7 @@ public class DirectedNetwork extends Network {
         outDegreeDist_= new int[outDegArraySize_];
         transitiveTriCount_= new int[maxNodeNo_];
         cyclicTriCount_= new int[maxNodeNo_];
-
+        this.getLinksFromFile();
     }
 
     public void addNode(int nodeno) {
