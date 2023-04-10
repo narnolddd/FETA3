@@ -5,17 +5,17 @@ import java.util.Random;
 
 public class MixedOperations extends OperationModel{
     
-    ArrayList <Operation>ops_=null;
-    ArrayList <Operation>specialOps_= null;
+    private ArrayList <Operation>ops_=null;
+    private ArrayList <Operation>specialOps_= null;
     
     public Operation nextOperation() {
         //System.err.println("No Recipients "+noRecipients_);
         if (ops_.size() != 0) {
-            int j= getRandom().nextInt(ops_.size());
+            int j= getGenerator().nextInt(ops_.size());
             return ops_.remove(j);
         }
         if (specialOps_.size() != 0) {
-            int j= getRandom().nextInt(specialOps_.size());
+            int j= getGenerator().nextInt(specialOps_.size());
             return specialOps_.remove(j);
         }
         return null;
