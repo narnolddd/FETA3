@@ -18,14 +18,12 @@ public class Star extends Operation{
     private String[] leafNodeNames_;
     private final boolean internal_;
     private int noExisting_;
-    private final int noLeaves_;  
-    private int noExternalLeaves_;
+    private final int noLeaves_; 
     private String centreType_;
     private String leafType_;
 
     public Star(int noLeaves, boolean internal) {
         internal_=internal;
-        noExternalLeaves_= 0;
         noLeaves_=noLeaves;
         centreType_= null;
         leafType_= null;
@@ -35,18 +33,17 @@ public class Star extends Operation{
     /** centreType and leafType will be null for untyped networks*/
     {
 	    internal_=internal;
-        noExternalLeaves_= 0;
         noLeaves_=noLeaves;
         centreType_= centreType;
         leafType_= leafType;	
 	}
     
-    public Star (int noLeaves, int noExtLeaves, String centreType, String leafType, boolean internal)
+    public Star (int noIntLeaves, int noExtLeaves, String centreType, String leafType, boolean internal)
     /** centreType and leafType will be null for untyped networks*/
     {
 	    internal_=internal;
-        noExternalLeaves_= noExtLeaves;
-        noLeaves_=noLeaves;
+        noExisting_= noIntLeaves;
+        noLeaves_=noIntLeaves+noExtLeaves;
         centreType_= centreType;
         leafType_= leafType;	
 	}

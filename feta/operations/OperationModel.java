@@ -13,6 +13,9 @@ public abstract class OperationModel {
     /** Select next growth operation */
     public abstract Operation nextOperation();
 
+    /** What happens if an operation fails*/
+    public void failedOperation(Operation op) {};
+
     public abstract void parseJSON(JSONObject params);
 
 }

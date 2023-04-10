@@ -20,6 +20,13 @@ public class MixedOperations extends OperationModel{
         }
         return null;
     }
+    
+    /** What happens if an operation fails*/
+    public void failedOperation(Operation op) 
+    {
+        ops_.add(op);
+    }
+
 
     @Override
     public void parseJSON(JSONObject params) {
