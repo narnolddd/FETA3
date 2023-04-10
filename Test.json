@@ -3,6 +3,13 @@
     "GraphInputFile": "test.dat",
     "GraphInputType": "CSV",
     "GraphOutputType": "CSV",
+    "InputLineSeparator": " ",
+    "Typed": true,
+    "Source":0,
+    "Target":1,
+    "Time": 2,
+    "SourceType": 3,
+    "TargetType": 4,
     "GraphOutputFile": "typeTest.dat",
     "Directed": false
   },

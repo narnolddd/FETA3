@@ -38,9 +38,14 @@ public class NodeTypes {
 	public static HashSet<Integer> getNodesOfType (String type)
 	{
         HashSet<Integer> nodes= nt_.nodesByType_.get(type);
-        if (nodes == null)
+        if (nodes == null) {
+            //System.out.println("Trying to find "+type);
+            //for (String s: nt_.nodesByType_.keySet()){
+             //   System.out.println("Type "+s+" exists");
+            //}
             return null;
-		return new HashSet<Integer>(nodes);
+		}
+        return new HashSet<Integer>(nodes);
 	}
 
 	/** Get current list of types */
