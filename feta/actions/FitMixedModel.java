@@ -26,11 +26,8 @@ public class FitMixedModel extends SimpleAction {
     public FullObjectModel objectModel_;
     public int granularity_;
     public List<int[]> configs_;
-    public ParseNet parser_;
-    public int noComponents_;
     public long startTime_=10;
     private boolean orderedData_ = false;
-
     private Random random_;
     private boolean debugMode_=false;
 
@@ -38,6 +35,13 @@ public class FitMixedModel extends SimpleAction {
         stoppingConditions_= new ArrayList<StoppingCondition>();
         options_=options;
         objectModel_= new FullObjectModel(options_.fullObjectModel_);
+    }
+
+    public FitMixedModel(FullObjectModel model, int granularity, long start, boolean orderedData) {
+        objectModel_=model;
+        granularity_=granularity;
+        startTime_=start;
+        orderedData_=orderedData;
     }
 
     /** Method that generates all possible configurations of model mixture */
@@ -73,9 +77,10 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public void execute(){
+        ParseNet parser;
         if (!options_.isDirectedInput()) {
-            parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
-        } else parser_= new ParseNetDirected((DirectedNetwork) network_);
+            parser = new ParseNetUndirected((UndirectedNetwork) network_);
+        } else parser= new ParseNetDirected((DirectedNetwork) network_);
         if (debugMode_) {
             random_= new Random(42);
         } else {
@@ -88,7 +93,7 @@ public class FitMixedModel extends SimpleAction {
         for (int j = 0; j < objectModel_.objectModels_.size(); j++) {
             long start = objectModel_.times_.get(j).start_;
             long end = objectModel_.times_.get(j).end_;
-            String line = getLikelihoods(start, end, totalChoices, runningLike);
+            String line = getLikelihoods(parser, start, end, totalChoices, runningLike);
             if (j != objectModel_.objectModels_.size()-1)
                 line+=",";
             else
@@ -99,9 +104,9 @@ public class FitMixedModel extends SimpleAction {
         System.out.println("\"finalc0\": "+finalC0+", \"finalraw\": "+runningLike[0]+", \"finalchoices\": "+totalChoices[0]+"}");
     }
 
-    public String getLikelihoods(long start, long end, int[] totalChoices, double[] runningLike) {
+    public String getLikelihoods(ParseNet parser, long start, long end, int[] totalChoices, double[] runningLike) {
         MixedModel obm = objectModel_.objectModelAtTime(start);
-        noComponents_ = obm.components_.size();
+        int noComponents_ = obm.components_.size();
         configs_=generatePartitions(granularity_,noComponents_);
 
         ArrayList<double[]> weightList = generateModels();
@@ -114,8 +119,8 @@ public class FitMixedModel extends SimpleAction {
             if (network_.latestTime_ > end)
                 break;
             ArrayList<Link> links = network_.linksToBuild_;
-            ArrayList<Link> lset = parser_.getNextLinkSet(links);
-            ArrayList<Operation> newOps = parser_.parseNewLinks(lset, network_);
+            ArrayList<Link> lset = parser.getNextLinkSet(links);
+            ArrayList<Operation> newOps = parser.parseNewLinks(lset, network_);
             for (Operation op: newOps) {
                 long time = op.getTime();
                 obm.calcNormalisation(network_);

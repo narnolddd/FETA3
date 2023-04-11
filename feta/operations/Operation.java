@@ -24,7 +24,7 @@ public abstract class Operation {
     public abstract void bufferLinks(Network net);
 
     /** Implemented in Operation, this is for selecting old nodes when growing network */
-    public abstract void chooseNodes(Network net, MixedModel obm);
+    public abstract void chooseNodes(Network net, MixedModel obm) throws Exception;
 
     /** Extracts operation into a node choices arraylist */
     public abstract void setNodeChoices(boolean orderedData);

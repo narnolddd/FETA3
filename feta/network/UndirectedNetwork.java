@@ -160,6 +160,11 @@ public class UndirectedNetwork extends Network {
         incrementDegDist(0);
     }
 
+    public void removeLatestNode() {
+        neighbours_.remove(latestNodeNo_);
+        degreeDist_[0]--;
+    }
+
     public void removeLinks(String nodename) {
         // Not implemented as not used in any graph model
     }

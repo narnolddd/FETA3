@@ -21,7 +21,20 @@ public class MixedModel {
     private boolean checkWeights_;
     private HashMap<double[], Double> likelihoods_;
 
+    // "build from scratch" constructor
     public MixedModel() {components_=new ArrayList<ObjectModelComponent>();}
+
+    // Constructor for FitMixedModel
+    public MixedModel(ArrayList<ObjectModelComponent> components) {
+        components_ = components;
+    }
+
+    // Constructor for Grow/Likelihood
+    public MixedModel(ArrayList<ObjectModelComponent> components, double[] weights) {
+        components_ = components;
+        weights_ = weights;
+        checkValid();
+    }
 
     public HashMap<double[], Double> getLikelihoods () {
         return likelihoods_;
@@ -107,7 +120,7 @@ public class MixedModel {
         if (sampleSize == 0)
             return chosenNodes;
         if (sampleSize > availableNodes.size()) {
-            System.err.println("Desired sample size ("+sampleSize+") is larger than nodes available ("+availableNodes.size()+")");
+            System.err.println("Warning: Number of nodes to choose ("+sampleSize+") greater than number of nodes available ("+availableNodes.size()+").");
             System.exit(-1);
         }
         int seedNode=-1;
@@ -128,7 +141,7 @@ public class MixedModel {
             sum += calcProbability(net, node);
         }
         if (Math.abs(sum - 1.0) > 0.000005) {
-            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum+" with "+net.noNodes_+" nodes.");
+            System.err.println("CalcNormalisation not correct. Currently probabilities add to "+sum+" with "+net.noNodes_+" nodes.");
             System.exit(-1);
         }
     }
@@ -139,7 +152,7 @@ public class MixedModel {
             sum += calcProbability(net, node);
         }
         if (Math.abs(sum - 1.0) > 0.000005) {
-            System.err.println("Object model calculated not correct. Currently probabilities add to "+sum+" with "+availableNodes.size()+" nodes.");
+            System.err.println("Update Normalisation not correct. Currently probabilities add to "+sum+" with "+availableNodes.size()+" nodes.");
             System.exit(-1);
         }
     }

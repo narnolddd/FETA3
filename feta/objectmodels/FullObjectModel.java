@@ -23,6 +23,26 @@ public class FullObjectModel {
         lastTime_=times_.get(times_.size()-1).end_;
     }
 
+    public FullObjectModel(ArrayList<MixedModel> models, long[] times) {
+        try {
+            times_ = new ArrayList<>();
+            objectModels_ = models;
+            timeToOM_ = new HashMap<>();
+            for( int i = 0; i < models.size(); i++) {
+                TimeInterval ti = new TimeInterval(times[i], times[i+1]);
+                timeToOM_.put(ti, models.get(i));
+            }
+        } catch (Exception e) {
+            System.err.println("Something wrong with specified Object Model");
+            e.printStackTrace();
+        }
+        checkValid();
+    }
+
+    public FullObjectModel(MixedModel model) {
+        this(new ArrayList<>() { {add(model);} },new long[]{Long.MIN_VALUE, Long.MAX_VALUE});
+    }
+
     /** Checks object models given are valid */
     public void checkValid() {
         if (times_.size() == 0 || objectModels_.size() == 0) {

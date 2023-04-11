@@ -15,7 +15,7 @@ public abstract class Network {
     public int noLinks_;
 
     /** For tracking time in network building */
-    private int latestNodeNo_; // Number of nodes built
+    protected int latestNodeNo_; // Number of nodes built
     public long latestTime_; // Time at which the most recent link was added
 
     /** Options for reading network */
@@ -117,6 +117,16 @@ public abstract class Network {
         nodeNames_.put(nodeNo,nodeName);
         addNode(nodeNo);
         nodeList_.add(nodeNo);
+    }
+
+    public abstract void removeLatestNode();
+
+    /** Removes a just-added node */
+    public void rollBackNodeAddition() {
+        latestNodeNo_--;
+        noNodes_--;
+        nodeNumbers_.remove(nodeNames_.get(latestNodeNo_));
+        nodeList_.remove(latestNodeNo_);
     }
 
     /** Add a typed node to all data structures */

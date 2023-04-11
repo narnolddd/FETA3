@@ -54,7 +54,7 @@ public class Star extends Operation{
         }
     }
 
-    public void chooseNodes(Network net, MixedModel obm) {
+    public void chooseNodes(Network net, MixedModel obm) throws Exception {
         pickCentreNode(net,obm);
         pickLeafNodes(net,obm);
     }
@@ -159,16 +159,9 @@ public class Star extends Operation{
         }
     }
 
-    public void pickLeafNodes(Network net, MixedModel obm) {
+    public void pickLeafNodes(Network net, MixedModel obm) throws Exception {
         HashSet<Integer> availableNodes;
         leafNodes_ = new int[noLeaves_];
-
-        // Add new nodes according to number of external leaves
-        int noNew = noLeaves_ - noExisting_;
-        for (int i = 0; i < noNew; i++) {
-            String newName = net.generateNodeName(leafType_);
-            leafNodes_[i]=net.nodeNameToNo(newName);
-        }
 
         // Check which nodes are in the sample space for the existing nodes
         if (leafType_ != null) {
@@ -184,10 +177,24 @@ public class Star extends Operation{
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }
-            internalLeaves = obm.drawMultipleNodesWithoutReplacement(net,noExisting_,availableNodes);
-        } else {
-            internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,noExisting_,availableNodes);
         }
+
+        if (noExisting_ > availableNodes.size()) {
+            // cancel addition of the node to data structures
+            if (!internal_) {
+                net.rollBackNodeAddition();
+            }
+            throw new Exception("Impossible operation request: number of leaves to choose ("+noExisting_+") exceeds number of available nodes (" + availableNodes.size() + ")");
+        }
+
+        // Add new nodes according to number of external leaves
+        int noNew = noLeaves_ - noExisting_;
+        for (int i = 0; i < noNew; i++) {
+            String newName = net.generateNodeName(leafType_);
+            leafNodes_[i]=net.nodeNameToNo(newName);
+        }
+
+        internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,noExisting_,availableNodes);
 
         if (noExisting_ >= 0) System.arraycopy(internalLeaves, 0, leafNodes_, noNew, noExisting_);
         nodesToNames(net);

@@ -62,6 +62,13 @@ public class DirectedNetwork extends Network {
         incrementOutDegDist(0);
     }
 
+    public void removeLatestNode() {
+        inLinks_.remove(latestNodeNo_);
+        outLinks_.remove(latestNodeNo_);
+        inDegreeDist_[0]--;
+        outDegreeDist_[0]--;
+    }
+
     public void addLink(int src, int dst){
         if (isLink(src,dst) && !allowDuplicates_)
             return;

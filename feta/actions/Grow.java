@@ -60,7 +60,13 @@ public class Grow extends SimpleAction {
             if (checkModel) {
                 obm.checkNorm(network_);
             }
-            op.chooseNodes(network_,obm);
+            try {
+                op.chooseNodes(network_,obm);
+            } catch (Exception e) {
+                e.printStackTrace();
+                operationModel_.failedOperation(op);
+                continue;
+            }
             op.bufferLinks(network_);
             time = op.getTime();
             time+=interval_;
