@@ -55,17 +55,19 @@ public class ParseNetUndirected extends ParseNet {
             leaves.removeAll(intersect_);
             String sourceNode= intersect_.iterator().next();
             Star op;
-            if (net.newNode(sourceNode)) {
+            if (newNode(sourceNode)) {
                 op = new Star(leaves.size(), null,null,false);
             } else {
                 op= new Star(leaves.size(), null,null, true);
             }
 
+            processedNodes_.add(sourceNode);
             int noExisting = 0;
             for (String leaf: leaves) {
-                if (!net.newNode(leaf)) {
+                if (!newNode(leaf)) {
                     noExisting++;
                 }
+                processedNodes_.add(leaf);
             }
             op.setNoExisting(noExisting);
             op.setLeaves(Methods.toStringArray(leaves));

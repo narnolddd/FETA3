@@ -1,9 +1,11 @@
 package feta.actions;
 
 import feta.FetaOptions;
+import feta.actions.stoppingconditions.NoMoreLinks;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.DirectedNetwork;
 import feta.network.Link;
+import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
 import feta.objectmodels.MixedModel;
@@ -37,11 +39,19 @@ public class FitMixedModel extends SimpleAction {
         objectModel_= new FullObjectModel(options_.fullObjectModel_);
     }
 
-    public FitMixedModel(FullObjectModel model, int granularity, long start, boolean orderedData) {
+    public FitMixedModel(Network net, FullObjectModel model, int granularity, long start, boolean orderedData) {
+        network_=net;
         objectModel_=model;
         granularity_=granularity;
         startTime_=start;
         orderedData_=orderedData;
+        stoppingConditions_= new ArrayList<StoppingCondition>() { {
+            add(new NoMoreLinks());
+        }};
+    }
+
+    public FitMixedModel(Network net, MixedModel model, int granularity, long start, boolean orderedData) {
+        this(net, new FullObjectModel(model),granularity,start,orderedData);
     }
 
     /** Method that generates all possible configurations of model mixture */
@@ -78,7 +88,7 @@ public class FitMixedModel extends SimpleAction {
 
     public void execute(){
         ParseNet parser;
-        if (!options_.isDirectedInput()) {
+        if (network_ instanceof UndirectedNetwork) {
             parser = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser= new ParseNetDirected((DirectedNetwork) network_);
         if (debugMode_) {
@@ -91,7 +101,7 @@ public class FitMixedModel extends SimpleAction {
         int[] totalChoices = new int[1];
         double[] runningLike = new double[1];
         for (int j = 0; j < objectModel_.objectModels_.size(); j++) {
-            long start = objectModel_.times_.get(j).start_;
+            long start = Math.max(objectModel_.times_.get(j).start_, startTime_);
             long end = objectModel_.times_.get(j).end_;
             String line = getLikelihoods(parser, start, end, totalChoices, runningLike);
             if (j != objectModel_.objectModels_.size()-1)

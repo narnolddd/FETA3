@@ -31,6 +31,7 @@ public class FullObjectModel {
             for( int i = 0; i < models.size(); i++) {
                 TimeInterval ti = new TimeInterval(times[i], times[i+1]);
                 timeToOM_.put(ti, models.get(i));
+                times_.add(ti);
             }
         } catch (Exception e) {
             System.err.println("Something wrong with specified Object Model");

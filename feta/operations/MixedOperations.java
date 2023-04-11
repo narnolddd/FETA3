@@ -24,6 +24,7 @@ public class MixedOperations extends OperationModel{
     /** What happens if an operation fails*/
     public void failedOperation(Operation op) 
     {
+        op.setTime(0);
         ops_.add(op);
     }
 

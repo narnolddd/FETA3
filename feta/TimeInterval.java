@@ -50,11 +50,11 @@ public class TimeInterval {
         return Objects.equals(start_, TimeInt.start_) && Objects.equals(end_,TimeInt.end_);
     }
 
-    /** Get hashcode right for intervals */
-    public int hashCode() {
-        int t1 = toIntExact(start_);
-        int t2 = toIntExact(end_);
-        return t1+t2;
-    }
+//    /** Get hashcode right for intervals */
+//    public int hashCode() {
+//        int t1 = toIntExact(start_);
+//        int t2 = toIntExact(end_);
+//        return t1+t2;
+//    }
 
 }

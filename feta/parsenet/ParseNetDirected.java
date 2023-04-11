@@ -79,10 +79,12 @@ public class ParseNetDirected extends ParseNet{
 
 		int noExisting = 0;
 		for (String leaf: leaves) {
-			if (newNode(leaf)) {
+			if (!newNode(leaf)) {
 				noExisting++;
 			}
+			processedNodes_.add(leaf);
 		}
+		processedNodes_.add(sourceNode);
 		op.setNoExisting(noExisting);
 		op.setCentreNode(sourceNode);
 		op.setLeaves(Methods.toStringArray(leaves));
