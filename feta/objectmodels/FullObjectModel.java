@@ -33,6 +33,7 @@ public class FullObjectModel {
                 timeToOM_.put(ti, models.get(i));
                 times_.add(ti);
             }
+            lastTime_=times[models.size()];
         } catch (Exception e) {
             System.err.println("Something wrong with specified Object Model");
             e.printStackTrace();

@@ -12,6 +12,7 @@ public class DegreeModelComponent extends ObjectModelComponent{
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        random_=false;
         int total = 0;
         for (int node: availableNodes) {
             total+=net.getDegree(node);
@@ -28,6 +29,7 @@ public class DegreeModelComponent extends ObjectModelComponent{
 
     @Override
     public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        random_=false;
         int total = 0;
         for (int node: availableNodes) {
             if (useInDegree_) {

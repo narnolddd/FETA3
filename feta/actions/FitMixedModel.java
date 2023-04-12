@@ -32,6 +32,7 @@ public class FitMixedModel extends SimpleAction {
     private boolean orderedData_ = false;
     private Random random_;
     private boolean debugMode_=false;
+    private ArrayList<Operation> operationsExtracted_;
 
     public FitMixedModel(FetaOptions options){
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -88,6 +89,7 @@ public class FitMixedModel extends SimpleAction {
 
     public void execute(){
         ParseNet parser;
+        operationsExtracted_= new ArrayList<>();
         if (network_ instanceof UndirectedNetwork) {
             parser = new ParseNetUndirected((UndirectedNetwork) network_);
         } else parser= new ParseNetDirected((DirectedNetwork) network_);
@@ -96,11 +98,11 @@ public class FitMixedModel extends SimpleAction {
         } else {
             random_= new Random();
         }
-        int noChanges = objectModel_.objectModels_.size()-1;
-        System.out.println("{\"changepoints\": "+noChanges+", \"intervals\": [");
+        int noIntervals = objectModel_.objectModels_.size();
+        System.out.println("{\"changepoints\": "+(noIntervals-1)+", \"intervals\": [");
         int[] totalChoices = new int[1];
         double[] runningLike = new double[1];
-        for (int j = 0; j < objectModel_.objectModels_.size(); j++) {
+        for (int j = 0; j < noIntervals; j++) {
             long start = Math.max(objectModel_.times_.get(j).start_, startTime_);
             long end = objectModel_.times_.get(j).end_;
             String line = getLikelihoods(parser, start, end, totalChoices, runningLike);
@@ -140,6 +142,7 @@ public class FitMixedModel extends SimpleAction {
                     noChoices+=op.getNoChoices();
                 //}
                 network_.buildUpTo(time);
+                operationsExtracted_.add(op);
             }
         }
 
@@ -158,6 +161,7 @@ public class FitMixedModel extends SimpleAction {
                 bestConfig=weights;
             }
         }
+        obm.setWeights(bestConfig);
         runningLike[0] += bestRaw;
         totalChoices[0] += noChoices;
 
@@ -170,6 +174,14 @@ public class FitMixedModel extends SimpleAction {
         }
         toPrint += "["+String.join(",",models)+"]}";
         return toPrint;
+    }
+
+    public ArrayList<Operation> getParsedOperations() {
+        return operationsExtracted_;
+    }
+
+    public FullObjectModel getFittedModel() {
+        return objectModel_;
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {

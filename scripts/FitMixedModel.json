@@ -1,33 +1,33 @@
 {
   "Data": {
-    "GraphInputFile": "data/cit-HepPh-ordered.txt",
+    "GraphInputFile": "data/cit-HepPh-new.txt",
     "GraphInputType": "NNT",
     "GraphOutputType": "NNT",
-    "Directed": false
+    "Directed": true
   },
   "Action": {
     "FitMixedModel": {
-      "Start": 100,
-      "Interval": 10,
-      "MaxNodes": 100,
+      "Start": 800010830,
+      "Interval": 1000000,
+      "MaxTime": 1015956000,
       "Granularity": 100
     }
   },
   "ObjectModel": [
     {
-      "Start": 10,
-      "End": 100000,
+      "Start": 800010830,
+      "End": 1025956000,
       "Components": [
         {
-          "ComponentName": "feta.objectmodels.DegreeModelComponent",
+          "ComponentName": "DegreeModelComponent",
           "Weight": 1.0
         },
         {
-          "ComponentName": "feta.objectmodels.RandomAttachment",
+          "ComponentName": "RandomAttachment",
           "Weight": 1.0
         },
         {
-         "ComponentName": "feta.objectmodels.TriangleClosureDegree",
+         "ComponentName": "TriangleClosure",
           "Weight":1.0
         }
       ]

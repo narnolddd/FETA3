@@ -7,6 +7,17 @@ public class MixedOperations extends OperationModel{
     
     private ArrayList <Operation>ops_=null;
     private ArrayList <Operation>specialOps_= null;
+
+    public MixedOperations(){}
+
+    public MixedOperations(ArrayList<Operation> ops) {
+        ops_ = new ArrayList<>();
+        specialOps_ = new ArrayList<>();
+        for (Operation op: ops) {
+            op.clear();
+            ops_.add(op);
+        }
+    }
     
     public Operation nextOperation() {
         //System.err.println("No Recipients "+noRecipients_);

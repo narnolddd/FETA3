@@ -28,7 +28,16 @@ public class Star extends Operation{
         centreType_= null;
         leafType_= null;
     }
-    
+
+    @Override
+    public void clear() {
+        setTime(0);
+        leafNodes_ = null;
+        leafNodeNames_=null;
+        centreNodeName_=null;
+        centreNode_=0;
+    }
+
     public Star (int noLeaves, String centreType, String leafType, boolean internal)
     /** centreType and leafType will be null for untyped networks*/
     {
@@ -92,12 +101,13 @@ public class Star extends Operation{
     }
 
     public void updateLikelihoods(MixedModel obm, Network net) {
+        NodeTypes nt = net.getNodeTypes();
         if (!internal_) {
             if (noExisting_==0)
                 return;
             HashSet<Integer> availableNodes;
             if (centreType_!=null) {
-                availableNodes = NodeTypes.getNodesOfType(leafType_);
+                availableNodes = nt.getNodesOfType(leafType_);
             } else {
                 availableNodes = net.getNodeListCopy();
             }
@@ -111,8 +121,8 @@ public class Star extends Operation{
             HashSet<Integer> availableSourceNodes;
             HashSet<Integer> availableTargetNodes;
             if (centreType_!=null) {
-                availableSourceNodes = NodeTypes.getNodesOfType(centreType_);
-                availableTargetNodes = NodeTypes.getNodesOfType(leafType_);
+                availableSourceNodes = nt.getNodesOfType(centreType_);
+                availableTargetNodes = nt.getNodesOfType(leafType_);
             } else {
                 availableSourceNodes = net.getNodeListCopy();
                 availableTargetNodes = net.getNodeListCopy();
@@ -141,10 +151,11 @@ public class Star extends Operation{
     }
 
     public void pickCentreNode(Network net, MixedModel obm) {
+        NodeTypes nt = net.getNodeTypes();
         if (internal_) {
             HashSet<Integer> availableNodes;
             if (centreType_ != null) {
-                availableNodes = NodeTypes.getNodesOfType(centreType_);
+                availableNodes = nt.getNodesOfType(centreType_);
                 //System.out.println("Getting nodes of type "+centreType_+ " found "+availableNodes);
             } else {
                 availableNodes = net.getNodeListCopy();
@@ -160,12 +171,13 @@ public class Star extends Operation{
     }
 
     public void pickLeafNodes(Network net, MixedModel obm) throws Exception {
+        NodeTypes nt = net.getNodeTypes();
         HashSet<Integer> availableNodes;
         leafNodes_ = new int[noLeaves_];
 
         // Check which nodes are in the sample space for the existing nodes
         if (leafType_ != null) {
-            availableNodes = NodeTypes.getNodesOfType(leafType_);
+            availableNodes = nt.getNodesOfType(leafType_);
         } else {
             availableNodes = net.getNodeListCopy();
         }
@@ -184,7 +196,7 @@ public class Star extends Operation{
             if (!internal_) {
                 net.rollBackNodeAddition();
             }
-            throw new Exception("Impossible operation request: number of leaves to choose ("+noExisting_+") exceeds number of available nodes (" + availableNodes.size() + ")");
+            throw new Exception("Impossible operation request: number of leaves to choose ("+noExisting_+") exceeds number of available nodes (" + availableNodes.size() + "). Skipping to next operation.");
         }
 
         // Add new nodes according to number of external leaves

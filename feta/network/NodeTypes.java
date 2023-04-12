@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 
 public class NodeTypes {
-	private static NodeTypes nt_ =new NodeTypes();
+//	private NodeTypes nt_ =new NodeTypes();
 	private HashMap <Integer,String> nodeTypes_;
 	// Map returns the type (as string) of given node (integer)
 	private HashMap <String, HashSet<Integer>> nodesByType_;
@@ -17,10 +17,10 @@ public class NodeTypes {
 	}
 
 	/** set the type of a given node to be a string */
-	public static void setNodeType(int nodeNo, String nodeType) 
+	public void setNodeType(int nodeNo, String nodeType)
 	{
 		/* Check if this node is added*/
-		String nt= nt_.nodeTypes_.get(nodeNo);
+		String nt= nodeTypes_.get(nodeNo);
 		if (nt != null) {
 			if (nt.equals(nodeType)) 
 				return;
@@ -29,15 +29,15 @@ public class NodeTypes {
 		}
 
 		/* If this is a new type add it */
-		nt_.nodesByType_.computeIfAbsent(nodeType, k -> new HashSet<>());
-		nt_.nodeTypes_.put(nodeNo,nodeType);
-		nt_.nodesByType_.get(nodeType).add(nodeNo);
+		nodesByType_.computeIfAbsent(nodeType, k -> new HashSet<>());
+		nodeTypes_.put(nodeNo,nodeType);
+		nodesByType_.get(nodeType).add(nodeNo);
 	}
 
 	/** Return numbers of all nodes with a given type*/
-	public static HashSet<Integer> getNodesOfType (String type)
+	public HashSet<Integer> getNodesOfType (String type)
 	{
-        HashSet<Integer> nodes= nt_.nodesByType_.get(type);
+        HashSet<Integer> nodes= nodesByType_.get(type);
         if (nodes == null) {
             //System.out.println("Trying to find "+type);
             //for (String s: nt_.nodesByType_.keySet()){
@@ -49,13 +49,13 @@ public class NodeTypes {
 	}
 
 	/** Get current list of types */
-	public static Set<String> getTypes() {
-		return nt_.nodesByType_.keySet();
+	public Set<String> getTypes() {
+		return nodesByType_.keySet();
 	}
 	
 	/**Get the type of a given node*/
-	public static String getNodeType(int nodeNo) {
-		return nt_.nodeTypes_.get(nodeNo);
+	public String getNodeType(int nodeNo) {
+		return nodeTypes_.get(nodeNo);
 	}
 	
 	public static boolean sameTypes(Link l, String sourceType, String destType)

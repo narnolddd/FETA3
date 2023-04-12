@@ -1,8 +1,10 @@
 package feta.actions;
 
 import feta.FetaOptions;
+import feta.actions.stoppingconditions.MaxTimeExceeded;
 import feta.actions.stoppingconditions.StoppingCondition;
 import feta.network.Link;
+import feta.network.Network;
 import feta.objectmodels.FullObjectModel;
 import feta.objectmodels.MixedModel;
 import feta.operations.Operation;
@@ -35,6 +37,16 @@ public class Grow extends SimpleAction {
         parseOperationModel();
     }
 
+    public Grow(Network net, FullObjectModel obm, OperationModel om, Long startTime, Long endTime) {
+        setNetwork(net);
+        stoppingConditions_= new ArrayList<StoppingCondition>() { {
+            add(new MaxTimeExceeded(endTime));
+        }};
+        operationModel_=om;
+        objectModel_=obm;
+        startTime_=startTime;
+    }
+
     public void execute() {
         // Build network up to starting time from seed
         network_.buildUpTo(startTime_);
@@ -63,7 +75,7 @@ public class Grow extends SimpleAction {
             try {
                 op.chooseNodes(network_,obm);
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
                 operationModel_.failedOperation(op);
                 continue;
             }
@@ -72,22 +84,6 @@ public class Grow extends SimpleAction {
             time+=interval_;
             network_.buildUpTo(Long.MAX_VALUE);
         }
-
-        WriteNet writer;
-        String outputType = options_.getOutputType();
-        if (outputType.equals("NNT")) {
-            writer = new WriteNetNNT(network_.linksBuilt_, options_);
-        } else if (outputType.equals("NN")) {
-            writer = new WriteNetNN(network_.linksBuilt_, options_);
-        } else if (outputType.equals("CSV") || outputType.equals("WriteNetCSV")) {
-            if (options_.isTypedNetwork()) {
-                writer = new WriteNetCSV(network_.getNodeTypes(), network_.getNodeNumbers(), network_.linksBuilt_, options_);
-            } else {
-                writer = new WriteNetCSV(network_.linksBuilt_, options_);
-            }
-        }
-            else throw new IllegalArgumentException("Unrecognised output type "+outputType);
-        writer.write(1,Long.MAX_VALUE);
     }
 
     public void parseActionOptions(JSONObject obj){
@@ -118,8 +114,13 @@ public class Grow extends SimpleAction {
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e){
             e.printStackTrace();
         }
-
         operationModel_=om;
+
+        // check valid output file
+        if (options_.netOutputFile_==null) {
+            System.err.println("No output file supplied for Grow.");
+            System.exit(-1);
+        }
     }
 
     public String toString() {return "Grow";}

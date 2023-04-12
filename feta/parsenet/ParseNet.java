@@ -84,4 +84,7 @@ public abstract class ParseNet {
         return !processedNodes_.contains(node);
     }
 
+    public ArrayList<Operation> getOperations() {
+        return operations_;
+    }
 }

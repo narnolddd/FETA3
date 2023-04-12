@@ -19,15 +19,17 @@ public class NoNodesByType extends Measurement {
 
     @Override
     public void update(DirectedNetwork net) {
-        for (String type : NodeTypes.getTypes()) {
-            sizes.put(type, NodeTypes.getNodesOfType(type).size());
+        NodeTypes nt = net.getNodeTypes();
+        for (String type : nt.getTypes()) {
+            sizes.put(type, nt.getNodesOfType(type).size());
         }
     }
 
     @Override
     public void update(UndirectedNetwork net) {
-        for (String type : NodeTypes.getTypes()) {
-            sizes.put(type, NodeTypes.getNodesOfType(type).size());
+        NodeTypes nt = net.getNodeTypes();
+        for (String type : nt.getTypes()) {
+            sizes.put(type, nt.getNodesOfType(type).size());
         }
     }
 

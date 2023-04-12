@@ -5,6 +5,10 @@ import feta.network.DirectedNetwork;
 import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import feta.readnet.*;
+import feta.writenet.WriteNet;
+import feta.writenet.WriteNetCSV;
+import feta.writenet.WriteNetNN;
+import feta.writenet.WriteNetNNT;
 import org.json.simple.JSONObject;
 import feta.actions.ParseTest;
 
@@ -39,6 +43,10 @@ public class FetaModel {
             System.out.println("Action "+act+ " completed in "+(curTime - startTime)+" milliseconds.");
         }
         long endTime = System.currentTimeMillis();
+
+        if (options_.netOutputFile_!=null) {
+            writeNetwork();
+        }
         System.out.println("Job completed in "+(endTime-startTime)+" milliseconds.");
     }
     public void parseActionList(JSONObject actionList) {
@@ -143,5 +151,25 @@ public class FetaModel {
 		}
 		
 	}
+
+    private void writeNetwork() {
+        WriteNet writer;
+        String outputType = options_.getOutputType();
+        String separator = options_.getOutSep();
+        if (outputType.equals("NNT")) {
+            writer = new WriteNetNNT(network_, options_);
+        } else if (outputType.equals("NN")) {
+            writer = new WriteNetNN(network_, options_);
+        } else if (outputType.equals("CSV") || outputType.equals("WriteNetCSV")) {
+//            if (options_.isTypedNetwork()) {
+//                writer = new WriteNetCSV(network_.getNodeTypes(), network_.getNodeNumbers(), network_.linksBuilt_, options_);
+//            } else {
+//                writer = new WriteNetCSV(network_.linksBuilt_, options_);
+//            }
+            writer = new WriteNetCSV(network_,separator, options_.netOutputFile_);
+        }
+        else throw new IllegalArgumentException("Unrecognised output type "+outputType);
+        writer.write();
+    }
 
 }

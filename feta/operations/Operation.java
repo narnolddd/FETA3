@@ -59,6 +59,9 @@ public abstract class Operation {
 		censored_= true;
 	}
 
+    /** Turns extracted operation into operation that can be used for growing networks */
+    public void clear() {}
+
     /** Helper methods */
 
     /** Concatenates two int arrays */

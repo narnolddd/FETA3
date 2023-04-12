@@ -133,7 +133,7 @@ public abstract class Network {
     public void addNode(String nodeName, String nodeType) {
         addNode(nodeName);
         if (nodeType != null)
-            NodeTypes.setNodeType(nodeNumbers_.get(nodeName),nodeType);
+            nodeTypes.setNodeType(nodeNumbers_.get(nodeName),nodeType);
     }
 
     /** Calls the addLink method on the integers corresponding to the string nodenames */
