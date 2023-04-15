@@ -100,8 +100,9 @@ public class MixedModel {
         if (seedNode == -1) {
             calcNormalisation(net, availableNodes);
         } else {
-        updateNormalisation(net, availableNodes, seedNode);}
+        updateNormalisation(net, availableNodes, seedNode);
         checkUpdatedNorm(net,availableNodes);
+        }
         double r = Math.random();
         double weightSoFar = 0.0;
         for (int node: availableNodes) {
@@ -308,6 +309,12 @@ public class MixedModel {
             str.append(weights_[i]).append(" ").append(components_.get(i)).append("\n");
         }
         return str.toString();
+    }
+
+    public void reset() {
+        for (ObjectModelComponent omc: components_) {
+            omc.reset();
+        }
     }
 
 }

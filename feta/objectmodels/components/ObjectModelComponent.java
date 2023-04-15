@@ -43,6 +43,12 @@ public abstract class ObjectModelComponent {
     public abstract double calcProbability(UndirectedNetwork net, int node);
     public abstract double calcProbability(DirectedNetwork net, int node);
 
+    public void reset() {
+        normalisationConstant_=0.0;
+        tempConstant_=0.0;
+        random_=false;
+    }
+
     public final void updateNormalisation(Network net, HashSet<Integer> availableNodes, int chosenNode) {
         random_=false;
         if (net.getClass() == UndirectedNetwork.class) {

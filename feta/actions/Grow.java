@@ -61,8 +61,7 @@ public class Grow extends SimpleAction {
             }
             Operation op = operationModel_.nextOperation();
             if (op == null) {
-                time+= interval_;
-                continue;
+                break;
             }
             if (op.getTime() == 0) {
                 op.setTime(time);

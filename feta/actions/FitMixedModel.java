@@ -181,6 +181,7 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public FullObjectModel getFittedModel() {
+        objectModel_.reset();
         return objectModel_;
     }
 

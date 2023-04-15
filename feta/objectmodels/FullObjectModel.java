@@ -75,6 +75,12 @@ public class FullObjectModel {
         throw new IllegalArgumentException("No object model specified for this time "+time);
     }
 
+    public void reset() {
+        for (MixedModel mm : objectModels_) {
+            mm.reset();
+        }
+    }
+
     public void parseObjectModels(JSONArray model) {
         int number = model.size();
 
