@@ -44,9 +44,6 @@ public class FetaOptions {
 
     public FetaOptions(){
 
-        String dateTime = new SimpleDateFormat("yyyyMMddHHmmss'.dat'").format(new Date());
-        netOutputFile_="output/"+dateTime;
-
     }
 
     public void readConfig(String file) {
