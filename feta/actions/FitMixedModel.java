@@ -14,6 +14,9 @@ import feta.parsenet.ParseNet;
 import feta.parsenet.ParseNetDirected;
 import feta.parsenet.ParseNetUndirected;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,12 +31,25 @@ public class FitMixedModel extends SimpleAction {
     public FullObjectModel objectModel_;
     public int granularity_;
     public List<int[]> configs_;
+
+    // Options related to Output
+    private double[] c0Intervals_;
+    private double[] rawIntervals_;
+    private int[] choicesIntervals_;
+
+    private String modelAsString_="";
+
+    private double totalChoices_;
     private double bestLikelihood_;
+    private double bestRaw_;
+
+
     public long startTime_=10;
     private boolean orderedData_ = false;
     private Random random_;
     private boolean debugMode_=false;
     private ArrayList<Operation> operationsExtracted_;
+    ParseNet parser_;
 
     public FitMixedModel(FetaOptions options){
         stoppingConditions_= new ArrayList<StoppingCondition>();
@@ -89,33 +105,38 @@ public class FitMixedModel extends SimpleAction {
     }
 
     public void execute(){
-        ParseNet parser;
         network_.buildUpTo(startTime_);
         operationsExtracted_= new ArrayList<>();
         if (network_ instanceof UndirectedNetwork) {
-            parser = new ParseNetUndirected((UndirectedNetwork) network_);
-        } else parser= new ParseNetDirected((DirectedNetwork) network_);
+            parser_ = new ParseNetUndirected((UndirectedNetwork) network_);
+        } else parser_= new ParseNetDirected((DirectedNetwork) network_);
         if (debugMode_) {
             random_= new Random(42);
         } else {
             random_= new Random();
         }
+
         int noIntervals = objectModel_.objectModels_.size();
-        System.out.println("{\"changepoints\": "+(noIntervals-1)+", \"intervals\": [");
+        c0Intervals_= new double[noIntervals];
+        rawIntervals_= new double[noIntervals];
+        choicesIntervals_= new int[noIntervals];
+
+        modelAsString_+="{\"changepoints\": "+(noIntervals-1)+", \"intervals\": \n[";
         int[] totalChoices = new int[1];
         double[] runningLike = new double[1];
         for (int j = 0; j < noIntervals; j++) {
             long start = Math.max(objectModel_.times_.get(j).start_, startTime_);
             long end = objectModel_.times_.get(j).end_;
-            String line = getLikelihoods(parser, start, end, totalChoices, runningLike);
+            String line = getLikelihoods(parser_, start, end, totalChoices, runningLike);
             if (j != objectModel_.objectModels_.size()-1)
                 line+=",";
             else
                 line+="],";
-            System.out.println(line);
+            modelAsString_+=line;
         }
         double finalC0 = Math.exp(runningLike[0]/totalChoices[0]);
-        System.out.println("\"finalc0\": "+finalC0+", \"finalraw\": "+runningLike[0]+", \"finalchoices\": "+totalChoices[0]+"}");
+        modelAsString_+="\n\"finalc0\": "+finalC0+", \"finalraw\": "+runningLike[0]+", \"finalchoices\": "+totalChoices[0]+"}";
+        System.out.println(modelAsString_);
     }
 
     public String getLikelihoods(ParseNet parser, long start, long end, int[] totalChoices, double[] runningLike) {
@@ -168,7 +189,7 @@ public class FitMixedModel extends SimpleAction {
         totalChoices[0] += noChoices;
 
         String toPrint = "{\"start\":"+start+", \"c0max\" : "+maxLike+
-                ", \"raw\": "+bestRaw+", \"choices\": "+noChoices+", \"models\": ";
+                ", \"raw\": "+bestRaw+", \"choices\": "+noChoices+", \n \"models\": ";
 
         bestLikelihood_=maxLike;
 
@@ -180,17 +201,55 @@ public class FitMixedModel extends SimpleAction {
         return toPrint;
     }
 
+    /** Extract Parsed Operations from fitting process */
     public ArrayList<Operation> getParsedOperations() {
         return operationsExtracted_;
     }
 
+    /** Extract Full Object Model from process */
     public FullObjectModel getFittedModel() {
         objectModel_.reset();
         return objectModel_;
     }
 
+    /** Return highest likelihood model achieved */
     public double getBestLikelihood() {
         return bestLikelihood_;
+    }
+
+    /** Write operation model to file using Parser */
+    public void writeOperationsToFile(String filename, Boolean censored) {
+        BufferedWriter bw;
+        try {
+            FileWriter fw = new FileWriter(filename);
+            bw = new BufferedWriter(fw);
+            for (Operation op: operationsExtracted_) {
+                if (censored)
+                    op.censor();
+                bw.write(op+"\n");
+                // Print for debugging: System.out.println(op);
+            }
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** Default method for the above with censored set to false */
+    public void writeOperationsToFile(String filename) {
+        writeOperationsToFile(filename, false);
+    }
+
+    public void writeObjectModelToFile(String filename) {
+        BufferedWriter bw;
+        try {
+            FileWriter fw = new FileWriter(filename);
+            bw = new BufferedWriter(fw);
+            bw.write(modelAsString_);
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {

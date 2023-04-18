@@ -10,8 +10,8 @@
     "Time": 2,
     "SourceType": 3,
     "TargetType": 4,
-    "GraphOutputFile": "typeTest.dat",
-    "Directed":false
+    "GraphOutputFile": "test/typeTest.dat",
+    "Directed":true
   },
   "Action": {
     "Grow": {
@@ -27,6 +27,7 @@
       "Components": [
         {
           "ComponentName": "DegreeModelComponent",
+          "Direction": "BOTH",
           "Weight": 0.7
         },
         {

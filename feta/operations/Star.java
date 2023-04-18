@@ -133,20 +133,22 @@ public class Star extends Operation{
                 System.exit(-1);
             }
 
-            if (availableTargetNodes.isEmpty()) {
-                System.err.println("No available target nodes to choose from! Operation "+this);
-                System.exit(-1);
-            }
-
             ArrayList<int[]> sourceNodeChoice = new ArrayList<>();
             sourceNodeChoice.add(new int[] {centreNode_});
             obm.updateLikelihoods(net, availableSourceNodes, sourceNodeChoice);
 
-            availableTargetNodes.remove(centreNode_);
-            for (int node: net.getOutLinks(centreNode_)) {
-                availableTargetNodes.remove(node);
+            if (noExisting_ > 0) {
+                if (availableTargetNodes.isEmpty()) {
+                    System.err.println("No available target nodes to choose from! Operation " + this);
+                    System.exit(-1);
+                }
+
+                availableTargetNodes.remove(centreNode_);
+                for (int node : net.getOutLinks(centreNode_)) {
+                    availableTargetNodes.remove(node);
+                }
+                obm.updateLikelihoods(net, availableTargetNodes, nodeOrders_);
             }
-            obm.updateLikelihoods(net,availableTargetNodes,nodeOrders_);
         }
     }
 
