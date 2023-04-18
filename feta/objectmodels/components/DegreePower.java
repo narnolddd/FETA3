@@ -8,17 +8,25 @@ import java.util.HashSet;
 
 public class DegreePower extends ObjectModelComponent {
 
+    public enum Direction  {
+        IN,
+        OUT,
+        BOTH
+    }
+
+    private Direction dir_;
+
+
     public DegreePower(){};
     public DegreePower(double power) {
         power_=power;
     }
-    public DegreePower(double power, boolean useInDegree) {
+    public DegreePower(double power, Direction dir) {
         power_=power;
-        useInDegree_=useInDegree;
+        dir_=dir;
     }
 
     public double power_=1.0;
-    public boolean useInDegree_=true;
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
@@ -43,10 +51,16 @@ public class DegreePower extends ObjectModelComponent {
         random_=false;
         double degSum = 0.0;
         for (int node: availableNodes) {
-            if (useInDegree_) {
-                degSum += Math.pow(net.getInDegree(node), power_);
-            } else {
-                degSum += Math.pow(net.getOutDegree(node), power_);
+            switch (dir_) {
+                case IN:
+                    degSum += Math.pow(net.getInDegree(node), power_);
+                    break;
+                case OUT:
+                    degSum += Math.pow(net.getOutDegree(node), power_);
+                    break;
+                case BOTH:
+                    degSum += Math.pow(net.getTotalDegree(node), power_);
+                    break;
             }
         }
 
@@ -78,17 +92,41 @@ public class DegreePower extends ObjectModelComponent {
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
-        if (random_)
-            return 1.0/tempConstant_; // tempConstant is never zero if random is true
-        if (useInDegree_)
-            return Math.pow(net.getInDegree(node),power_)/tempConstant_;
-        return Math.pow(net.getOutDegree(node),power_)/tempConstant_;
+        if (random_){
+            return 1.0/tempConstant_;
+        }
+        switch (dir_) {
+            case IN:
+                return Math.pow(net.getInDegree(node),power_)/tempConstant_;
+            case OUT:
+                return Math.pow(net.getOutDegree(node),power_)/tempConstant_;
+            case BOTH:
+                return Math.pow(net.getTotalDegree(node),power_)/tempConstant_;
+            default:
+            {System.err.println("No direction specified!");
+                return 0.0;}
+        }
     }
 
     public void parseJSON(JSONObject params) {
-        Boolean useInDeg = (Boolean) params.get("UseInDegree");
-        if (useInDeg!= null) {
-            useInDegree_=useInDeg;
+        String dir = (String) params.get("Direction");
+        if (dir!= null) {
+            switch (dir) {
+                case "IN":
+                    dir_= Direction.IN;
+                    break;
+                case "OUT":
+                    dir_= Direction.OUT;
+                    break;
+                case "BOTH":
+                    dir_= Direction.BOTH;
+                    break;
+                default:
+                    System.err.println("Invalid direction "+dir+". Direction for DegreeModelComponent should be specified as IN, OUT or BOTH.");
+                    break;
+            }
+        } else {
+            dir_= Direction.IN;
         }
         Double power = (Double) params.get("Power");
         if (power!=null) {

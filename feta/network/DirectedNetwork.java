@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.TreeMap;
 
 public class DirectedNetwork extends Network {
@@ -180,6 +181,11 @@ public class DirectedNetwork extends Network {
     public int getOutDegree(int node) {
         return outLinks_.get(node).size();
     }
+
+    public int getTotalDegree(int node) {
+        HashSet<Integer> nbs = new HashSet<>(inLinks_.get(node));
+        nbs.addAll(outLinks_.get(node));
+        return nbs.size();}
 
     public int getTransitiveTri() {
         return transitiveTri_;

@@ -18,7 +18,7 @@ public class FitAndCloneRunner {
     public static void main(String[] args) {
         // Read in network to be fitted
         ReadNet reader = new ReadNetCSV("test/typeTest.dat"," ",true,0,1,2,3,4);
-        double[] degreePowerParms = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2};
+        double[] degreePowerParms = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2};
 
         double bestLikelihood = 0.0;
         FullObjectModel bestObm = null;
@@ -29,7 +29,7 @@ public class FitAndCloneRunner {
             ArrayList<ObjectModelComponent> components = new ArrayList<>() {
                 {
                     add(new RandomAttachment());
-                    add(new DegreeModelComponent());
+                    add(new DegreePower(d, DegreePower.Direction.IN));
                 }
             };
 

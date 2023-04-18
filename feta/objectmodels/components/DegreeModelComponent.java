@@ -8,7 +8,21 @@ import java.util.HashSet;
 
 public class DegreeModelComponent extends ObjectModelComponent{
 
-    public boolean useInDegree_=true;
+    public enum Direction  {
+        IN,
+        OUT,
+        BOTH
+    }
+
+    private Direction dir_;
+
+    public DegreeModelComponent(){
+        dir_=Direction.IN;
+    }
+
+    public DegreeModelComponent(Direction dir){
+        dir_=dir;
+    }
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
@@ -32,10 +46,16 @@ public class DegreeModelComponent extends ObjectModelComponent{
         random_=false;
         int total = 0;
         for (int node: availableNodes) {
-            if (useInDegree_) {
-                total += net.getInDegree(node);
-            } else {
-                total += net.getOutDegree(node);
+            switch (dir_) {
+                case IN:
+                    total += net.getInDegree(node);
+                    break;
+                case OUT:
+                    total += net.getOutDegree(node);
+                    break;
+                case BOTH:
+                    total += net.getTotalDegree(node);
+                    break;
             }
         }
 
@@ -61,10 +81,18 @@ public class DegreeModelComponent extends ObjectModelComponent{
 
     public void updateNormalisation(DirectedNetwork net, HashSet<Integer> availableNodes, int chosenNode) {
         if (!random_) {
-            if (useInDegree_) {
-                tempConstant_ -= net.getInDegree(chosenNode);
-            } else {
-                tempConstant_ -= net.getOutDegree(chosenNode);
+            for (int node: availableNodes) {
+                switch (dir_) {
+                    case IN:
+                        tempConstant_ -= net.getInDegree(node);
+                        break;
+                    case OUT:
+                        tempConstant_ -= net.getOutDegree(node);
+                        break;
+                    case BOTH:
+                        tempConstant_ -= net.getTotalDegree(node);
+                        break;
+                }
             }
         }
         if (random_ || tempConstant_==0) {
@@ -84,15 +112,38 @@ public class DegreeModelComponent extends ObjectModelComponent{
         if (random_){
             return 1.0/tempConstant_;
         }
-        if (useInDegree_) {
-            return (net.getInDegree(node))/tempConstant_;
-        } else return (net.getOutDegree(node))/tempConstant_;
+        switch (dir_) {
+            case IN:
+                return net.getInDegree(node)/tempConstant_;
+            case OUT:
+                return net.getOutDegree(node)/tempConstant_;
+            case BOTH:
+                return net.getTotalDegree(node)/tempConstant_;
+            default:
+            {System.err.println("No direction specified!");
+                return 0.0;}
+        }
     }
 
     public void parseJSON(JSONObject params) {
-        Boolean useInDeg = (Boolean) params.get("UseInDegree");
-        if (useInDeg!= null) {
-            useInDegree_=useInDeg;
+        String dir = (String) params.get("Direction");
+        if (dir!= null) {
+            switch (dir) {
+                case "IN":
+                    dir_=Direction.IN;
+                    break;
+                case "OUT":
+                    dir_=Direction.OUT;
+                    break;
+                case "BOTH":
+                    dir_=Direction.BOTH;
+                    break;
+                default:
+                    System.err.println("Invalid direction "+dir+". Direction for DegreeModelComponent should be specified as IN, OUT or BOTH.");
+                    break;
+            }
+        } else {
+            dir_=Direction.IN;
         }
     }
 
