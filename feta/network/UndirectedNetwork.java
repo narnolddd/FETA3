@@ -207,9 +207,9 @@ public class UndirectedNetwork extends Network {
     /** Section related to growing networks */
     public void addNewLink(String src, String dst, String srcType, String dstType, long time) {
         if (srcType!=null) {
-            linksToBuild_.add(new UndirectedLink(src,dst,time,srcType,dstType));
+            linksToBuild_.add(new Link(src,dst,srcType,dstType,time));
         } else {
-            linksToBuild_.add(new UndirectedLink(src, dst, time));
+            linksToBuild_.add(new Link(src, dst, time));
         }
     }
 

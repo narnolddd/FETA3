@@ -11,7 +11,7 @@
     "SourceType": 3,
     "TargetType": 4,
     "GraphOutputFile": "typeTest.dat",
-    "Directed":true
+    "Directed":false
   },
   "Action": {
     "Grow": {

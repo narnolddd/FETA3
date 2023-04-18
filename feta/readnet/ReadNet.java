@@ -30,9 +30,7 @@ public abstract class ReadNet {
         sampled_ = options.netInputSampled_;
         samplingProp_= options.sampleProp_;
 
-        if (options.isDirectedInput()) {
-            lb_= new DirectedLinkBuilder();
-        } else lb_= new UndirectedLinkBuilder();
+        lb_= new LinkBuilder();
     }
 
     public final ArrayList<Link>  readNetwork(){

@@ -1,10 +1,8 @@
 package feta.parsenet;
 
 import feta.Methods;
-import feta.actions.Likelihood;
 import feta.network.Link;
 import feta.network.Network;
-import feta.network.UndirectedLink;
 import feta.network.UndirectedNetwork;
 import feta.operations.Operation;
 import feta.operations.Star;

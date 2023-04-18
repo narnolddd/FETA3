@@ -250,9 +250,9 @@ public class DirectedNetwork extends Network {
 
     public void addNewLink(String src, String dst, String srcType, String dstType, long time) {
         if (srcType!=null) {
-            linksToBuild_.add(new DirectedLink(src,dst,srcType,dstType,time));
+            linksToBuild_.add(new Link(src,dst,srcType,dstType,time));
         } else {
-            linksToBuild_.add(new DirectedLink(src, dst, time));
+            linksToBuild_.add(new Link(src, dst, time));
         }
     }
 
