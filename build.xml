@@ -56,7 +56,7 @@
             <fileset dir="${basedir}" includes="**/*.class" />
             <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
             <manifest>
-                <attribute name="Main-Class" value="feta.FetaCLI" />
+                <attribute name="Main-Class" value="feta.runners.FetaCLI" />
             </manifest>
 
         </jar>
@@ -74,7 +74,7 @@
             <fileset dir="${basedir}" includes="**" excludes="*.jar" />
             <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
             <manifest>
-                <attribute name="Main-Class" value="feta.FetaCLI" />
+                <attribute name="Main-Class" value="feta.runners.FetaCLI" />
             </manifest>
 
         </jar>

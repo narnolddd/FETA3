@@ -1,4 +1,4 @@
-package feta;
+package feta.runners;
 
 import feta.actions.Measure;
 import feta.actions.SimpleAction;

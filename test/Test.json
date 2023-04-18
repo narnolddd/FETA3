@@ -1,6 +1,6 @@
 {
   "Data": {
-    "GraphInputFile": "test.dat",
+    "GraphInputFile": "test/typeSeed.dat",
     "GraphInputType": "CSV",
     "GraphOutputType": "CSV",
     "InputLineSeparator": " ",
@@ -11,7 +11,7 @@
     "SourceType": 3,
     "TargetType": 4,
     "GraphOutputFile": "typeTest.dat",
-    "Directed": false
+    "Directed":true
   },
   "Action": {
     "Grow": {
@@ -27,11 +27,11 @@
       "Components": [
         {
           "ComponentName": "DegreeModelComponent",
-          "Weight": 0.4
+          "Weight": 0.7
         },
         {
           "ComponentName": "RandomAttachment",
-          "Weight":0.6
+          "Weight": 0.3
         }
       ]
     }
@@ -44,20 +44,20 @@
             {"Internal":true,
              "NoInternal":1,
              "NoExternal":1,
-             "CentreType":"System",
-             "LeafType":"Function",
+             "CentreType":"Teal",
+             "LeafType":"Mallard",
              "Occurrence":15},
             {"Internal":true,
              "NoInternal":0,
              "NoExternal":4,
-             "CentreType":"Function",
-             "LeafType":"Entity",
+             "CentreType":"Mallard",
+             "LeafType":"Pintail",
              "Occurrence":12},
             {"Internal":false,
             "NoInternal":1,
              "NoExternal":2,
-             "CentreType":"System",
-             "LeafType":"Function",
+             "CentreType":"Teal",
+             "LeafType":"Mallard",
              "Occurrence":20}
         ]
       }

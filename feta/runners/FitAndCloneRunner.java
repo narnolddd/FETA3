@@ -1,11 +1,8 @@
-package feta;
+package feta.runners;
 
 import feta.actions.FitMixedModel;
-import feta.actions.Grow;
-import feta.actions.SimpleAction;
 import feta.network.DirectedNetwork;
 import feta.network.Network;
-import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
 import feta.objectmodels.MixedModel;
 import feta.objectmodels.components.*;
@@ -13,8 +10,6 @@ import feta.operations.MixedOperations;
 import feta.operations.OperationModel;
 import feta.readnet.ReadNet;
 import feta.readnet.ReadNetCSV;
-import feta.writenet.WriteNet;
-import feta.writenet.WriteNetCSV;
 
 import java.util.ArrayList;
 
@@ -22,7 +17,7 @@ public class FitAndCloneRunner {
 
     public static void main(String[] args) {
         // Read in network to be fitted
-        ReadNet reader = new ReadNetCSV("typeTest.dat"," ",true,0,1,2,3,4);
+        ReadNet reader = new ReadNetCSV("test/typeTest.dat"," ",true,0,1,2,3,4);
         double[] degreePowerParms = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2};
 
         double bestLikelihood = 0.0;

@@ -1,4 +1,6 @@
-package feta;
+package feta.runners;
+
+import feta.FetaModel;
 
 public class FetaCLI {
 
