@@ -41,11 +41,6 @@ public class FetaOptions {
     public JSONArray fullObjectModel_;
     public JSONObject operationModel_;
 
-
-    public FetaOptions(){
-
-    }
-
     public void readConfig(String file) {
 
         JSONParser parser = new JSONParser();
