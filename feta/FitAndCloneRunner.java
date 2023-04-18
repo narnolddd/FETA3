@@ -8,9 +8,7 @@ import feta.network.Network;
 import feta.network.UndirectedNetwork;
 import feta.objectmodels.FullObjectModel;
 import feta.objectmodels.MixedModel;
-import feta.objectmodels.components.DegreeModelComponent;
-import feta.objectmodels.components.ObjectModelComponent;
-import feta.objectmodels.components.RandomAttachment;
+import feta.objectmodels.components.*;
 import feta.operations.MixedOperations;
 import feta.operations.OperationModel;
 import feta.readnet.ReadNet;
@@ -25,31 +23,42 @@ public class FitAndCloneRunner {
     public static void main(String[] args) {
         // Read in network to be fitted
         ReadNet reader = new ReadNetCSV("typeTest.dat"," ",true,0,1,2,3,4);
-        Network net = new DirectedNetwork(reader, true);
+        double[] degreePowerParms = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2};
 
-        // Specify object model to be tested
-        ArrayList<ObjectModelComponent> components = new ArrayList<>() {
-            {
-                add( new DegreeModelComponent());
-                add( new RandomAttachment());
+        double bestLikelihood = 0.0;
+        FullObjectModel bestObm = null;
+        for (double d: degreePowerParms) {
+            Network net = new DirectedNetwork(reader, true);
+
+            // Specify object model to be tested
+            ArrayList<ObjectModelComponent> components = new ArrayList<>() {
+                {
+                    add(new RandomAttachment());
+                    add(new DegreeModelComponent());
+                }
+            };
+
+            MixedModel model = new MixedModel(components);
+
+            // Fit mixed model
+            FitMixedModel fit = new FitMixedModel(net, model, 100, 10, false);
+            fit.execute();
+
+            // Get out parsed operation model and fitted object model
+            OperationModel om = new MixedOperations(fit.getParsedOperations());
+            FullObjectModel obm = fit.getFittedModel();
+            double currentLikelihood = fit.getBestLikelihood();
+            if (currentLikelihood > bestLikelihood) {
+                bestLikelihood = currentLikelihood;
+                bestObm = obm;
             }
-        };
-
-        MixedModel model = new MixedModel(components);
-
-        // Fit mixed model
-        FitMixedModel fit = new FitMixedModel(net,model,100,10,false);
-        fit.execute();
-
-        // Get out parsed operation model and fitted object model
-        OperationModel om = new MixedOperations(fit.getParsedOperations());
-        FullObjectModel obm = fit.getFittedModel();
-
-        // Grow network from this operation and object model and write to csv
-        Network grownNet = new DirectedNetwork(reader,true);
-        Grow grow = new Grow(grownNet,obm,om,10L,100L);
-        grow.execute();
-        WriteNet writer = new WriteNetCSV(grownNet, " ", "testOutput.csv");
-        writer.write();
+        }
+        System.out.println(bestObm);
+//        // Grow network from this operation and object model and write to csv
+//        Network grownNet = new DirectedNetwork(reader, true);
+//        Grow grow = new Grow(grownNet, bestObm, om, 10L, 100L);
+//        grow.execute();
+//        WriteNet writer = new WriteNetCSV(grownNet, " ", "testOutput.csv");
+//        writer.write();
     }
 }

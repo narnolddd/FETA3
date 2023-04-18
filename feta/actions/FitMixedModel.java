@@ -28,6 +28,7 @@ public class FitMixedModel extends SimpleAction {
     public FullObjectModel objectModel_;
     public int granularity_;
     public List<int[]> configs_;
+    private double bestLikelihood_;
     public long startTime_=10;
     private boolean orderedData_ = false;
     private Random random_;
@@ -63,7 +64,7 @@ public class FitMixedModel extends SimpleAction {
             return parts;
         }
         List<int[]> newParts = new ArrayList<>();
-        for (int l = 0; l < n; l++) {
+        for (int l = 0; l <= n; l++) {
             List<int[]> oldParts = generatePartitions(n-l,k-1);
             for (int[] partition: oldParts) {
                 int[] newPartition = new int[partition.length+1];
@@ -89,6 +90,7 @@ public class FitMixedModel extends SimpleAction {
 
     public void execute(){
         ParseNet parser;
+        network_.buildUpTo(startTime_);
         operationsExtracted_= new ArrayList<>();
         if (network_ instanceof UndirectedNetwork) {
             parser = new ParseNetUndirected((UndirectedNetwork) network_);
@@ -168,6 +170,8 @@ public class FitMixedModel extends SimpleAction {
         String toPrint = "{\"start\":"+start+", \"c0max\" : "+maxLike+
                 ", \"raw\": "+bestRaw+", \"choices\": "+noChoices+", \"models\": ";
 
+        bestLikelihood_=maxLike;
+
         String[] models = new String[bestConfig.length];
         for (int i = 0; i < bestConfig.length; i++) {
             models[i]="{\""+obm.components_.get(i)+"\": "+bestConfig[i]+"}";
@@ -183,6 +187,10 @@ public class FitMixedModel extends SimpleAction {
     public FullObjectModel getFittedModel() {
         objectModel_.reset();
         return objectModel_;
+    }
+
+    public double getBestLikelihood() {
+        return bestLikelihood_;
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {

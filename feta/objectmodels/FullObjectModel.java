@@ -102,4 +102,12 @@ public class FullObjectModel {
         }
         checkValid();
     }
+
+    @Override
+    public String toString() {
+        return "FullObjectModel{" +
+                "objectModels_=" + objectModels_ +
+                ", timeToOM_=" + timeToOM_ +
+                '}';
+    }
 }

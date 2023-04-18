@@ -22,8 +22,6 @@ public abstract class ParseNet {
     protected HashSet<String> processedNodes_;
 	
     public void parseNetwork(long start, long end) {
-		processedNodes_=new HashSet<>();
-
         /* Get string set of already processed nodes */
         net_.buildUpTo(start);
         for (int node: net_.getNodeListCopy()) {
@@ -43,6 +41,11 @@ public abstract class ParseNet {
         }
     }
 
+    protected void initialiseProcessedNodeSet() {
+        for (int i = 0; i < net_.noNodes_; i++) {
+            processedNodes_.add(net_.nodeNoToName(i));
+        }
+    }
 
     public ArrayList<Link> getNextLinkSet(ArrayList<Link> links) {
         ArrayList<Link> linkSet = new ArrayList<Link>();

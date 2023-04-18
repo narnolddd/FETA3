@@ -19,14 +19,19 @@ public class MixedModel {
     public ArrayList<ObjectModelComponent> components_;
     private double[] weights_;
     private boolean checkWeights_;
+    private int counter;
     private HashMap<double[], Double> likelihoods_;
 
     // "build from scratch" constructor
-    public MixedModel() {components_=new ArrayList<ObjectModelComponent>();}
+    public MixedModel() {
+        components_=new ArrayList<ObjectModelComponent>();
+        counter = 0;
+    }
 
     // Constructor for FitMixedModel
     public MixedModel(ArrayList<ObjectModelComponent> components) {
         components_ = components;
+        counter = 0;
     }
 
     // Constructor for Grow/Likelihood
@@ -34,6 +39,7 @@ public class MixedModel {
         components_ = components;
         weights_ = weights;
         checkValid();
+        counter = 0;
     }
 
     public HashMap<double[], Double> getLikelihoods () {
@@ -101,7 +107,8 @@ public class MixedModel {
             calcNormalisation(net, availableNodes);
         } else {
         updateNormalisation(net, availableNodes, seedNode);
-        checkUpdatedNorm(net,availableNodes);
+        if (counter < 50)
+            checkUpdatedNorm(net,availableNodes);
         }
         double r = Math.random();
         double weightSoFar = 0.0;
@@ -116,7 +123,8 @@ public class MixedModel {
     }
 
     public int[] drawMultipleNodesWithoutReplacement(Network net, int sampleSize, HashSet<Integer> availableNodes) {
-        checkNorm(net);
+        if (counter < 50)
+            checkNorm(net);
         int[] chosenNodes = new int[sampleSize];
         if (sampleSize == 0)
             return chosenNodes;
@@ -131,6 +139,7 @@ public class MixedModel {
             chosenNodes[i] = node;
             seedNode = node;
         }
+        counter+=1;
         return chosenNodes;
     }
 

@@ -18,6 +18,7 @@ public class ParseNetDirected extends ParseNet{
 		operations_ = new ArrayList<Operation>();
 		processedNodes_= new HashSet<>();
         net_=net;
+		initialiseProcessedNodeSet();
     }
 
     public ArrayList<Operation> parseNewLinks(ArrayList <Link> links, Network net) {

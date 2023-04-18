@@ -8,11 +8,21 @@ import java.util.HashSet;
 
 public class DegreePower extends ObjectModelComponent {
 
+    public DegreePower(){};
+    public DegreePower(double power) {
+        power_=power;
+    }
+    public DegreePower(double power, boolean useInDegree) {
+        power_=power;
+        useInDegree_=useInDegree;
+    }
+
     public double power_=1.0;
     public boolean useInDegree_=true;
 
     @Override
     public void calcNormalisation(UndirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        random_=false;
         double degSum = 0.0;
         for (int node: availableNodes) {
             degSum += Math.pow(net.getDegree(node), power_);
@@ -30,6 +40,7 @@ public class DegreePower extends ObjectModelComponent {
 
     @Override
     public void calcNormalisation(DirectedNetwork net, int sourceNode, HashSet<Integer> availableNodes) {
+        random_=false;
         double degSum = 0.0;
         for (int node: availableNodes) {
             if (useInDegree_) {
@@ -61,17 +72,17 @@ public class DegreePower extends ObjectModelComponent {
     }
 
     public double calcProbability(UndirectedNetwork net, int node) {
-        if (tempConstant_==0.0)
-            return 0.0;
+        if (random_)
+            return 1.0/tempConstant_; // tempConstant is never zero if random is true
         return Math.pow(net.getDegree(node), power_)/tempConstant_;
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
-        if (tempConstant_==0.0)
-            return 0.0;
+        if (random_)
+            return 1.0/tempConstant_; // tempConstant is never zero if random is true
         if (useInDegree_)
-            return Math.pow(net.getInDegree(node)+1,power_)/tempConstant_;
-        return Math.pow(net.getOutDegree(node)+1,power_)/tempConstant_;
+            return Math.pow(net.getInDegree(node),power_)/tempConstant_;
+        return Math.pow(net.getOutDegree(node),power_)/tempConstant_;
     }
 
     public void parseJSON(JSONObject params) {

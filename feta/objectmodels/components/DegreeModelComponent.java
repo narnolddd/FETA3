@@ -74,15 +74,15 @@ public class DegreeModelComponent extends ObjectModelComponent{
     }
 
     public double calcProbability(UndirectedNetwork net, int node) {
-        if (tempConstant_==0.0){
-            return 0.0;
+        if (random_){
+            return 1.0/tempConstant_;
         }
         return net.getDegree(node)/tempConstant_;
     }
 
     public double calcProbability(DirectedNetwork net, int node) {
-        if (normalisationConstant_==0.0){
-            return 0.0;
+        if (random_){
+            return 1.0/tempConstant_;
         }
         if (useInDegree_) {
             return (net.getInDegree(node))/tempConstant_;

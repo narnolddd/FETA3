@@ -70,9 +70,9 @@ public class Star extends Operation{
 
     public void setNodeChoices(boolean orderedData) {
         nodeChoices_= new ArrayList<int[]>();
-//        if (internal_) {
-//            nodeChoices_.add(new int[] {centreNode_});
-//        }
+        if (internal_) {
+            noChoices_+=1;
+        }
         if (orderedData) {
             for (int node: leafNodes_) {
                 nodeChoices_.add(new int[] {node});

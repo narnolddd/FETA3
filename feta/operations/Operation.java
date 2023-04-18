@@ -15,7 +15,7 @@ public abstract class Operation {
     ArrayList<int[]> nodeChoices_;
     ArrayList <int[]> nodeOrders_;
     private long time_;
-    private int noChoices_=0;
+    protected int noChoices_=0;
     private Random generator_;
     private boolean censored_= false;
 
@@ -106,7 +106,6 @@ public abstract class Operation {
     }
 
     public void filterNodeChoices() {
-        noChoices_=0;
         ArrayList<int[]> newChoices = new ArrayList<int[]>();
         for (int[] nodeSet: nodeChoices_) {
             int[] copy = Methods.removeNegativeNumbers(nodeSet);

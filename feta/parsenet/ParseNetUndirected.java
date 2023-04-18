@@ -20,6 +20,7 @@ public class ParseNetUndirected extends ParseNet {
         operations_= new ArrayList<Operation>();
         processedNodes_= new HashSet<>();
         net_=network;
+        initialiseProcessedNodeSet();
     }
 
     public ArrayList<Operation> parseNewLinks(ArrayList <Link> links, Network net) {
