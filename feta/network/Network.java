@@ -17,6 +17,7 @@ public abstract class Network {
     /** For tracking time in network building */
     protected int latestNodeNo_; // Number of nodes built
     public long latestTime_; // Time at which the most recent link was added
+    public long earliestTime_=-1;
 
     /** Options for reading network */
     private ReadNet networkReader_;
@@ -68,6 +69,9 @@ public abstract class Network {
     /** Build network from list of links */
 
     public void buildUpTo(long time) {
+        if (earliestTime_ < 0) {
+            earliestTime_ = linksToBuild_.get(0).time_;
+        }
         ArrayList<Link> remaining_ = new ArrayList<Link>();
         int i;
         for (i=0; i < linksToBuild_.size(); i++) {

@@ -11,6 +11,10 @@ import feta.operations.OperationModel;
 import feta.readnet.ReadNet;
 import feta.readnet.ReadNetCSV;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class FitAndReturnOperations {
@@ -30,7 +34,9 @@ public class FitAndReturnOperations {
         double[] degreePowerParms = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2};
 
         double bestLikelihood = 0.0;
-        FitMixedModel bestFit = null;
+        String modelString = null;
+        FitMixedModel fit = null;
+
         for (double d: degreePowerParms) {
             Network net = new DirectedNetwork(reader, true);
 
@@ -38,7 +44,7 @@ public class FitAndReturnOperations {
             ArrayList<ObjectModelComponent> components = new ArrayList<>() {
                 {
                     add(new RandomAttachment());
-                    add(new DegreePower(d, DegreePower.Direction.IN));
+                    add(new DegreePower(d, DegreePower.Direction.BOTH));
                     add(new TriangleClosure());
                 }
             };
@@ -46,22 +52,24 @@ public class FitAndReturnOperations {
             MixedModel model = new MixedModel(components);
 
             // Fit mixed model
-            FitMixedModel fit = new FitMixedModel(net, model, 100, 1, false);
+            fit = new FitMixedModel(net, model, 100, 0, false);
             fit.execute();
 
             double currentLikelihood = fit.getBestLikelihood();
-            if (currentLikelihood > bestLikelihood) {
+            if (currentLikelihood >= bestLikelihood) {
                 bestLikelihood = currentLikelihood;
-                bestFit = fit;
+                modelString = fit.getObjectModelString();
             }
         }
-        bestFit.writeObjectModelToFile(omFile);
-        bestFit.writeOperationsToFile(opFile, true);
-//        // Grow network from this operation and object model and write to csv
-//        Network grownNet = new DirectedNetwork(reader, true);
-//        Grow grow = new Grow(grownNet, bestObm, om, 10L, 100L);
-//        grow.execute();
-//        WriteNet writer = new WriteNetCSV(grownNet, " ", "testOutput.csv");
-//        writer.write();
+
+        // Write out operation model
+        fit.writeOperationsToFile(opFile, true);
+
+        // Write out object model
+        try (PrintStream out = new PrintStream(new FileOutputStream(omFile))) {
+            out.print(modelString);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

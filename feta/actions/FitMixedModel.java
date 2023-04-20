@@ -149,6 +149,7 @@ public class FitMixedModel extends SimpleAction {
 
         network_.buildUpTo(start);
         int noChoices = 0;
+
         HashMap<double[], Double> c0Values = new HashMap<>();
         while (network_.linksToBuild_.size()>0 && withinStoppingConditions(network_)) {
             if (network_.latestTime_ > end)
@@ -156,17 +157,20 @@ public class FitMixedModel extends SimpleAction {
             ArrayList<Link> links = network_.linksToBuild_;
             ArrayList<Link> lset = parser.getNextLinkSet(links);
             ArrayList<Operation> newOps = parser.parseNewLinks(lset, network_);
+            long time=-1;
             for (Operation op: newOps) {
-                long time = op.getTime();
-                obm.calcNormalisation(network_);
-                updateLikelihoods(op, obm);
-                // debug line
-                //if (op.getNoChoices() <= 5) {
-                    noChoices+=op.getNoChoices();
-                //}
-                network_.buildUpTo(time);
+                time = op.getTime();
+                if (time > network_.earliestTime_) {
+                    obm.calcNormalisation(network_);
+                    updateLikelihoods(op, obm);
+                    // debug line
+                    //if (op.getNoChoices() <= 5) {
+                    noChoices += op.getNoChoices();
+                    //}
+                }
                 operationsExtracted_.add(op);
             }
+            network_.buildUpTo(time);
         }
 
         // Turn everything into a C0 value
@@ -250,6 +254,10 @@ public class FitMixedModel extends SimpleAction {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getObjectModelString() {
+        return modelAsString_;
     }
 
     public void updateLikelihoods(Operation op, MixedModel obm) {
