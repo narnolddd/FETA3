@@ -111,6 +111,7 @@ public class Star extends Operation{
             } else {
                 availableNodes = net.getNodeListCopy();
             }
+
             if (availableNodes.isEmpty()) {
                 System.err.println("No available target nodes to choose from! Operation "+this);
                 System.exit(-1);
@@ -158,11 +159,10 @@ public class Star extends Operation{
             HashSet<Integer> availableNodes;
             if (centreType_ != null) {
                 availableNodes = nt.getNodesOfType(centreType_);
-                //System.out.println("Getting nodes of type "+centreType_+ " found "+availableNodes);
             } else {
                 availableNodes = net.getNodeListCopy();
             }
-            
+         
             centreNode_ = obm.nodeDrawWithoutReplacement(net, availableNodes, -1);
             centreNodeName_=net.nodeNoToName(centreNode_);
         }
@@ -177,23 +177,23 @@ public class Star extends Operation{
         HashSet<Integer> availableNodes;
         leafNodes_ = new int[noLeaves_];
 
+        net.getNodeListCopy().remove(centreNode_);
         // Check which nodes are in the sample space for the existing nodes
         if (leafType_ != null) {
             availableNodes = nt.getNodesOfType(leafType_);
         } else {
             availableNodes = net.getNodeListCopy();
         }
-        availableNodes.remove(centreNode_);
-
+        
         // Internal or external star.
         int[] internalLeaves;
-        if (internal_) {
+        if (internal_ && availableNodes != null) {
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }
         }
 
-        if (noExisting_ > availableNodes.size()) {
+        if (availableNodes != null && noExisting_ > availableNodes.size()) {
             // cancel addition of the node to data structures
             if (!internal_) {
                 net.rollBackNodeAddition();
