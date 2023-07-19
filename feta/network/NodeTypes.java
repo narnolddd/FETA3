@@ -43,7 +43,7 @@ public class NodeTypes {
             //for (String s: nt_.nodesByType_.keySet()){
              //   System.out.println("Type "+s+" exists");
             //}
-            return null;
+            return new HashSet<Integer>();
 		}
         return new HashSet<Integer>(nodes);
 	}

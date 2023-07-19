@@ -187,13 +187,13 @@ public class Star extends Operation{
         
         // Internal or external star.
         int[] internalLeaves;
-        if (internal_ && availableNodes != null) {
+        if (internal_) {
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }
         }
 
-        if (availableNodes != null && noExisting_ > availableNodes.size()) {
+        if (noExisting_ > availableNodes.size()) {
             // cancel addition of the node to data structures
             if (!internal_) {
                 net.rollBackNodeAddition();
