@@ -45,6 +45,10 @@ public class ReadNetCSV extends ReadNet {
     @Override
     public Link parseLine(String line, long linkno) {
         String[] parts = line.split(sep_);
+        if (parts.length < 3) {
+            System.err.println("Failed to parse network line "+line);
+            System.exit(-1);
+        }
         String node1 = parts[sourceColumn_];
         String node2 = parts[dstColumn_];
 

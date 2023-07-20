@@ -153,7 +153,7 @@ public class Star extends Operation{
         }
     }
 
-    public void pickCentreNode(Network net, MixedModel obm) {
+    public void pickCentreNode(Network net, MixedModel obm) throws Exception {
         NodeTypes nt = net.getNodeTypes();
         if (internal_) {
             HashSet<Integer> availableNodes;
@@ -162,7 +162,9 @@ public class Star extends Operation{
             } else {
                 availableNodes = net.getNodeListCopy();
             }
-         
+            if (availableNodes == null) {
+                 throw new Exception("Impossible operation request: Centre node of type "+centreType_+"Not found. Skipping to next operation.");
+            }
             centreNode_ = obm.nodeDrawWithoutReplacement(net, availableNodes, -1);
             centreNodeName_=net.nodeNoToName(centreNode_);
         }
@@ -187,18 +189,23 @@ public class Star extends Operation{
         
         // Internal or external star.
         int[] internalLeaves;
-        if (internal_) {
+        if (internal_ && availableNodes != null) {
             for (int node: net.getOutLinks(centreNode_)) {
                 availableNodes.remove(node);
             }
+            availableNodes.remove(centreNode_);
         }
-
-        if (noExisting_ > availableNodes.size()) {
+        int size= 0;
+        if (availableNodes != null) {
+            size= availableNodes.size();
+        }
+        if (noExisting_ > size) {
             // cancel addition of the node to data structures
             if (!internal_) {
                 net.rollBackNodeAddition();
             }
-            throw new Exception("Impossible operation request: number of leaves to choose ("+noExisting_+") exceeds number of available nodes (" + availableNodes.size() + "). Skipping to next operation.");
+            
+            throw new Exception("Impossible operation request: number of leaves to choose ("+noExisting_+") exceeds number of available nodes (" + size + "). Resubmitting operation.");
         }
 
         // Add new nodes according to number of external leaves
@@ -207,7 +214,6 @@ public class Star extends Operation{
             String newName = net.generateNodeName(leafType_);
             leafNodes_[i]=net.nodeNameToNo(newName);
         }
-
         internalLeaves=obm.drawMultipleNodesWithoutReplacement(net,noExisting_,availableNodes);
 
         if (noExisting_ >= 0) System.arraycopy(internalLeaves, 0, leafNodes_, noNew, noExisting_);
