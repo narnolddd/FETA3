@@ -163,7 +163,7 @@ public class Star extends Operation{
                 availableNodes = net.getNodeListCopy();
             }
             if (availableNodes == null) {
-                 throw new Exception("Impossible operation request: Centre node of type "+centreType_+"Not found. Skipping to next operation.");
+                 throw new Exception("Impossible operation request: Centre node of type "+centreType_+" not found. Resubmitting operation.");
             }
             centreNode_ = obm.nodeDrawWithoutReplacement(net, availableNodes, -1);
             centreNodeName_=net.nodeNoToName(centreNode_);
